@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Неофициальный фан-сайт о футбольном клубе Реал Мадрид: новости, клуб, стадион, история и данные.">
-  <meta name="theme-color" content="#0b1f4b">
+  <meta name="theme-color" content="#070b16">
   <title>Real Madrid — неофициальный фан-сайт</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1f4b' stroke='%23c9a227' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'%3ERM%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1f4b' stroke='%23d4af37' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'%3ERM%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="progress" id="progress"></div>
+
   <header class="header">
     <a class="brand" href="#news" aria-label="Real Madrid — на главную">
       <span class="crest">
-        <!-- Положите свой файл герба в assets/crest.png — он подставится сам -->
+        <!-- Свой файл герба: assets/crest.png -->
         <img src="assets/crest.png" alt="" onerror="this.parentElement.classList.add('no-crest')">
         <span class="fallback" aria-hidden="true">RM</span>
       </span>
@@ -33,6 +32,10 @@
       <a href="#history" data-page="history">История</a>
       <a href="#data-lab" data-page="data-lab">Лаборатория данных</a>
     </nav>
+
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Тема">
+      <span class="theme-icon" aria-hidden="true"></span>
+    </button>
   </header>
 
   <main class="content">
@@ -45,49 +48,71 @@
         <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте.</p>
         <div class="hero-actions">
           <a class="btn btn-gold" href="#club">О клубе</a>
-          <a class="btn btn-ghost" href="#history">История</a>
+          <a class="btn btn-ghost" href="#data-lab">Данные и графики</a>
         </div>
       </div>
 
+      <div class="stats" id="stats"></div>
+      <p class="muted small" id="statsNote"></p>
+
       <div class="section-head">
-        <h2>Последние новости</h2>
-        <span class="tag">примеры — замените своими</span>
+        <h2>Новости</h2>
+        <span class="tag">демо-материалы</span>
       </div>
+
+      <div class="toolbar">
+        <input id="search" class="search" type="search" placeholder="Поиск по новостям…" aria-label="Поиск по новостям">
+        <div id="chips" class="chips" role="group" aria-label="Категории"></div>
+      </div>
+
       <div id="news-grid" class="cards"></div>
+      <p id="news-empty" class="muted empty" hidden>Ничего не найдено.</p>
     </section>
 
     <!-- КЛУБ -->
     <section id="club" class="view">
       <h2 class="page-title">Клуб</h2>
-      <div class="facts">
+      <div class="facts reveal">
         <div class="fact"><b>1902</b><span>год основания</span></div>
         <div class="fact"><b>Мадрид</b><span>город</span></div>
-        <div class="fact"><b>Los Blancos</b><span>«белые» — прозвище клуба</span></div>
-        <div class="fact"><b>Белый</b><span>традиционный цвет формы</span></div>
+        <div class="fact"><b>Los Blancos</b><span>«белые» — прозвище</span></div>
+        <div class="fact"><b>Белый</b><span>цвет формы</span></div>
       </div>
-      <div class="panel">
-        <h3>О клубе</h3>
-        <p>Реал Мадрид — испанский футбольный клуб из столицы страны. Здесь будет рассказ о клубе, президенте, тренерском штабе и составе. Добавим по мере наполнения сайта.</p>
-      </div>
+
+      <div class="section-head"><h2>Легенды клуба</h2></div>
+      <div id="legends" class="cards legends"></div>
+
+      <div class="section-head"><h2>Вопросы и ответы</h2></div>
+      <div id="faq" class="faq"></div>
     </section>
 
     <!-- СТАДИОН -->
     <section id="stadium" class="view">
       <h2 class="page-title">Стадион</h2>
       <div class="two-col">
-        <div class="panel">
+        <div class="panel reveal">
           <h3>Сантьяго Бернабеу</h3>
-          <p>Домашняя арена клуба в Мадриде. Открыта в 1947 году и названа в честь Сантьяго Бернабеу, многолетнего президента клуба.</p>
+          <p>Домашняя арена клуба в Мадриде. Открыта в 1947 году и названа в честь Сантьяго Бернабеу, многолетнего президента клуба. Позже стадион прошёл масштабную реконструкцию.</p>
           <ul class="list">
             <li>Открытие: 1947 год</li>
+            <li>Город: Мадрид</li>
             <li>Домашний клуб: Реал Мадрид</li>
-            <li>Вместимость, адрес, как добраться — добавим позже</li>
           </ul>
+          <p class="muted small">Вместимость, адрес и схему проезда можно добавить позже.</p>
         </div>
-        <div class="panel pitch-wrap" aria-hidden="true">
-          <svg class="pitch" viewBox="0 0 210 136" xmlns="http://www.w3.org/2000/svg">
-            <rect width="210" height="136" rx="6" fill="#1f7a45"/>
-            <g fill="none" stroke="#fff" stroke-width="1.2" opacity=".9">
+
+        <div class="panel pitch-panel reveal">
+          <div class="pitch-top">
+            <h3>Схема расстановки</h3>
+            <select id="formation" class="select" aria-label="Схема">
+              <option value="433">4-3-3</option>
+              <option value="442">4-4-2</option>
+              <option value="352">3-5-2</option>
+            </select>
+          </div>
+          <svg class="pitch" id="pitch" viewBox="0 0 210 136" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Футбольное поле с расстановкой">
+            <rect width="210" height="136" rx="6" class="grass"/>
+            <g class="lines">
               <rect x="8" y="8" width="194" height="120"/>
               <line x1="105" y1="8" x2="105" y2="128"/>
               <circle cx="105" cy="68" r="14"/>
@@ -96,7 +121,7 @@
               <rect x="8" y="54" width="9" height="28"/>
               <rect x="193" y="54" width="9" height="28"/>
             </g>
-            <circle cx="105" cy="68" r="1.6" fill="#fff"/>
+            <g id="players"></g>
           </svg>
         </div>
       </div>
@@ -105,32 +130,38 @@
     <!-- ИСТОРИЯ -->
     <section id="history" class="view">
       <h2 class="page-title">История</h2>
-      <ol class="timeline">
-        <li><time>1902</time><div><h3>Основание клуба</h3><p>Клуб основан в Мадриде под названием «Мадрид Фудбол Клуб».</p></div></li>
-        <li><time>1920</time><div><h3>Приставка «Реал»</h3><p>Король Альфонсо XIII даровал клубу титул «Реал» — «королевский».</p></div></li>
-        <li><time>1947</time><div><h3>Открытие Бернабеу</h3><p>Клуб открывает новый стадион, который позже получает имя Сантьяго Бернабеу.</p></div></li>
-        <li><time>1956</time><div><h3>Эпоха Кубка чемпионов</h3><p>Реал выигрывает первый в истории розыгрыш Кубка европейских чемпионов и берёт первые пять трофеев подряд.</p></div></li>
-      </ol>
-      <p class="muted">Позже добавим больше событий и фотографий.</p>
+      <div class="chips" id="histChips" role="group" aria-label="Фильтр истории">
+        <button class="chip active" data-f="all" type="button">Все</button>
+        <button class="chip" data-f="club" type="button">Клуб</button>
+        <button class="chip" data-f="europe" type="button">Европа</button>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
     </section>
 
     <!-- ЛАБОРАТОРИЯ ДАННЫХ -->
     <section id="data-lab" class="view">
       <h2 class="page-title">Лаборатория данных</h2>
-      <div class="two-col">
-        <div class="panel">
-          <h3>Пример графика <span class="tag">демо-данные</span></h3>
-          <div id="bars" class="bars"></div>
-          <p class="muted">Данные берутся из массива в <code>script.js</code>. Когда будет настоящая статистика, заменим её.</p>
+
+      <div class="panel reveal">
+        <div class="tabs" id="chartTabs" role="tablist">
+          <button class="tab active" data-chart="decades" type="button">Кубки по десятилетиям</button>
+          <button class="tab" data-chart="line" type="button">Рост числа титулов</button>
+          <button class="tab" data-chart="scorers" type="button">Бомбардиры</button>
         </div>
-        <div class="panel">
-          <h3>Что здесь будет</h3>
-          <ul class="list">
-            <li>Результаты и таблицы сезонов</li>
-            <li>Статистика игроков</li>
-            <li>Графики и сравнения</li>
-          </ul>
-        </div>
+        <div id="chartArea" class="chart-area"></div>
+        <p class="muted small" id="chartNote"></p>
+      </div>
+
+      <div class="section-head"><h2>Победы в финалах Кубка чемпионов</h2></div>
+      <div class="toolbar">
+        <input id="finalSearch" class="search" type="search" placeholder="Поиск: год, соперник, город…" aria-label="Поиск по финалам">
+        <button id="sortBtn" class="btn-small" type="button">Сначала новые</button>
+      </div>
+      <div class="table-wrap reveal">
+        <table class="table">
+          <thead><tr><th>Год</th><th>Город</th><th>Соперник</th><th>Счёт</th></tr></thead>
+          <tbody id="finalsBody"></tbody>
+        </table>
       </div>
     </section>
 
@@ -141,6 +172,19 @@
     <p class="gold-line">Hala Madrid</p>
   </footer>
 
+  <button id="toTop" class="to-top" type="button" aria-label="Наверх">↑</button>
+
+  <dialog id="modal" class="modal">
+    <article>
+      <button class="modal-close" id="modalClose" type="button" aria-label="Закрыть">×</button>
+      <time id="modalDate"></time>
+      <span class="tag" id="modalCat"></span>
+      <h3 id="modalTitle"></h3>
+      <p id="modalBody"></p>
+    </article>
+  </dialog>
+
+  <script src="data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
