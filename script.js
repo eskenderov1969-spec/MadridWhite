@@ -292,6 +292,25 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+// ---------- Бургер-меню (телефон) ----------
+const burger = $('#burger');
+const navEl = $('#mainNav');
+const scrim = $('#scrim');
+
+function setMenu(open) {
+  navEl.classList.toggle('open', open);
+  scrim.classList.toggle('show', open);
+  burger.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', String(open));
+  burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+  document.body.classList.toggle('menu-open', open);
+}
+burger.addEventListener('click', () => setMenu(!navEl.classList.contains('open')));
+scrim.addEventListener('click', () => setMenu(false));
+navEl.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+window.matchMedia('(min-width: 641px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
+
 // ---------- Старт ----------
 renderNews();
 renderFinals();
