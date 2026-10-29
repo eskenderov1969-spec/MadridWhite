@@ -3,49 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Неофициальный фан-сайт о футбольном клубе Реал Мадрид: новости, клуб, стадион, история и данные.">
+  <meta name="theme-color" content="#0b1f4b">
   <title>Real Madrid — неофициальный фан-сайт</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1f4b' stroke='%23c9a227' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'%3ERM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page">
-    <header class="header">
-      <a class="brand" href="#news">Real Madrid</a>
-      <nav class="nav" aria-label="Основное меню">
-        <a href="#news" data-page="news" class="active">Новости</a>
-        <a href="#club" data-page="club">Клуб</a>
-        <a href="#stadium" data-page="stadium">Стадион</a>
-        <a href="#history" data-page="history">История</a>
-        <a href="#data-lab" data-page="data-lab">Лаборатория данных</a>
-      </nav>
-    </header>
+  <header class="header">
+    <a class="brand" href="#news" aria-label="Real Madrid — на главную">
+      <span class="crest">
+        <!-- Положите свой файл герба в assets/crest.png — он подставится сам -->
+        <img src="assets/crest.png" alt="" onerror="this.parentElement.classList.add('no-crest')">
+        <span class="fallback" aria-hidden="true">RM</span>
+      </span>
+      <span class="brand-text">
+        <strong>Real Madrid</strong>
+        <small>Hala Madrid</small>
+      </span>
+    </a>
 
-    <main class="content">
-      <section id="news" class="view active">
-        <h1>Новости</h1>
-        <p class="placeholder">Здесь появятся новости клуба.</p>
-      </section>
+    <nav class="nav" aria-label="Основное меню">
+      <a href="#news" data-page="news" class="active">Новости</a>
+      <a href="#club" data-page="club">Клуб</a>
+      <a href="#stadium" data-page="stadium">Стадион</a>
+      <a href="#history" data-page="history">История</a>
+      <a href="#data-lab" data-page="data-lab">Лаборатория данных</a>
+    </nav>
+  </header>
 
-      <section id="club" class="view">
-        <h1>Клуб</h1>
-        <p class="placeholder">Раздел в разработке.</p>
-      </section>
+  <main class="content">
 
-      <section id="stadium" class="view">
-        <h1>Стадион</h1>
-        <p class="placeholder">Раздел в разработке.</p>
-      </section>
+    <!-- НОВОСТИ -->
+    <section id="news" class="view active">
+      <div class="hero">
+        <p class="eyebrow">Неофициальный фан-сайт</p>
+        <h1>Добро пожаловать в мир <span>Los Blancos</span></h1>
+        <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте.</p>
+        <div class="hero-actions">
+          <a class="btn btn-gold" href="#club">О клубе</a>
+          <a class="btn btn-ghost" href="#history">История</a>
+        </div>
+      </div>
 
-      <section id="history" class="view">
-        <h1>История</h1>
-        <p class="placeholder">Раздел в разработке.</p>
-      </section>
+      <div class="section-head">
+        <h2>Последние новости</h2>
+        <span class="tag">примеры — замените своими</span>
+      </div>
+      <div id="news-grid" class="cards"></div>
+    </section>
 
-      <section id="data-lab" class="view">
-        <h1>Лаборатория данных</h1>
-        <p class="placeholder">Раздел в разработке.</p>
-      </section>
-    </main>
-  </div>
+    <!-- КЛУБ -->
+    <section id="club" class="view">
+      <h2 class="page-title">Клуб</h2>
+      <div class="facts">
+        <div class="fact"><b>1902</b><span>год основания</span></div>
+        <div class="fact"><b>Мадрид</b><span>город</span></div>
+        <div class="fact"><b>Los Blancos</b><span>«белые» — прозвище клуба</span></div>
+        <div class="fact"><b>Белый</b><span>традиционный цвет формы</span></div>
+      </div>
+      <div class="panel">
+        <h3>О клубе</h3>
+        <p>Реал Мадрид — испанский футбольный клуб из столицы страны. Здесь будет рассказ о клубе, президенте, тренерском штабе и составе. Добавим по мере наполнения сайта.</p>
+      </div>
+    </section>
+
+    <!-- СТАДИОН -->
+    <section id="stadium" class="view">
+      <h2 class="page-title">Стадион</h2>
+      <div class="two-col">
+        <div class="panel">
+          <h3>Сантьяго Бернабеу</h3>
+          <p>Домашняя арена клуба в Мадриде. Открыта в 1947 году и названа в честь Сантьяго Бернабеу, многолетнего президента клуба.</p>
+          <ul class="list">
+            <li>Открытие: 1947 год</li>
+            <li>Домашний клуб: Реал Мадрид</li>
+            <li>Вместимость, адрес, как добраться — добавим позже</li>
+          </ul>
+        </div>
+        <div class="panel pitch-wrap" aria-hidden="true">
+          <svg class="pitch" viewBox="0 0 210 136" xmlns="http://www.w3.org/2000/svg">
+            <rect width="210" height="136" rx="6" fill="#1f7a45"/>
+            <g fill="none" stroke="#fff" stroke-width="1.2" opacity=".9">
+              <rect x="8" y="8" width="194" height="120"/>
+              <line x1="105" y1="8" x2="105" y2="128"/>
+              <circle cx="105" cy="68" r="14"/>
+              <rect x="8" y="38" width="26" height="60"/>
+              <rect x="176" y="38" width="26" height="60"/>
+              <rect x="8" y="54" width="9" height="28"/>
+              <rect x="193" y="54" width="9" height="28"/>
+            </g>
+            <circle cx="105" cy="68" r="1.6" fill="#fff"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ИСТОРИЯ -->
+    <section id="history" class="view">
+      <h2 class="page-title">История</h2>
+      <ol class="timeline">
+        <li><time>1902</time><div><h3>Основание клуба</h3><p>Клуб основан в Мадриде под названием «Мадрид Фудбол Клуб».</p></div></li>
+        <li><time>1920</time><div><h3>Приставка «Реал»</h3><p>Король Альфонсо XIII даровал клубу титул «Реал» — «королевский».</p></div></li>
+        <li><time>1947</time><div><h3>Открытие Бернабеу</h3><p>Клуб открывает новый стадион, который позже получает имя Сантьяго Бернабеу.</p></div></li>
+        <li><time>1956</time><div><h3>Эпоха Кубка чемпионов</h3><p>Реал выигрывает первый в истории розыгрыш Кубка европейских чемпионов и берёт первые пять трофеев подряд.</p></div></li>
+      </ol>
+      <p class="muted">Позже добавим больше событий и фотографий.</p>
+    </section>
+
+    <!-- ЛАБОРАТОРИЯ ДАННЫХ -->
+    <section id="data-lab" class="view">
+      <h2 class="page-title">Лаборатория данных</h2>
+      <div class="two-col">
+        <div class="panel">
+          <h3>Пример графика <span class="tag">демо-данные</span></h3>
+          <div id="bars" class="bars"></div>
+          <p class="muted">Данные берутся из массива в <code>script.js</code>. Когда будет настоящая статистика, заменим её.</p>
+        </div>
+        <div class="panel">
+          <h3>Что здесь будет</h3>
+          <ul class="list">
+            <li>Результаты и таблицы сезонов</li>
+            <li>Статистика игроков</li>
+            <li>Графики и сравнения</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Неофициальный фан-сайт. Не связан с Real Madrid C.F. Названия и символы принадлежат их владельцам.</p>
+    <p class="gold-line">Hala Madrid</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
