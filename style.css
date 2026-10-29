@@ -86,6 +86,38 @@ h1 {
 
 .placeholder { color: var(--muted); }
 
+/* Телефон: вкладки столбиком справа */
 @media (max-width: 600px) {
-  .nav a { padding: 6px 12px; font-size: .9rem; }
+  .page { padding: 12px; }
+
+  .header { padding: 8px 0 12px; }
+
+  .nav {
+    position: fixed;
+    top: 64px;
+    right: 8px;
+    width: 118px;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .nav a {
+    padding: 8px 10px;
+    font-size: .85rem;
+    text-align: center;
+    background: var(--card);
+    border-color: var(--navy);
+    border-radius: 16px;
+  }
+
+  .nav a.active {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .content {
+    margin-right: 126px;
+    padding: 16px;
+  }
 }
