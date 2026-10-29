@@ -48,6 +48,7 @@ function showPage() {
   if (target === 'news') runCounters();
   if (target === 'history') renderTimeline();
   if (target === 'data-lab') renderChart(activeChart);
+  document.dispatchEvent(new CustomEvent('pagechange', { detail: target }));
 }
 window.addEventListener('hashchange', showPage);
 
