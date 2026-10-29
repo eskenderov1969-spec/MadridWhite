@@ -13,6 +13,10 @@
   <div class="progress" id="progress"></div>
 
   <header class="header">
+    <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
+
     <a class="brand" href="#news" aria-label="Real Madrid — на главную">
       <span class="crest">
         <!-- Свой файл герба: assets/crest.png -->
@@ -25,7 +29,7 @@
       </span>
     </a>
 
-    <nav class="nav" aria-label="Основное меню">
+    <nav class="nav" id="mainNav" aria-label="Основное меню">
       <a href="#news" data-page="news" class="active">Новости</a>
       <a href="#club" data-page="club">Клуб</a>
       <a href="#squad" data-page="squad">Состав</a>
@@ -39,6 +43,8 @@
       <span class="theme-icon" aria-hidden="true"></span>
     </button>
   </header>
+
+  <div class="scrim" id="scrim"></div>
 
   <main class="content">
 
