@@ -28,8 +28,10 @@
     <nav class="nav" aria-label="Основное меню">
       <a href="#news" data-page="news" class="active">Новости</a>
       <a href="#club" data-page="club">Клуб</a>
+      <a href="#squad" data-page="squad">Состав</a>
       <a href="#stadium" data-page="stadium">Стадион</a>
       <a href="#history" data-page="history">История</a>
+      <a href="#trophies" data-page="trophies">Трофеи</a>
       <a href="#data-lab" data-page="data-lab">Лаборатория данных</a>
     </nav>
 
@@ -86,6 +88,35 @@
       <div id="faq" class="faq"></div>
     </section>
 
+    <!-- СОСТАВ -->
+    <section id="squad" class="view">
+      <h2 class="page-title">Состав</h2>
+      <p class="muted small sub">Сейчас здесь легенды клуба — пример. Замените массив <code>players</code> в <code>data.js</code> актуальным составом.</p>
+
+      <div class="toolbar">
+        <input id="playerSearch" class="search" type="search" placeholder="Поиск игрока или страны…" aria-label="Поиск игрока">
+        <select id="playerSort" class="select" aria-label="Сортировка">
+          <option value="goals">По голам</option>
+          <option value="apps">По матчам</option>
+          <option value="name">По имени</option>
+        </select>
+      </div>
+      <div id="posChips" class="chips" role="group" aria-label="Позиции"></div>
+
+      <div id="players-grid" class="cards players"></div>
+      <p id="players-empty" class="muted empty" hidden>Игроки не найдены.</p>
+
+      <div class="section-head"><h2>Сравнение игроков</h2></div>
+      <div class="panel reveal">
+        <div class="compare-pick">
+          <select id="cmpA" class="select" aria-label="Первый игрок"></select>
+          <span class="vs">VS</span>
+          <select id="cmpB" class="select" aria-label="Второй игрок"></select>
+        </div>
+        <div id="cmpOut"></div>
+      </div>
+    </section>
+
     <!-- СТАДИОН -->
     <section id="stadium" class="view">
       <h2 class="page-title">Стадион</h2>
@@ -138,6 +169,22 @@
       <ol class="timeline" id="timeline"></ol>
     </section>
 
+    <!-- ТРОФЕИ -->
+    <section id="trophies" class="view">
+      <h2 class="page-title">Зал трофеев</h2>
+      <div id="trophyChips" class="chips" role="group" aria-label="Группы трофеев"></div>
+      <div id="trophyGrid" class="trophies"></div>
+      <div class="total-box"><span>Всего трофеев в списке</span><b id="trophyTotal">0</b></div>
+      <p class="muted small" id="trophyNote"></p>
+
+      <div class="section-head"><h2>Победы в Лиге чемпионов</h2></div>
+      <div id="yearChips" class="chips" role="group" aria-label="Годы побед"></div>
+      <div id="yearInfo" class="panel yinfo"></div>
+
+      <div class="section-head"><h2>Викторина</h2><span class="tag" id="bestTag"></span></div>
+      <div id="quiz" class="panel quiz"></div>
+    </section>
+
     <!-- ЛАБОРАТОРИЯ ДАННЫХ -->
     <section id="data-lab" class="view">
       <h2 class="page-title">Лаборатория данных</h2>
@@ -184,7 +231,27 @@
     </article>
   </dialog>
 
+  <dialog id="playerModal" class="modal">
+    <article>
+      <button class="modal-close" id="pmClose" type="button" aria-label="Закрыть">×</button>
+      <div class="pm-top">
+        <div class="avatar" id="pmAvatar"></div>
+        <div>
+          <h3 id="pmName"></h3>
+          <div class="pm-meta" id="pmMeta"></div>
+        </div>
+      </div>
+      <div class="pm-stats" id="pmStats"></div>
+      <p id="pmBio"></p>
+      <div class="pm-actions">
+        <button class="btn btn-gold" id="pmA" type="button">В сравнение (слева)</button>
+        <button class="btn btn-outline" id="pmB" type="button">В сравнение (справа)</button>
+      </div>
+    </article>
+  </dialog>
+
   <script src="data.js"></script>
   <script src="script.js"></script>
+  <script src="features.js"></script>
 </body>
 </html>
