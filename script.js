@@ -216,7 +216,7 @@ function renderChart(kind) {
         <span class="track"><span class="fill" data-w="${(s.goals / max) * 100}%" style="--d:${i * 0.08}s"></span></span>
         <b>${s.goals}</b>
       </div>`).join('')}</div>`;
-    note.textContent = 'Голы за клуб во всех турнирах (по открытым источникам — уточняйте актуальные цифры).';
+    note.textContent = 'Голы за клуб во всех турнирах. Мбаппе — на 25 октября 2026 года; остальные цифры по открытым источникам, уточняйте при необходимости.';
     requestAnimationFrame(() => requestAnimationFrame(() => $$('.fill', area).forEach(el => { el.style.width = el.dataset.w; })));
   }
 
