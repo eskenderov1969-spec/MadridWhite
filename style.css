@@ -465,6 +465,8 @@ button.btn { border: 0; font-family: inherit; cursor: pointer; }
 .ring { width: 150px; height: 150px; margin: 6px auto 18px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--gold) calc(var(--p) * 1%), var(--border) 0); }
 .ring span { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; background: var(--card-solid); font-family: var(--font-serif); font-size: 2.2rem; font-weight: 700; color: var(--gold); }
 
+.tag-new { align-self: flex-start; margin: 2px 0 4px; }
+
 /* Меню с 7 пунктами */
 @media (max-width: 1100px) { .nav a { padding: 8px 11px; font-size: .84rem; } }
 @media (min-width: 641px) and (max-width: 980px) {
