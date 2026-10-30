@@ -65,7 +65,7 @@
 
       <div class="section-head">
         <h2>Новости</h2>
-        <span class="tag">демо-материалы</span>
+        <span class="tag" id="newsTag"></span>
       </div>
 
       <div class="toolbar">
@@ -87,6 +87,9 @@
         <div class="fact"><b>Белый</b><span>цвет формы</span></div>
       </div>
 
+      <div class="section-head"><h2>Клуб сегодня</h2><span class="tag" id="nowDate"></span></div>
+      <div class="facts reveal" id="now"></div>
+
       <div class="section-head"><h2>Легенды клуба</h2></div>
       <div id="legends" class="cards legends"></div>
 
@@ -97,7 +100,7 @@
     <!-- СОСТАВ -->
     <section id="squad" class="view">
       <h2 class="page-title">Состав</h2>
-      <p class="muted small sub">Сейчас здесь легенды клуба — пример. Замените массив <code>players</code> в <code>data.js</code> актуальным составом.</p>
+      <p class="muted small sub" id="squadNote"></p>
 
       <div class="toolbar">
         <input id="playerSearch" class="search" type="search" placeholder="Поиск игрока или страны…" aria-label="Поиск игрока">
