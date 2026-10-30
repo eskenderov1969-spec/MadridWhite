@@ -1,9 +1,9 @@
-// Состав, зал трофеев и викторина. Использует D, $, $$, observeReveal из script.js
+// Состав, зал трофеев и карточка игрока в лаборатории. Использует D, $, $$, observeReveal из script.js
 (function () {
   const POS = { GK: 'Вратарь', DF: 'Защитник', MF: 'Полузащитник', FW: 'Нападающий' };
   const POS_CHIPS = { all: 'Все', GK: 'Вратари', DF: 'Защитники', MF: 'Полузащитники', FW: 'Нападающие' };
   const initials = name => name.split(' ').map(w => w[0]).slice(0, 2).join('');
-  // null = нет статистики за «Реал» в сезоне 2025/26 (новички лета 2026 года)
+  // null = нет матчей в Ла Лиге 2026/27
   const ratio = p => (p.apps ? p.goals / p.apps : null);
   const fmtN = v => (v == null ? '—' : Number.isInteger(v) ? v : v.toFixed(2));
   const dbl = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -54,7 +54,7 @@
         <div class="avatar">${initials(p.name)}</div>
         <h3>${p.name}</h3>
         <div class="meta">${POS[p.pos]} · ${p.nat}</div>
-        ${p.apps == null ? '<span class="tag tag-new">новичок 2026</span>' : ''}
+        ${p.years === 'с 2026' ? '<span class="tag tag-new">новичок 2026</span>' : ''}
         <div class="mini"><span><b>${fmtN(p.apps)}</b> матчей</span><span><b>${fmtN(p.goals)}</b> голов</span></div>
       </button>`).join('');
     $('#players-empty').hidden = list.length > 0;
@@ -74,7 +74,7 @@
     $('#pmAvatar').textContent = initials(p.name);
     $('#pmName').textContent = p.name;
     $('#pmMeta').textContent = `${POS[p.pos]} · ${p.nat} · ${p.years}`;
-    $('#pmStats').innerHTML = statBox(fmtN(p.apps), 'матчей в 25/26') + statBox(fmtN(p.goals), 'голов в 25/26') + statBox(fmtN(ratio(p)), 'голов за матч');
+    $('#pmStats').innerHTML = statBox(fmtN(p.apps), 'матчей в Ла Лиге 26/27') + statBox(fmtN(p.goals), 'голов в Ла Лиге 26/27') + statBox(fmtN(ratio(p)), 'голов за матч');
     $('#pmBio').textContent = p.bio;
     pm.showModal();
   });
@@ -104,7 +104,7 @@
   async function renderCompare() {
     const a = D.players.find(p => p.id === +cmpA.value);
     const b = D.players.find(p => p.id === +cmpB.value);
-    const rows = [['Матчей (2025/26)', a.apps, b.apps], ['Голов (2025/26)', a.goals, b.goals], ['Голов за матч', ratio(a), ratio(b)]];
+    const rows = [['Матчей (Ла Лига 26/27)', a.apps, b.apps], ['Голов (Ла Лига 26/27)', a.goals, b.goals], ['Голов за матч', ratio(a), ratio(b)]];
 
     $('#cmpOut').innerHTML =
       `<div class="cmp-head"><span>${a.name}</span><span>${b.name}</span></div>` +
@@ -177,130 +177,178 @@
   });
   showYear(D.finals[D.finals.length - 1].year);
 
-  // ================= ВИКТОРИНА =================
-  const quizEl = $('#quiz');
-  const BEST_KEY = 'rm-quiz-best';
-  const getBest = () => { try { return +localStorage.getItem(BEST_KEY) || 0; } catch (e) { return 0; } };
-  const setBest = v => { try { localStorage.setItem(BEST_KEY, String(v)); } catch (e) {} };
-  const shuffle = arr => {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  // ================= ЛАБОРАТОРИЯ ДАННЫХ: КАРТОЧКА ИГРОКА =================
+  const PR = window.PROFILES || {};
+  const SEASON = window.PROFILES_SEASON || '2026/27';
+  const POS_TAB = { GK: 'Вратарь', DF: 'Защита', MF: 'Полузащита', FW: 'Атака' };
+
+  // [ключ, подпись, единица (строка) или число знаков после запятой]
+  const STAT_SETS = {
+    general: [
+      ['apps', 'Матчи'], ['minutes', 'Минуты на поле'], ['starts', 'Старты'], ['subs', 'Выходы на замену'],
+      ['yellow', 'Жёлтые карточки'], ['red', 'Красные карточки'], ['rating', 'Рейтинг за матч', 2],
+    ],
+    GK: [
+      ['saves', 'Сейвы'], ['savePct', 'Отражённые удары', '%'], ['conceded', 'Пропущенные голы'], ['cleanSheets', 'Сухие матчи'],
+      ['pensSaved', 'Отражённые пенальти'], ['passAcc', 'Точность передач', '%'], ['longPassAcc', 'Точность длинных передач', '%'],
+      ['sweeper', 'Выходы на перехват'], ['claims', 'Игра на выходах'],
+    ],
+    DF: [
+      ['tackles', 'Отборы'], ['interceptions', 'Перехваты'], ['duelsGround', 'Выигранные единоборства (земля)'], ['duelsAir', 'Выигранные единоборства (воздух)'],
+      ['clearances', 'Выносы'], ['blocks', 'Блокированные удары'], ['passAcc', 'Точность передач', '%'], ['longPasses', 'Длинные передачи'],
+      ['goals', 'Голы'], ['assists', 'Голевые передачи'], ['errorsToGoal', 'Ошибки, ведущие к голу'], ['fouls', 'Фолы'],
+    ],
+    MF: [
+      ['passes', 'Передачи'], ['keyPasses', 'Ключевые передачи'], ['passAcc', 'Точность паса', '%'], ['progPasses', 'Прогрессивные передачи'],
+      ['progCarries', 'Проходы с мячом'], ['tackles', 'Отборы'], ['interceptions', 'Перехваты'], ['goals', 'Голы'],
+      ['assists', 'Голевые передачи'], ['xA', 'xA', 2], ['distance', 'Пройденная дистанция', ' км'],
+    ],
+    FW: [
+      ['goals', 'Голы'], ['xG', 'xG', 2], ['shots', 'Удары'], ['shotsOnTarget', 'Удары в створ'], ['conversion', 'Конверсия ударов', '%'],
+      ['assists', 'Голевые передачи'], ['dribbles', 'Успешные обводки'], ['touchesBox', 'Касания в штрафной'], ['penScored', 'Реализованные пенальти'],
+    ],
   };
 
-  const TOTAL = Math.min(10, D.quiz.length);
-  let qs = [];
-  let qi = 0;
-  let score = 0;
-  let streak = 0;
-  let locked = false;
+  const plural = (n, a, b, c) => { const m = n % 100, d = n % 10; return m > 10 && m < 20 ? c : d === 1 ? a : d >= 2 && d <= 4 ? b : c; };
+  const ageOf = iso => {
+    const b = new Date(iso), n = new Date();
+    let a = n.getFullYear() - b.getUTCFullYear();
+    const m = n.getMonth() - b.getUTCMonth();
+    if (m < 0 || (m === 0 && n.getDate() < b.getUTCDate())) a--;
+    return a;
+  };
+  const fmtDate = iso => iso.split('-').reverse().join('.');
+  const shortName = s => s.replace(/^РБ\s+/, '').slice(0, 3);
 
-  function updateBest() {
-    const b = getBest();
-    $('#bestTag').textContent = b ? `рекорд: ${b} из ${TOTAL}` : 'рекорда пока нет';
+  function statVal(p, pr, key) {
+    const s = pr.stats || {};
+    if (s[key] != null) return s[key];
+    if (key === 'apps') return p.apps;
+    if (key === 'goals') return p.goals;
+    return null;
+  }
+  function fmtStat(v, u) {
+    if (v == null) return '—';
+    const n = Number(v);
+    let s = typeof u === 'number' ? n.toFixed(u) : Number.isInteger(n) ? n.toLocaleString('ru-RU') : n.toFixed(1);
+    if (typeof u === 'string') s += u;
+    return s;
   }
 
-  function quizIntro() {
-    updateBest();
-    quizEl.innerHTML = `
-      <div class="q-intro">
-        <h3>Проверьте, насколько хорошо вы знаете клуб</h3>
-        <p class="muted">${TOTAL} вопросов с вариантами ответов. Подсказка: можно отвечать клавишами 1–4.</p>
-        <button class="btn btn-gold" id="quizStart" type="button">Начать</button>
-      </div>`;
-    $('#quizStart').addEventListener('click', quizStart);
+  let labTab = 'general';
+  const labSel = $('#labPlayer');
+  const labOrder = [...D.players].sort((a, b) => ((PR[a.id] || {}).num ?? 99) - ((PR[b.id] || {}).num ?? 99));
+  labSel.innerHTML = labOrder.map(p => {
+    const n = (PR[p.id] || {}).num;
+    return `<option value="${p.id}">${n != null ? '№' + n + ' · ' : ''}${p.name}</option>`;
+  }).join('');
+  labSel.value = D.players[0].id;
+
+  function renderLab() {
+    const p = D.players.find(x => x.id === +labSel.value);
+    const pr = PR[p.id] || {};
+
+    // Карточка
+    const box = $('#pcPhoto');
+    const img = $('#pcImg');
+    $('#pcPh').textContent = initials(p.name);
+    $('#pcNum').textContent = pr.num != null ? pr.num : '';
+    box.classList.remove('no-photo');
+    img.onerror = () => box.classList.add('no-photo');
+    img.onload = () => box.classList.remove('no-photo');
+    img.alt = p.name;
+    img.src = pr.slug ? `assets/players/${pr.slug}.jpg` : '';
+
+    $('#pcName').textContent = p.name;
+    $('#pcPos').textContent = POS[p.pos];
+    const age = pr.born ? ageOf(pr.born) : null;
+    const facts = [
+      ['Возраст', pr.born ? `${age} ${plural(age, 'год', 'года', 'лет')} · ${fmtDate(pr.born)}` : null],
+      ['Гражданство', p.nat],
+      ['Контракт', pr.contract],
+      ['Рыночная стоимость', pr.value],
+      ['В клубе', p.years],
+    ];
+    $('#pcFacts').innerHTML = facts.map(([k, v]) =>
+      `<div><dt>${k}</dt><dd${v ? '' : ' class="na" title="Нет данных — заполните в profiles.js"'}>${v || '—'}</dd></div>`).join('');
+
+    // Вкладки и показатели
+    $('#labTabs').innerHTML = [['general', 'Общее'], ['pos', POS_TAB[p.pos]]].map(([k, l]) =>
+      `<button class="tab${labTab === k ? ' active' : ''}" data-t="${k}" type="button" role="tab">${l}</button>`).join('');
+    $('#labSeason').textContent = `${SEASON} Прочерк — данных в открытых источниках нет (добавьте в profiles.js).`;
+    const set = labTab === 'general' ? STAT_SETS.general : STAT_SETS[p.pos];
+    $('#labStats').innerHTML = set.map(([key, label, u], i) => {
+      const v = statVal(p, pr, key);
+      return `<div class="stat-tile${v == null ? ' empty' : ''}" style="--d:${i * 0.03}s"><b>${fmtStat(v, u)}</b><span>${label}</span></div>`;
+    }).join('');
+
+    renderForm(pr);
   }
 
-  function quizStart() {
-    qs = shuffle(D.quiz).slice(0, TOTAL).map(q => ({
-      text: q.q,
-      explain: q.explain,
-      opts: shuffle(q.options.map((t, i) => ({ t, ok: i === q.answer }))),
-    }));
-    qi = 0; score = 0; streak = 0;
-    renderQuestion();
+  const resOf = score => { const [x, y] = score.split(':').map(Number); return x > y ? 'win' : x === y ? 'draw' : 'loss'; };
+
+  async function renderForm(pr) {
+    const area = $('#formArea');
+    const f = (pr.form || []).filter(m => m.rating != null);
+
+    if (f.length) {
+      // Форма игрока: рейтинг за матч (шкала 5–10)
+      const avg = f.reduce((s, m) => s + m.rating, 0) / f.length;
+      $('#formTitle').textContent = `Форма: рейтинг за последние ${f.length} ${plural(f.length, 'матч', 'матча', 'матчей')}`;
+      area.innerHTML = `
+        <div class="fbars">${f.map((m, i) => {
+          const h = Math.max(8, Math.min(100, ((m.rating - 5) / 5) * 100));
+          const cls = m.rating >= 7.5 ? 'win' : m.rating >= 6.5 ? 'draw' : 'loss';
+          return `<div class="fb"><em>${m.rating.toFixed(1)}</em><i class="${cls}" style="--h:${h}%;--d:${i * 0.06}s"></i></div>`;
+        }).join('')}</div>
+        <div class="flabels">${f.map(m => `<span title="${m.opp || ''}">${shortName(m.opp || '')}</span>`).join('')}</div>
+        <div class="form-legend"><span><i class="win"></i>7,5 и выше</span><span><i class="draw"></i>6,5–7,4</span><span><i class="loss"></i>ниже 6,5</span></div>`;
+      $('#formNote').textContent = `Средний рейтинг за период: ${avg.toFixed(2)}.`;
+    } else {
+      // Пока нет рейтингов игрока — показываем форму команды по реальным результатам
+      const last = D.results.slice(0, 8).reverse();
+      const pts = last.reduce((s, r) => { const k = resOf(r.score); return s + (k === 'win' ? 3 : k === 'draw' ? 1 : 0); }, 0);
+      const H = { win: 100, draw: 55, loss: 24 };
+      $('#formTitle').textContent = `Форма команды: последние ${last.length} матчей`;
+      area.innerHTML = `
+        <div class="fbars">${last.map((r, i) => {
+          const k = resOf(r.score);
+          return `<div class="fb"><em>${r.score}</em><i class="${k}" style="--h:${H[k]}%;--d:${i * 0.06}s"></i></div>`;
+        }).join('')}</div>
+        <div class="flabels">${last.map(r => `<span title="${r.opp} (${r.comp})">${shortName(r.opp)}</span>`).join('')}</div>
+        <div class="form-legend"><span><i class="win"></i>победа</span><span><i class="draw"></i>ничья</span><span><i class="loss"></i>поражение</span></div>`;
+      $('#formNote').textContent = `Рейтингов игрока за матч пока нет, поэтому показана форма команды: ${pts} очков из ${last.length * 3}. Чтобы увидеть форму игрока, добавьте form в profiles.js.`;
+    }
+    await dbl();
+    $$('.fb i', area).forEach(i => i.classList.add('on'));
   }
 
-  function renderQuestion() {
-    const q = qs[qi];
-    locked = false;
-    quizEl.innerHTML = `
-      <div class="q-top"><span>Вопрос ${qi + 1} из ${qs.length}</span><span>Счёт: ${score}${streak > 1 ? ` · серия ${streak}` : ''}</span></div>
-      <div class="q-bar"><i style="width:${(qi / qs.length) * 100}%"></i></div>
-      <h3 class="q-text">${q.text}</h3>
-      <div class="q-opts">
-        ${q.opts.map((o, i) => `<button class="q-opt" data-i="${i}" type="button"><kbd>${i + 1}</kbd><span>${o.t}</span></button>`).join('')}
-      </div>
-      <div class="q-feedback" id="qFeedback" hidden></div>
-      <div class="q-actions"><button class="btn btn-gold" id="qNext" type="button" hidden>${qi === qs.length - 1 ? 'Результат' : 'Дальше'}</button></div>`;
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const bar = $('.q-bar i', quizEl);
-      if (bar) bar.style.width = `${((qi + 1) / qs.length) * 100}%`;
-    }));
-    $('#qNext').addEventListener('click', nextQuestion);
+  function labStep(d) {
+    const i = labOrder.findIndex(p => p.id === +labSel.value);
+    labSel.value = labOrder[(i + d + labOrder.length) % labOrder.length].id;
+    renderLab();
   }
-
-  function answer(i) {
-    if (locked) return;
-    locked = true;
-    const q = qs[qi];
-    const ok = q.opts[i].ok;
-    if (ok) { score++; streak++; } else { streak = 0; }
-
-    $$('.q-opt', quizEl).forEach((btn, idx) => {
-      btn.disabled = true;
-      if (q.opts[idx].ok) btn.classList.add('ok');
-      else if (idx === i) btn.classList.add('bad');
-    });
-    const fb = $('#qFeedback');
-    fb.hidden = false;
-    fb.innerHTML = `<strong>${ok ? 'Верно!' : 'Не совсем.'}</strong> ${q.explain}`;
-    $('#qNext').hidden = false;
-    $('#qNext').focus({ preventScroll: true });
-  }
-
-  function nextQuestion() {
-    qi++;
-    if (qi >= qs.length) return renderResult();
-    renderQuestion();
-  }
-
-  function renderResult() {
-    const best = getBest();
-    const isRecord = score > best;
-    if (isRecord) setBest(score);
-    updateBest();
-    const pct = Math.round((score / qs.length) * 100);
-    const rank = score === qs.length ? 'Легенда клуба' : score >= 8 ? 'Знаток' : score >= 5 ? 'Болельщик' : 'Новичок';
-    quizEl.innerHTML = `
-      <div class="q-result">
-        <div class="ring" style="--p:${pct}"><span>${score}/${qs.length}</span></div>
-        <h3>${rank}</h3>
-        <p class="muted">${isRecord ? 'Новый личный рекорд!' : `Ваш рекорд: ${Math.max(best, score)} из ${qs.length}`}</p>
-        <button class="btn btn-gold" id="quizAgain" type="button">Сыграть ещё раз</button>
-      </div>`;
-    $('#quizAgain').addEventListener('click', quizStart);
-  }
-
-  quizEl.addEventListener('click', e => {
-    const b = e.target.closest('.q-opt');
-    if (b) answer(+b.dataset.i);
+  $('#labPrev').addEventListener('click', () => labStep(-1));
+  $('#labNext').addEventListener('click', () => labStep(1));
+  labSel.addEventListener('change', renderLab);
+  $('#labTabs').addEventListener('click', e => {
+    const b = e.target.closest('.tab');
+    if (!b) return;
+    labTab = b.dataset.t;
+    renderLab();
   });
-  document.addEventListener('keydown', e => {
-    if (current !== 'trophies' || locked || !qs.length || qi >= qs.length) return;
-    if (!$('.q-opt', quizEl)) return;
-    if (/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
-    const n = +e.key;
-    if (n >= 1 && n <= 4 && qs[qi].opts[n - 1]) answer(n - 1);
+  $('#pmLab').addEventListener('click', () => {
+    pm.close();
+    labSel.value = openedId;
+    renderLab();
+    location.hash = '#data-lab';
   });
 
   // ================= Страницы =================
   function onPage(page) {
     if (page === 'squad') renderCompare();
     if (page === 'trophies') renderTrophies();
+    if (page === 'data-lab') renderLab();
   }
   document.addEventListener('pagechange', e => onPage(e.detail));
 
@@ -308,6 +356,6 @@
   renderPlayers();
   renderCompare();
   renderTrophies();
-  quizIntro();
+  renderLab();
   observeReveal($('.view.active'));
 })();
