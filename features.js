@@ -3,8 +3,9 @@
   const POS = { GK: 'Вратарь', DF: 'Защитник', MF: 'Полузащитник', FW: 'Нападающий' };
   const POS_CHIPS = { all: 'Все', GK: 'Вратари', DF: 'Защитники', MF: 'Полузащитники', FW: 'Нападающие' };
   const initials = name => name.split(' ').map(w => w[0]).slice(0, 2).join('');
-  const ratio = p => (p.apps ? p.goals / p.apps : 0);
-  const fmtN = v => (Number.isInteger(v) ? v : v.toFixed(2));
+  // null = нет статистики за «Реал» в сезоне 2025/26 (новички лета 2026 года)
+  const ratio = p => (p.apps ? p.goals / p.apps : null);
+  const fmtN = v => (v == null ? '—' : Number.isInteger(v) ? v : v.toFixed(2));
   const dbl = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
   function countUp(el, to, dur = 1200) {
@@ -15,6 +16,12 @@
       if (p < 1) requestAnimationFrame(tick);
     })(t0);
   }
+
+  // ================= Подписи с датой и «Клуб сегодня» =================
+  $('#newsTag').textContent = D.asOf;
+  $('#squadNote').textContent = D.playersNote;
+  $('#nowDate').textContent = D.asOf;
+  $('#now').innerHTML = D.now.map(n => `<div class="fact"><b>${n.v}</b><span>${n.k}</span></div>`).join('');
 
   // ================= СОСТАВ =================
   let pos = 'all';
@@ -40,14 +47,15 @@
     let list = D.players.filter(p =>
       (pos === 'all' || p.pos === pos) && (!q || `${p.name} ${p.nat}`.toLowerCase().includes(q)));
     const s = sortSel.value;
-    list = [...list].sort((a, b) => (s === 'name' ? a.name.localeCompare(b.name, 'ru') : b[s] - a[s]));
+    list = [...list].sort((a, b) => (s === 'name' ? a.name.localeCompare(b.name, 'ru') : (b[s] ?? -1) - (a[s] ?? -1)));
 
     grid.innerHTML = list.map((p, i) => `
       <button class="card player reveal" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
         <div class="avatar">${initials(p.name)}</div>
         <h3>${p.name}</h3>
         <div class="meta">${POS[p.pos]} · ${p.nat}</div>
-        <div class="mini"><span><b>${p.apps}</b> матчей</span><span><b>${p.goals}</b> голов</span></div>
+        ${p.apps == null ? '<span class="tag tag-new">новичок 2026</span>' : ''}
+        <div class="mini"><span><b>${fmtN(p.apps)}</b> матчей</span><span><b>${fmtN(p.goals)}</b> голов</span></div>
       </button>`).join('');
     $('#players-empty').hidden = list.length > 0;
     observeReveal(grid);
@@ -66,7 +74,7 @@
     $('#pmAvatar').textContent = initials(p.name);
     $('#pmName').textContent = p.name;
     $('#pmMeta').textContent = `${POS[p.pos]} · ${p.nat} · ${p.years}`;
-    $('#pmStats').innerHTML = statBox(p.apps, 'матчей') + statBox(p.goals, 'голов') + statBox(ratio(p).toFixed(2), 'голов за матч');
+    $('#pmStats').innerHTML = statBox(fmtN(p.apps), 'матчей в 25/26') + statBox(fmtN(p.goals), 'голов в 25/26') + statBox(fmtN(ratio(p)), 'голов за матч');
     $('#pmBio').textContent = p.bio;
     pm.showModal();
   });
@@ -96,21 +104,21 @@
   async function renderCompare() {
     const a = D.players.find(p => p.id === +cmpA.value);
     const b = D.players.find(p => p.id === +cmpB.value);
-    const rows = [['Матчей', a.apps, b.apps], ['Голов', a.goals, b.goals], ['Голов за матч', ratio(a), ratio(b)]];
+    const rows = [['Матчей (2025/26)', a.apps, b.apps], ['Голов (2025/26)', a.goals, b.goals], ['Голов за матч', ratio(a), ratio(b)]];
 
     $('#cmpOut').innerHTML =
       `<div class="cmp-head"><span>${a.name}</span><span>${b.name}</span></div>` +
       rows.map(([label, x, y]) => {
-        const m = Math.max(x, y) || 1;
+        const m = Math.max(x ?? 0, y ?? 0) || 1;
         return `
           <div class="cmp-row">
             <div class="cmp-label">${label}</div>
             <div class="cmp-bars">
-              <div class="cmp-side left${x > y ? ' win' : ''}">
-                <span class="cmp-track"><i style="--w:${(x / m) * 100}%"></i></span><b>${fmtN(x)}</b>
+              <div class="cmp-side left${x != null && y != null && x > y ? ' win' : ''}">
+                <span class="cmp-track"><i style="--w:${((x ?? 0) / m) * 100}%"></i></span><b>${fmtN(x)}</b>
               </div>
-              <div class="cmp-side right${y > x ? ' win' : ''}">
-                <b>${fmtN(y)}</b><span class="cmp-track"><i style="--w:${(y / m) * 100}%"></i></span>
+              <div class="cmp-side right${x != null && y != null && y > x ? ' win' : ''}">
+                <b>${fmtN(y)}</b><span class="cmp-track"><i style="--w:${((y ?? 0) / m) * 100}%"></i></span>
               </div>
             </div>
           </div>`;
