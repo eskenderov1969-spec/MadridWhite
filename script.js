@@ -70,7 +70,7 @@ $('#statsNote').textContent = D.statsNote;
   ];
   $('#heroCard').innerHTML = `
     <span class="hc-tag">Сводка 2026/27</span>
-    <div class="hc-head"><span class="hc-crest">RM</span><div><strong>Los Blancos · Белые</strong><small>Мадрид, Испания</small></div></div>
+    <div class="hc-head"><img class="hc-logo" src="assets/crest.png" alt="" onerror="this.outerHTML='<span class=&quot;hc-crest&quot;>RM</span>'"><div><strong>Los Blancos · Белые</strong><small>Мадрид, Испания</small></div></div>
     ${rows.map(r => `<div class="hc-row"><span class="hc-ico">${r[0]}</span><div><small>${r[1]}</small><b>${r[2] || '—'}</b></div></div>`).join('')}
     <div class="hc-motto"><small>Девиз клуба</small><b>¡Hala Madrid!</b></div>`;
 })();
@@ -339,3 +339,16 @@ $$('.page-title, .section-head h2').forEach(h => {
   const last = words.pop();
   h.innerHTML = (words.length ? words.join(' ') + ' ' : '') + `<span class="acc">${last}</span>`;
 });
+
+
+// ---------- Заставка с гербом (один раз за вкладку) ----------
+(function () {
+  const sp = $('#splash');
+  if (!sp) return;
+  let seen = false;
+  try { seen = sessionStorage.getItem('splash') === '1'; sessionStorage.setItem('splash', '1'); } catch (e) {}
+  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { sp.remove(); return; }
+  document.body.classList.add('splash-on');
+  setTimeout(() => sp.classList.add('hide'), 1100);
+  setTimeout(() => { sp.remove(); document.body.classList.remove('splash-on'); }, 1700);
+})();
