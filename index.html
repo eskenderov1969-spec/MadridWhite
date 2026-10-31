@@ -6,15 +6,16 @@
   <meta name="description" content="Неофициальный фан-сайт о футбольном клубе Реал Мадрид: новости, клуб, стадион, история и данные.">
   <meta name="theme-color" content="#070b16">
   <title>Real Madrid — неофициальный фан-сайт</title>
-  <link rel="icon" type="image/png" href="assets/crest.png">
+  <link rel="icon" type="image/png" id="favicon" href="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
+  <script src="crest.js"></script>
 </head>
 <body>
   <div class="splash" id="splash" aria-hidden="true">
-    <img src="assets/crest.png" alt="" onerror="this.remove()">
+    <img data-crest alt="" onerror="this.remove()">
     <span>Hala Madrid</span>
   </div>
   <div class="progress" id="progress"></div>
@@ -27,7 +28,7 @@
     <a class="brand" href="#news" aria-label="Real Madrid — на главную">
       <span class="crest">
         <!-- Свой файл герба: assets/crest.png -->
-        <img src="assets/crest.png" alt="" onerror="this.parentElement.classList.add('no-crest')">
+        <img data-crest alt="" onerror="this.parentElement.classList.add('no-crest')">
         <span class="fallback" aria-hidden="true">RM</span>
       </span>
       <span class="brand-text">
@@ -266,7 +267,7 @@
   <footer class="footer">
     <div class="footer-in">
       <div class="foot-brand">
-        <img class="foot-logo" src="assets/crest.png" alt="" onerror="this.outerHTML='<span class=&quot;foot-crest&quot;>RM</span>'">
+        <img class="foot-logo" data-crest alt="" onerror="this.outerHTML='<span class=&quot;foot-crest&quot;>RM</span>'">
         <div>
           <strong>Real Madrid · Сезон 2026/2027</strong>
           <p>Неофициальный фан-сайт. Не связан с Real Madrid C.F. Названия и символы принадлежат их владельцам.</p>
@@ -311,6 +312,7 @@
     </article>
   </dialog>
 
+  <script>document.getElementById("favicon").href = window.CREST; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
   <script src="data.js"></script>
   <script src="profiles.js"></script>
   <script src="script.js"></script>
