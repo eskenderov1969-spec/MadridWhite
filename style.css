@@ -845,3 +845,147 @@ body.splash-on { overflow: hidden; }
 .crest img { display: block; height: 50px; width: auto; max-width: none; }
 .crest.no-crest { display: grid; }
 @media (max-width: 640px) { .crest img { height: 42px; } }
+
+/* ================= Матч-центр, таблица, страница матча, трансферы ================= */
+.nav a { padding: 10px 11px; font-size: .86rem; }
+.nav a.active::after { left: 11px; right: 11px; }
+.header { gap: 18px; }
+
+/* Ближайший матч */
+.next-match {
+  position: relative; overflow: hidden; margin: 28px 0 8px; padding: clamp(18px, 3vw, 30px); border-radius: 22px;
+  border: 1px solid rgba(212, 175, 55, .4);
+  background:
+    radial-gradient(420px 220px at 100% 0%, rgba(212, 175, 55, .14), transparent 70%),
+    linear-gradient(135deg, rgba(27, 58, 138, .45), var(--card-solid) 70%);
+  box-shadow: var(--shadow);
+}
+[data-theme="light"] .next-match { background: linear-gradient(135deg, rgba(27, 58, 138, .1), #fff 70%); }
+.nm-top { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.nm-teams, .mp-score { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 4vw, 44px); }
+.nm-team, .mp-team { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; flex: 1; }
+.nm-team strong, .mp-team strong { font-family: var(--display); font-size: clamp(1.05rem, 2.4vw, 1.5rem); text-transform: uppercase; letter-spacing: .03em; color: var(--heading); line-height: 1.2; }
+.nm-crest { height: 76px; display: grid; place-items: center; }
+.nm-crest img { height: 100%; width: auto; display: block; filter: drop-shadow(0 6px 18px rgba(212, 175, 55, .4)); }
+.nm-crest b { font-family: var(--display); font-size: 1.6rem; color: var(--heading); }
+.nm-badge {
+  width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--display); font-weight: 700; font-size: 1.6rem; letter-spacing: .04em; color: var(--heading);
+  background: var(--card); border: 1px solid var(--border);
+}
+.nm-vs { font-family: var(--display); font-size: 1.4rem; color: var(--gold); letter-spacing: .1em; }
+.nm-when { text-align: center; margin: 20px 0 16px; }
+.nm-when b { display: block; font-family: var(--display); font-size: clamp(1.15rem, 2.6vw, 1.6rem); text-transform: uppercase; letter-spacing: .03em; color: var(--heading); font-weight: 600; }
+.nm-when span { color: var(--muted); font-size: .88rem; }
+.cd { display: flex; justify-content: center; gap: clamp(8px, 2vw, 14px); flex-wrap: wrap; }
+.cd > div { min-width: 82px; padding: 12px 10px; text-align: center; border-radius: 14px; background: var(--card); border: 1px solid var(--border); }
+.cd b { display: block; font-family: var(--display); font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.15; color: var(--gold); font-variant-numeric: tabular-nums; }
+.cd span { font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.cd .cd-days { min-width: 160px; }
+.cd-live { margin: 0; color: var(--muted); font-size: .9rem; text-align: center; }
+.nm-btn { display: table; margin: 20px auto 0; }
+
+/* Вкладки и строки матчей */
+.mc-tabs { margin: 28px 0 20px; }
+.mc-pane[hidden] { display: none; }
+.mrows { display: grid; gap: 10px; margin-bottom: 14px; }
+.mrow {
+  display: flex; align-items: center; gap: 16px; padding: 12px 18px 12px 12px; border-radius: 14px; text-decoration: none; color: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .008)), var(--card-solid); border: 1px solid var(--border);
+  transition: transform .3s var(--ease), border-color .3s, box-shadow .3s;
+}
+[data-theme="light"] .mrow { background: #fff; }
+a.mrow:hover { transform: translateX(5px); border-color: rgba(212, 175, 55, .55); box-shadow: 0 0 20px var(--glow); }
+.mr-date { width: 58px; flex: none; padding: 6px 0; text-align: center; border-radius: 10px; background: var(--card); border: 1px solid var(--border); line-height: 1.1; }
+.mr-date b { display: block; font-family: var(--display); font-size: 1.5rem; color: var(--heading); }
+.mr-date span { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-weight: 700; }
+.mr-date small { font-size: .62rem; color: var(--muted); text-transform: uppercase; }
+.mr-main { flex: 1; min-width: 0; }
+.mr-comp { display: block; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+.mr-main strong { display: block; color: var(--heading); font-size: 1.02rem; line-height: 1.35; }
+.mr-main strong i { font-style: normal; font-family: var(--display); color: var(--gold); padding: 0 6px; font-size: 1.15rem; }
+.mr-venue, .mr-time { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+.mr-time { color: var(--heading); font-weight: 700; }
+.mr-go { color: var(--gold); font-size: 1.6rem; line-height: 1; }
+.res-badge { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 10px; border-radius: 8px; font-weight: 800; font-size: .8rem; }
+.mp-meta .res-badge { height: 24px; font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; }
+.res-badge.win { background: rgba(212, 175, 55, .18); color: var(--gold); border: 1px solid rgba(212, 175, 55, .45); }
+.res-badge.draw { background: rgba(154, 167, 199, .15); color: var(--muted); border: 1px solid rgba(154, 167, 199, .4); }
+.res-badge.loss { background: rgba(255, 107, 107, .14); color: #ff8c8c; border: 1px solid rgba(255, 107, 107, .45); }
+[data-theme="light"] .res-badge.win { color: #7a5f0b; }
+[data-theme="light"] .res-badge.loss { color: #c0392b; }
+.mc-filter { margin: 22px 0 16px; }
+
+/* Таблица Ла Лиги */
+.lg-table td, .lg-table th { padding: 11px 12px; text-align: center; }
+.lg-table th:nth-child(2), .lg-table td:nth-child(2) { text-align: left; }
+.lg-table td:first-child { color: var(--muted); font-family: var(--font); font-weight: 700; border-left: 4px solid transparent; }
+.lg-table td:nth-child(2) { font-family: var(--font); font-weight: 600; color: var(--heading); }
+.lg-table tr.z-cl td:first-child { border-left-color: var(--gold); }
+.lg-table tr.z-el td:first-child { border-left-color: #5b7fe0; }
+.lg-table tr.z-rel td:first-child { border-left-color: #ff6b6b; }
+.lg-table tr.me td { background: rgba(212, 175, 55, .13); }
+.lg-table tr.me td:nth-child(2) { color: var(--gold); font-weight: 800; }
+.lg-legend { display: flex; gap: 18px; flex-wrap: wrap; margin: 14px 0 8px; font-size: .78rem; color: var(--muted); }
+.lg-legend i { display: inline-block; width: 4px; height: 14px; margin-right: 8px; border-radius: 2px; vertical-align: -2px; }
+.lg-legend .z-cl { background: var(--gold); } .lg-legend .z-el { background: #5b7fe0; } .lg-legend .z-rel { background: #ff6b6b; }
+
+/* Страница матча */
+.back-link { display: inline-block; margin-bottom: 18px; color: var(--gold); text-decoration: none; font-weight: 700; font-size: .88rem; letter-spacing: .04em; }
+.back-link:hover { text-decoration: underline; }
+.mp-head { text-align: center; padding: clamp(20px, 4vw, 36px); background: linear-gradient(135deg, rgba(27, 58, 138, .4), var(--card-solid)); }
+.mp-meta { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 22px; }
+.mp-sc { font-family: var(--display); font-weight: 700; font-size: clamp(2.8rem, 9vw, 5rem); line-height: 1; color: var(--heading); letter-spacing: .04em; white-space: nowrap; }
+.mp-sc i { font-style: normal; color: var(--gold); padding: 0 .12em; }
+.mp-date { margin: 22px 0 0; color: var(--muted); font-size: .9rem; }
+.mp-body { margin-top: 20px; align-items: start; }
+.goals { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.goals li { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
+.goals li.real { border-left: 3px solid var(--gold); }
+.goals li.opp { border-left: 3px solid var(--muted); }
+.g-min { min-width: 40px; font-family: var(--display); color: var(--gold); font-size: 1.05rem; }
+.goals small { margin-left: auto; color: var(--muted); }
+.mp-facts { margin-top: 16px; }
+.mp-navs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.mp-nav { display: flex; flex-direction: column; gap: 2px; padding: 14px 18px; border-radius: 14px; text-decoration: none; background: var(--card-solid); border: 1px solid var(--border); transition: border-color .25s, transform .3s var(--ease); }
+.mp-nav:hover { border-color: var(--gold); transform: translateY(-3px); }
+.mp-nav.next { text-align: right; }
+.mp-nav small { color: var(--gold); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; }
+.mp-nav b { color: var(--heading); }
+.mp-nav span { font-family: var(--display); color: var(--muted); }
+
+/* Трансферы */
+#trChips { margin: 18px 0 22px; }
+.tr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.tr-card { cursor: default; padding: 18px; gap: 10px; }
+.tr-card:hover { transform: translateY(-5px); }
+.tr-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tr-dir { padding: 3px 10px; border-radius: 8px; font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.tr-dir.in { background: rgba(212, 175, 55, .16); color: var(--gold); border: 1px solid rgba(212, 175, 55, .45); }
+.tr-dir.out { background: rgba(255, 107, 107, .12); color: #ff8c8c; border: 1px solid rgba(255, 107, 107, .4); }
+[data-theme="light"] .tr-dir.out { color: #c0392b; }
+.tr-kind { font-size: .68rem; color: var(--muted); letter-spacing: .04em; text-align: right; }
+.tr-card h3 { margin: 4px 0 0; font-size: 1.35rem; }
+.tr-card .pos-pill { align-self: flex-start; }
+.tr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.tr-row small { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tr-row b { color: var(--heading); text-align: right; }
+.tr-row .tr-fee { font-family: var(--display); font-size: 1.35rem; color: var(--gold); font-weight: 600; }
+.tr-note { margin: 0; font-size: .76rem; color: var(--muted); line-height: 1.45; }
+
+@media (max-width: 900px) { .mr-venue { display: none; } }
+@media (max-width: 640px) {
+  .next-match { padding: 16px; margin-top: 20px; }
+  .nm-crest, .nm-badge { height: 56px; width: 56px; }
+  .nm-crest { width: auto; }
+  .nm-team strong { font-size: 1rem; }
+  .cd > div { min-width: 0; flex: 1 1 70px; padding: 10px 6px; }
+  .mrow { gap: 10px; padding: 10px 12px 10px 10px; }
+  .mr-time { font-size: .72rem; white-space: normal; text-align: right; max-width: 70px; }
+  .mp-navs { grid-template-columns: 1fr; }
+  .lg-table td, .lg-table th { padding: 9px 7px; font-size: .8rem; }
+}
+
+.nm-crest { display: block; height: auto; }
+.nm-crest img { display: block; height: 76px; width: auto; margin: 0 auto; }
+@media (max-width: 640px) { .nm-crest img { height: 56px; } }
