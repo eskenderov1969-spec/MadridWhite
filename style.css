@@ -989,3 +989,30 @@ a.mrow:hover { transform: translateX(5px); border-color: rgba(212, 175, 55, .55)
 .nm-crest { display: block; height: auto; }
 .nm-crest img { display: block; height: 76px; width: auto; margin: 0 auto; }
 @media (max-width: 640px) { .nm-crest img { height: 56px; } }
+
+/* ================= Фон: «Сантьяго Бернабеу» изнутри (фото) ================= */
+.stadium-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; background: #050914; }
+.stadium-bg .sb-photo {
+  position: absolute; inset: -3%; width: 106%; height: 106%; object-fit: cover; object-position: 50% 96%;
+  filter: blur(.8px) saturate(1.12) brightness(1);
+  animation: sbDrift 60s ease-in-out infinite alternate;
+}
+@keyframes sbDrift { from { transform: scale(1) translateY(0); } to { transform: scale(1.06) translateY(-1.5%); } }
+/* затемнение: сверху сильнее (заголовки), внизу видно поле, по краям виньетка */
+.stadium-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(1200px 650px at 50% 75%, rgba(7, 11, 22, 0), rgba(7, 11, 22, .45)),
+    linear-gradient(180deg, rgba(7, 11, 22, .82) 0%, rgba(7, 11, 22, .5) 40%, rgba(7, 11, 22, .22) 100%);
+}
+[data-theme="light"] .stadium-bg { background: #e9e6dc; }
+[data-theme="light"] .stadium-bg .sb-photo { filter: blur(1.4px) saturate(.9) brightness(1.1); opacity: .5; }
+[data-theme="light"] .stadium-bg::after { background: linear-gradient(180deg, rgba(244, 242, 236, .6), rgba(244, 242, 236, .86)); }
+/* страница прозрачная: фон даёт стадион */
+html body, [data-theme="light"] body { background: transparent; }
+.footer { background: rgba(7, 11, 22, .85); backdrop-filter: blur(6px); }
+[data-theme="light"] .footer { background: rgba(255, 255, 255, .88); }
+[data-theme="dark"] .lead, [data-theme="dark"] .hero .pill-badge, [data-theme="dark"] .muted.small { text-shadow: 0 1px 10px rgba(3, 6, 14, .9); }
+[data-theme="dark"] .hero h1 { text-shadow: 0 4px 30px rgba(3, 6, 14, .7); }
+@media (max-width: 640px) { .stadium-bg .sb-photo { object-position: 50% 85%; } }
+@media (prefers-reduced-motion: reduce) { .stadium-bg .sb-photo { animation: none; } }
