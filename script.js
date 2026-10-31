@@ -70,7 +70,7 @@ $('#statsNote').textContent = D.statsNote;
   ];
   $('#heroCard').innerHTML = `
     <span class="hc-tag">Сводка 2026/27</span>
-    <div class="hc-head"><img class="hc-logo" src="assets/crest.png" alt="" onerror="this.outerHTML='<span class=&quot;hc-crest&quot;>RM</span>'"><div><strong>Los Blancos · Белые</strong><small>Мадрид, Испания</small></div></div>
+    <div class="hc-head"><img class="hc-logo" src="${window.CREST}" alt="" onerror="this.outerHTML='<span class=&quot;hc-crest&quot;>RM</span>'"><div><strong>Los Blancos · Белые</strong><small>Мадрид, Испания</small></div></div>
     ${rows.map(r => `<div class="hc-row"><span class="hc-ico">${r[0]}</span><div><small>${r[1]}</small><b>${r[2] || '—'}</b></div></div>`).join('')}
     <div class="hc-motto"><small>Девиз клуба</small><b>¡Hala Madrid!</b></div>`;
 })();
