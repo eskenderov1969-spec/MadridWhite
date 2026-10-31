@@ -41,6 +41,8 @@
       <a href="#news" data-page="news" class="active">Новости</a>
       <a href="#club" data-page="club">Клуб</a>
       <a href="#squad" data-page="squad">Состав</a>
+      <a href="#matches" data-page="matches">Матчи</a>
+      <a href="#transfers" data-page="transfers">Трансферы</a>
       <a href="#stadium" data-page="stadium">Стадион</a>
       <a href="#history" data-page="history">История</a>
       <a href="#trophies" data-page="trophies">Трофеи</a>
@@ -72,6 +74,8 @@
         <aside class="hero-card" id="heroCard" aria-label="Сводка сезона"></aside>
       </div>
       <p class="muted small" id="statsNote"></p>
+
+      <div class="next-match reveal" id="nextHome"></div>
 
       <div class="section-head">
         <h2 data-eyebrow="Свежее из клуба">Новости</h2>
@@ -134,6 +138,36 @@
         </div>
         <div id="cmpOut"></div>
       </div>
+    </section>
+
+    <!-- МАТЧИ -->
+    <section id="matches" class="view">
+      <h2 class="page-title" data-eyebrow="Сезон 2026/27">Матч-центр</h2>
+      <div class="next-match" id="nextFull"></div>
+
+      <div class="tabs mc-tabs" id="mcTabs" role="tablist">
+        <button class="tab active" data-tab="cal" type="button">Календарь</button>
+        <button class="tab" data-tab="res" type="button">Результаты</button>
+        <button class="tab" data-tab="table" type="button">Таблица Ла Лиги</button>
+      </div>
+      <div id="mcCal" class="mc-pane"></div>
+      <div id="mcRes" class="mc-pane" hidden></div>
+      <div id="mcTable" class="mc-pane" hidden></div>
+    </section>
+
+    <!-- СТРАНИЦА МАТЧА -->
+    <section id="match" class="view">
+      <a class="back-link" href="#matches">← Все матчи</a>
+      <div id="matchPage"></div>
+    </section>
+
+    <!-- ТРАНСФЕРЫ -->
+    <section id="transfers" class="view">
+      <h2 class="page-title" data-eyebrow="Лето 2026">Трансферы</h2>
+      <p class="muted small sub" id="transfersNote"></p>
+      <div class="facts" id="trSummary"></div>
+      <div id="trChips" class="chips" role="group" aria-label="Фильтр трансферов"></div>
+      <div id="trGrid" class="tr-grid"></div>
     </section>
 
     <!-- СТАДИОН -->
@@ -274,7 +308,7 @@
         </div>
       </div>
       <nav class="foot-links" aria-label="Быстрые ссылки">
-        <a href="#news">Новости</a><a href="#squad">Состав</a><a href="#stadium">Стадион</a><a href="#trophies">Трофеи</a>
+        <a href="#news">Новости</a><a href="#squad">Состав</a><a href="#matches">Матчи</a><a href="#transfers">Трансферы</a><a href="#stadium">Стадион</a><a href="#trophies">Трофеи</a>
       </nav>
     </div>
     <p class="gold-line">Hala Madrid</p>
@@ -317,5 +351,6 @@
   <script src="profiles.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
+  <script src="matches.js"></script>
 </body>
 </html>
