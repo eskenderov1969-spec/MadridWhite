@@ -12,8 +12,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
   <script src="crest.js"></script>
+  <script src="bg.js"></script>
 </head>
 <body>
+  <div class="stadium-bg" aria-hidden="true">
+    <img class="sb-photo" id="sbPhoto" alt="">
+  </div>
   <div class="splash" id="splash" aria-hidden="true">
     <img data-crest alt="" onerror="this.remove()">
     <span>Hala Madrid</span>
@@ -346,7 +350,7 @@
     </article>
   </dialog>
 
-  <script>document.getElementById("favicon").href = window.CREST; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
+  <script>document.getElementById("favicon").href = window.CREST; document.getElementById("sbPhoto").src = window.BG; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
   <script src="data.js"></script>
   <script src="profiles.js"></script>
   <script src="script.js"></script>
