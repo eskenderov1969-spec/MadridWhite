@@ -59,6 +59,22 @@ statsEl.innerHTML = D.stats.map(s => `
 `).join('');
 $('#statsNote').textContent = D.statsNote;
 
+// Сводная карточка в первом экране (данные из D.now)
+(function () {
+  const pick = k => D.now.find(n => n.k.toLowerCase().startsWith(k)) || {};
+  const rows = [
+    ['♛', 'Главный тренер', pick('главный').v],
+    ['★', 'Капитан и вице-капитан', `${(pick('капитан').v || '')} · ${(pick('вице').v || '')}`],
+    ['◎', pick('ла лига').k, pick('ла лига').v],
+    ['❖', pick('победы').k, pick('победы').v],
+  ];
+  $('#heroCard').innerHTML = `
+    <span class="hc-tag">Сводка 2026/27</span>
+    <div class="hc-head"><span class="hc-crest">RM</span><div><strong>Los Blancos · Белые</strong><small>Мадрид, Испания</small></div></div>
+    ${rows.map(r => `<div class="hc-row"><span class="hc-ico">${r[0]}</span><div><small>${r[1]}</small><b>${r[2] || '—'}</b></div></div>`).join('')}
+    <div class="hc-motto"><small>Девиз клуба</small><b>¡Hala Madrid!</b></div>`;
+})();
+
 function runCounters() {
   $$('.stat b', statsEl).forEach(el => {
     const to = +el.dataset.to;
@@ -315,3 +331,11 @@ window.matchMedia('(min-width: 641px)').addEventListener('change', e => { if (e.
 renderNews();
 renderFinals();
 showPage();
+
+
+// ---------- Заголовки: акцент на последнем слове ----------
+$$('.page-title, .section-head h2').forEach(h => {
+  const words = h.textContent.trim().split(/\s+/);
+  const last = words.pop();
+  h.innerHTML = (words.length ? words.join(' ') + ' ' : '') + `<span class="acc">${last}</span>`;
+});
