@@ -32,13 +32,14 @@ const links = $$('.nav a');
 let current = null;
 
 function showPage() {
-  const id = location.hash.slice(1);
+  const raw = location.hash.slice(1);
+  const id = raw.split('/')[0];   // «match/2026-10-25» → раздел match
   const target = document.getElementById(id) && document.getElementById(id).classList.contains('view') ? id : 'news';
-  if (target === current) return;
+  if (target === current && target !== 'match') return;
   current = target;
 
   views.forEach(v => v.classList.toggle('active', v.id === target));
-  links.forEach(a => a.classList.toggle('active', a.dataset.page === target));
+  links.forEach(a => a.classList.toggle('active', a.dataset.page === (target === 'match' ? 'matches' : target)));
   window.scrollTo({ top: 0 });
 
   const view = document.getElementById(target);
