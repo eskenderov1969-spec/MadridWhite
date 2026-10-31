@@ -6,13 +6,17 @@
   <meta name="description" content="Неофициальный фан-сайт о футбольном клубе Реал Мадрид: новости, клуб, стадион, история и данные.">
   <meta name="theme-color" content="#070b16">
   <title>Real Madrid — неофициальный фан-сайт</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1f4b' stroke='%23d4af37' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'%3ERM%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="assets/crest.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="splash" id="splash" aria-hidden="true">
+    <img src="assets/crest.png" alt="" onerror="this.remove()">
+    <span>Hala Madrid</span>
+  </div>
   <div class="progress" id="progress"></div>
 
   <header class="header">
@@ -262,7 +266,7 @@
   <footer class="footer">
     <div class="footer-in">
       <div class="foot-brand">
-        <span class="foot-crest" aria-hidden="true">RM</span>
+        <img class="foot-logo" src="assets/crest.png" alt="" onerror="this.outerHTML='<span class=&quot;foot-crest&quot;>RM</span>'">
         <div>
           <strong>Real Madrid · Сезон 2026/2027</strong>
           <p>Неофициальный фан-сайт. Не связан с Real Madrid C.F. Названия и символы принадлежат их владельцам.</p>
