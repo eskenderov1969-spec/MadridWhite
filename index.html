@@ -7,6 +7,9 @@
   <meta name="theme-color" content="#070b16">
   <title>Real Madrid — неофициальный фан-сайт</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1f4b' stroke='%23d4af37' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'%3ERM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,7 +28,7 @@
       </span>
       <span class="brand-text">
         <strong>Real Madrid</strong>
-        <small>Hala Madrid</small>
+        <small>Сезон 2026 / 2027</small>
       </span>
     </a>
 
@@ -36,7 +39,7 @@
       <a href="#stadium" data-page="stadium">Стадион</a>
       <a href="#history" data-page="history">История</a>
       <a href="#trophies" data-page="trophies">Трофеи</a>
-      <a href="#data-lab" data-page="data-lab">Лаборатория данных</a>
+      <a href="#data-lab" data-page="data-lab" class="nav-cta">Лаборатория данных</a>
     </nav>
 
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Тема">
@@ -51,20 +54,22 @@
     <!-- НОВОСТИ -->
     <section id="news" class="view active">
       <div class="hero">
-        <p class="eyebrow">Неофициальный фан-сайт</p>
-        <h1>Добро пожаловать в мир <span>Los Blancos</span></h1>
-        <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте.</p>
-        <div class="hero-actions">
-          <a class="btn btn-gold" href="#club">О клубе</a>
-          <a class="btn btn-ghost" href="#data-lab">Данные и графики</a>
+        <div class="hero-main">
+          <p class="pill-badge"><i></i>Hala Madrid · основан в 1902 году</p>
+          <h1>Real Madrid <span>Football Club</span></h1>
+          <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте. Состав, трофеи и данные сезона 2026/27.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="#squad">Состав 26/27 <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#stadium">Тур по «Бернабеу»</a>
+          </div>
+          <div class="stats" id="stats"></div>
         </div>
+        <aside class="hero-card" id="heroCard" aria-label="Сводка сезона"></aside>
       </div>
-
-      <div class="stats" id="stats"></div>
       <p class="muted small" id="statsNote"></p>
 
       <div class="section-head">
-        <h2>Новости</h2>
+        <h2 data-eyebrow="Свежее из клуба">Новости</h2>
         <span class="tag" id="newsTag"></span>
       </div>
 
@@ -79,7 +84,7 @@
 
     <!-- КЛУБ -->
     <section id="club" class="view">
-      <h2 class="page-title">Клуб</h2>
+      <h2 class="page-title" data-eyebrow="О клубе">Клуб</h2>
       <div class="facts reveal">
         <div class="fact"><b>1902</b><span>год основания</span></div>
         <div class="fact"><b>Мадрид</b><span>город</span></div>
@@ -99,7 +104,7 @@
 
     <!-- СОСТАВ -->
     <section id="squad" class="view">
-      <h2 class="page-title">Состав</h2>
+      <h2 class="page-title" data-eyebrow="Игроки и статистика">Состав 2026/27</h2>
       <p class="muted small sub" id="squadNote"></p>
 
       <div class="toolbar">
@@ -128,7 +133,7 @@
 
     <!-- СТАДИОН -->
     <section id="stadium" class="view">
-      <h2 class="page-title">Стадион</h2>
+      <h2 class="page-title" data-eyebrow="Мадрид · с 1947 года">Стадион Бернабеу</h2>
       <div class="two-col">
         <div class="panel reveal">
           <h3>Сантьяго Бернабеу</h3>
@@ -169,7 +174,7 @@
 
     <!-- ИСТОРИЯ -->
     <section id="history" class="view">
-      <h2 class="page-title">История</h2>
+      <h2 class="page-title" data-eyebrow="С 1902 года">История клуба</h2>
       <div class="chips" id="histChips" role="group" aria-label="Фильтр истории">
         <button class="chip active" data-f="all" type="button">Все</button>
         <button class="chip" data-f="club" type="button">Клуб</button>
@@ -180,7 +185,7 @@
 
     <!-- ТРОФЕИ -->
     <section id="trophies" class="view">
-      <h2 class="page-title">Зал трофеев</h2>
+      <h2 class="page-title" data-eyebrow="Зал славы">Зал трофеев</h2>
       <div id="trophyChips" class="chips" role="group" aria-label="Группы трофеев"></div>
       <div id="trophyGrid" class="trophies"></div>
       <div class="total-box"><span>Всего трофеев в списке</span><b id="trophyTotal">0</b></div>
@@ -190,13 +195,44 @@
       <div id="yearChips" class="chips" role="group" aria-label="Годы побед"></div>
       <div id="yearInfo" class="panel yinfo"></div>
 
-      <div class="section-head"><h2>Викторина</h2><span class="tag" id="bestTag"></span></div>
-      <div id="quiz" class="panel quiz"></div>
     </section>
 
     <!-- ЛАБОРАТОРИЯ ДАННЫХ -->
     <section id="data-lab" class="view">
-      <h2 class="page-title">Лаборатория данных</h2>
+      <h2 class="page-title" data-eyebrow="Данные и аналитика">Лаборатория данных</h2>
+
+      <div class="lab-pick">
+        <button class="btn-small" id="labPrev" type="button" aria-label="Предыдущий игрок">←</button>
+        <select id="labPlayer" class="select" aria-label="Игрок"></select>
+        <button class="btn-small" id="labNext" type="button" aria-label="Следующий игрок">→</button>
+      </div>
+
+      <div class="panel pcard reveal">
+        <div class="pc-photo" id="pcPhoto">
+          <span class="pc-ph" id="pcPh" aria-hidden="true"></span>
+          <img id="pcImg" alt="">
+          <span class="pc-num" id="pcNum"></span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-top"><h3 id="pcName"></h3><span class="tag" id="pcPos"></span></div>
+          <dl class="pc-facts" id="pcFacts"></dl>
+        </div>
+      </div>
+
+      <div class="two-col lab-grid">
+        <div class="panel reveal">
+          <div class="tabs" id="labTabs" role="tablist"></div>
+          <p class="muted small" id="labSeason"></p>
+          <div class="stat-tiles" id="labStats"></div>
+        </div>
+        <div class="panel reveal">
+          <h3 id="formTitle"></h3>
+          <div id="formArea"></div>
+          <p class="muted small" id="formNote"></p>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Клубные графики</h2></div>
 
       <div class="panel reveal">
         <div class="tabs" id="chartTabs" role="tablist">
@@ -224,7 +260,18 @@
   </main>
 
   <footer class="footer">
-    <p>Неофициальный фан-сайт. Не связан с Real Madrid C.F. Названия и символы принадлежат их владельцам.</p>
+    <div class="footer-in">
+      <div class="foot-brand">
+        <span class="foot-crest" aria-hidden="true">RM</span>
+        <div>
+          <strong>Real Madrid · Сезон 2026/2027</strong>
+          <p>Неофициальный фан-сайт. Не связан с Real Madrid C.F. Названия и символы принадлежат их владельцам.</p>
+        </div>
+      </div>
+      <nav class="foot-links" aria-label="Быстрые ссылки">
+        <a href="#news">Новости</a><a href="#squad">Состав</a><a href="#stadium">Стадион</a><a href="#trophies">Трофеи</a>
+      </nav>
+    </div>
     <p class="gold-line">Hala Madrid</p>
   </footer>
 
@@ -255,11 +302,13 @@
       <div class="pm-actions">
         <button class="btn btn-gold" id="pmA" type="button">В сравнение (слева)</button>
         <button class="btn btn-outline" id="pmB" type="button">В сравнение (справа)</button>
+        <button class="btn btn-outline" id="pmLab" type="button">Карточка в лаборатории</button>
       </div>
     </article>
   </dialog>
 
   <script src="data.js"></script>
+  <script src="profiles.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
 </body>
