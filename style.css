@@ -993,8 +993,8 @@ a.mrow:hover { transform: translateX(5px); border-color: rgba(212, 175, 55, .55)
 /* ================= Фон: «Сантьяго Бернабеу» изнутри (фото) ================= */
 .stadium-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; background: #050914; }
 .stadium-bg .sb-photo {
-  position: absolute; inset: -3%; width: 106%; height: 106%; object-fit: cover; object-position: 50% 96%;
-  filter: blur(.8px) saturate(1.12) brightness(1);
+  position: absolute; inset: -3%; width: 106%; max-width: none; height: 106%; object-fit: cover; object-position: 50% 88%;
+  filter: saturate(1.08);
   animation: sbDrift 60s ease-in-out infinite alternate;
 }
 @keyframes sbDrift { from { transform: scale(1) translateY(0); } to { transform: scale(1.06) translateY(-1.5%); } }
