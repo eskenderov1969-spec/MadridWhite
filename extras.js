@@ -3,7 +3,7 @@
   const dlg = $('#palette'), input = $('#palInput'), list = $('#palList');
   if (!dlg || typeof dlg.showModal !== 'function') { const b = $('#searchBtn'); if (b) b.hidden = true; return; }
   const POS = { GK: 'вратарь', DF: 'защитник', MF: 'полузащитник', FW: 'нападающий' };
-  const dFmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' });
+  const dFmt = new Intl.DateTimeFormat((window.LOCALE || 'ru-RU'), { day: 'numeric', month: 'long' });
   const day = s => new Date(s + 'T12:00:00');
 
   // Что умеем искать. go() — куда перейти.
@@ -32,7 +32,7 @@
     if (!qq) items = INDEX.filter(i => i.g === 'Разделы').concat(INDEX.filter(i => i.g === 'Календарь').slice(0, 2));
     else {
       const words = qq.split(/\s+/);
-      items = INDEX.map(i => { const h = (i.t + ' ' + i.hay).toLowerCase().replace(/ё/g, 'е'); const ok = words.every(w => h.includes(w));
+      items = INDEX.map(i => { const h = hay(i.t + ' ' + i.hay).toLowerCase().replace(/ё/g, 'е'); const ok = words.every(w => h.includes(w));
         return ok ? { i, sc: (i.t.toLowerCase().replace(/ё/g, 'е').includes(qq) ? 0 : 1) + (i.g === 'Разделы' ? -1 : 0) } : null; })
         .filter(Boolean).sort((a, b) => a.sc - b.sc).map(x => x.i).slice(0, 14);
     }
