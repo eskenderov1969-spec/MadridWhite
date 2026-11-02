@@ -91,7 +91,7 @@ function runCounters() {
 }
 
 // ---------- Новости ----------
-const fmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const fmt = new Intl.DateTimeFormat((window.LOCALE || 'ru-RU'), { day: 'numeric', month: 'long', year: 'numeric' });
 const chipsEl = $('#chips');
 const searchEl = $('#search');
 let cat = 'Все';
@@ -112,7 +112,7 @@ function renderNews() {
   const q = searchEl.value.trim().toLowerCase();
   const list = D.news.filter(n =>
     (cat === 'Все' || n.cat === cat) &&
-    (!q || (n.title + ' ' + n.text).toLowerCase().includes(q)));
+    (!q || hay(n.title + ' ' + n.text).toLowerCase().includes(q)));
 
   $('#news-grid').innerHTML = list.map((n, i) => `
     <button class="card reveal" data-id="${n.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
@@ -145,7 +145,7 @@ modal.addEventListener('click', e => { if (e.target === modal) modal.close(); })
 
 // ---------- Легенды и FAQ ----------
 $('#legends').innerHTML = D.legends.map((l, i) => {
-  const initials = l.name.split(' ').map(w => w[0]).slice(0, 2).join('');
+  const initials = tr(l.name).split(' ').map(w => w[0]).slice(0, 2).join('');
   return `
     <article class="card legend reveal" style="--d:${i * 0.06}s">
       <div class="avatar">${initials}</div>
@@ -285,7 +285,7 @@ const finalSearch = $('#finalSearch');
 function renderFinals() {
   const q = finalSearch.value.trim().toLowerCase();
   let list = D.finals.filter(f =>
-    !q || `${f.year} ${f.city} ${f.opponent} ${f.score}`.toLowerCase().includes(q));
+    !q || hay(`${f.year} ${f.city} ${f.opponent} ${f.score}`).toLowerCase().includes(q));
   list = [...list].sort((a, b) => newestFirst ? b.year - a.year : a.year - b.year);
   $('#finalsBody').innerHTML = list.length
     ? list.map(f => `<tr><td>${f.year}</td><td>${f.city}</td><td>${f.opponent}</td><td>${f.score}</td></tr>`).join('')
