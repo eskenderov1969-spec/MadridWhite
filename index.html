@@ -12,11 +12,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
   <script src="crest.js"></script>
-  <script src="bg.js"></script>
 </head>
 <body>
   <div class="stadium-bg" aria-hidden="true">
-    <img class="sb-photo" id="sbPhoto" alt="">
+    <i class="sb-glow g1"></i><i class="sb-glow g2"></i><i class="sb-glow g3"></i><i class="sb-beams"></i><svg class="sb-pitch" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="600" cy="800" r="170"/><circle cx="600" cy="800" r="6" fill="currentColor"/><rect x="330" y="640" width="540" height="160"/><rect x="460" y="730" width="280" height="70"/><path d="M470 640a130 130 0 0 0 260 0"/><path d="M0 800h1200"/></g></svg><i class="sb-grain"></i>
   </div>
   <div class="splash" id="splash" aria-hidden="true">
     <img data-crest alt="" onerror="this.remove()">
@@ -53,6 +52,10 @@
       <a href="#data-lab" data-page="data-lab" class="nav-cta">Лаборатория данных</a>
     </nav>
 
+    <button class="theme-btn search-btn" id="searchBtn" type="button" aria-label="Поиск по сайту (Ctrl+K)" title="Поиск по сайту (Ctrl+K)">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+    </button>
+
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Тема">
       <span class="theme-icon" aria-hidden="true"></span>
     </button>
@@ -80,6 +83,7 @@
       <p class="muted small" id="statsNote"></p>
 
       <div class="next-match reveal" id="nextHome"></div>
+      <div class="home-grid reveal" id="homeWidgets"></div>
 
       <div class="section-head">
         <h2 data-eyebrow="Свежее из клуба">Новости</h2>
@@ -153,10 +157,12 @@
         <button class="tab active" data-tab="cal" type="button">Календарь</button>
         <button class="tab" data-tab="res" type="button">Результаты</button>
         <button class="tab" data-tab="table" type="button">Таблица Ла Лиги</button>
+        <button class="tab" data-tab="season" type="button">Сезон в цифрах</button>
       </div>
       <div id="mcCal" class="mc-pane"></div>
       <div id="mcRes" class="mc-pane" hidden></div>
       <div id="mcTable" class="mc-pane" hidden></div>
+      <div id="mcSeason" class="mc-pane" hidden></div>
     </section>
 
     <!-- СТРАНИЦА МАТЧА -->
@@ -320,6 +326,18 @@
 
   <button id="toTop" class="to-top" type="button" aria-label="Наверх">↑</button>
 
+  <dialog id="palette" class="palette" aria-label="Поиск по сайту">
+    <div class="pal-box">
+      <div class="pal-top">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+        <input id="palInput" type="search" placeholder="Игрок, матч, новость, трансфер, раздел…" autocomplete="off" aria-label="Поиск">
+        <kbd>Esc</kbd>
+      </div>
+      <ul class="pal-list" id="palList" role="listbox"></ul>
+      <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> выбор</span><span><kbd>Enter</kbd> открыть</span><span><kbd>Ctrl</kbd>+<kbd>K</kbd> поиск</span></div>
+    </div>
+  </dialog>
+
   <dialog id="modal" class="modal">
     <article>
       <button class="modal-close" id="modalClose" type="button" aria-label="Закрыть">×</button>
@@ -350,11 +368,12 @@
     </article>
   </dialog>
 
-  <script>document.getElementById("favicon").href = window.CREST; document.getElementById("sbPhoto").src = window.BG; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
+  <script>document.getElementById("favicon").href = window.CREST; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
   <script src="data.js"></script>
   <script src="profiles.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
   <script src="matches.js"></script>
+  <script src="extras.js"></script>
 </body>
 </html>
