@@ -56,6 +56,15 @@
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
     </button>
 
+    <div class="lang" id="langSw">
+      <button class="theme-btn lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Язык" title="Язык">RU</button>
+      <div class="lang-menu" hidden>
+        <button type="button" data-lang="ru"><b>RU</b> Русский</button>
+        <button type="button" data-lang="en"><b>EN</b> English</button>
+        <button type="button" data-lang="es"><b>ES</b> Español</button>
+      </div>
+    </div>
+
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Тема">
       <span class="theme-icon" aria-hidden="true"></span>
     </button>
@@ -371,6 +380,10 @@
   <script>document.getElementById("favicon").href = window.CREST; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
   <script src="data.js"></script>
   <script src="profiles.js"></script>
+  <script src="lang-names.js"></script>
+  <script src="lang-en.js"></script>
+  <script src="lang-es.js"></script>
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
   <script src="matches.js"></script>
