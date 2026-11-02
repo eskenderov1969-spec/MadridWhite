@@ -1206,3 +1206,16 @@ kbd { padding: 2px 7px; border-radius: 6px; border: 1px solid var(--border); bac
 .p-top .fav-btn { order: 2; margin-left: auto; }
 .p-top .p-nat { order: 3; flex-basis: 100%; margin: 0; overflow: visible; text-overflow: clip; letter-spacing: .08em; text-transform: uppercase; font-size: .66rem; }
 @media (max-width: 640px) { .p-nat { display: block; } }
+
+/* ================= Переключатель языка ================= */
+.lang { position: relative; }
+.lang-btn { font: 700 .74rem var(--font); letter-spacing: .06em; width: auto; min-width: 42px; padding: 0 10px; }
+.lang-menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 90; min-width: 170px; padding: 6px; border-radius: 14px; background: var(--card-solid); border: 1px solid rgba(212, 175, 55, .4); box-shadow: 0 20px 50px rgba(0, 0, 0, .5); animation: pop .22s var(--ease); }
+.lang-menu[hidden] { display: none; }
+.lang-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 9px; background: none; color: var(--text); font: 500 .9rem var(--font); cursor: pointer; text-align: left; }
+.lang-menu button b { display: inline-grid; place-items: center; width: 30px; height: 22px; border-radius: 6px; background: var(--card); border: 1px solid var(--border); font-size: .66rem; letter-spacing: .06em; color: var(--gold); }
+.lang-menu button:hover { background: rgba(212, 175, 55, .12); }
+.lang-menu button.on { color: var(--heading); box-shadow: inset 3px 0 0 var(--gold); background: rgba(212, 175, 55, .1); }
+@media (max-width: 640px) { .lang-btn { min-width: 38px; padding: 0 8px; } .lang-menu { right: -48px; } }
+.brand-text strong, .brand-text small { white-space: nowrap; }
+@media (max-width: 440px) { .brand-text strong { font-size: .98rem; } .brand-text small { font-size: .5rem; letter-spacing: .1em; } .header { gap: 8px; } }
