@@ -2,7 +2,7 @@
 (function () {
   const POS = { GK: 'Вратарь', DF: 'Защитник', MF: 'Полузащитник', FW: 'Нападающий' };
   const POS_CHIPS = { all: 'Все', GK: 'Вратари', DF: 'Защитники', MF: 'Полузащитники', FW: 'Нападающие' };
-  const initials = name => name.split(' ').map(w => w[0]).slice(0, 2).join('');
+  const initials = name => tr(name).split(' ').map(w => w[0]).slice(0, 2).join('');
   // null = нет матчей в Ла Лиге 2026/27
   const ratio = p => (p.apps ? p.goals / p.apps : null);
   const fmtN = v => (v == null ? '—' : Number.isInteger(v) ? v : v.toFixed(2));
@@ -25,12 +25,17 @@
 
   // ================= СОСТАВ =================
   let pos = 'all';
+  // Избранные игроки хранятся в браузере (localStorage)
+  let FAV = new Set();
+  try { FAV = new Set(JSON.parse(localStorage.getItem('rm-fav') || '[]')); } catch (e) {}
+  const saveFav = () => { try { localStorage.setItem('rm-fav', JSON.stringify([...FAV])); } catch (e) {} };
   const grid = $('#players-grid');
   const search = $('#playerSearch');
   const sortSel = $('#playerSort');
 
   $('#posChips').innerHTML = Object.keys(POS_CHIPS).map((k, i) =>
-    `<button class="chip${i === 0 ? ' active' : ''}" data-p="${k}" type="button">${POS_CHIPS[k]}</button>`).join('');
+    `<button class="chip${i === 0 ? ' active' : ''}" data-p="${k}" type="button">${POS_CHIPS[k]}</button>`).join('')
+    + '<button class="chip chip-fav" data-p="fav" type="button">★ Избранные</button>';
 
   $('#posChips').addEventListener('click', e => {
     const b = e.target.closest('.chip');
@@ -45,18 +50,26 @@
   function renderPlayers() {
     const q = search.value.trim().toLowerCase();
     let list = D.players.filter(p =>
-      (pos === 'all' || p.pos === pos) && (!q || `${p.name} ${p.nat}`.toLowerCase().includes(q)));
+      (pos === 'all' || (pos === 'fav' ? FAV.has(p.id) : p.pos === pos)) && (!q || hay(`${p.name} ${p.nat}`).toLowerCase().includes(q)));
     const s = sortSel.value;
     list = [...list].sort((a, b) => (s === 'name' ? a.name.localeCompare(b.name, 'ru') : (b[s] ?? -1) - (a[s] ?? -1)));
 
-    grid.innerHTML = list.map((p, i) => `
+    const maxG = Math.max(1, ...D.players.map(x => x.goals || 0));
+    grid.innerHTML = list.map((p, i) => {
+      const pr = (window.PROFILES || {})[p.id] || {};
+      const num = pr.num != null ? pr.num : '';
+      const w = p.goals == null ? 0 : Math.round((p.goals / maxG) * 100);
+      return `
       <button class="card player reveal" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
-        <div class="avatar">${initials(p.name)}</div>
+        <span class="ghost-num" aria-hidden="true">${num !== '' ? '#' + num : ''}</span>
+        <div class="p-top"><span class="num-badge">${num !== '' ? num : initials(p.name)}</span><span class="pos-pill pos-${p.pos}">${POS[p.pos]}</span><span class="p-nat">${p.nat}</span><span class="fav-btn${FAV.has(p.id) ? ' on' : ''}" data-fav="${p.id}" role="button" tabindex="0" aria-label="В избранное" title="В избранное">★</span></div>
         <h3>${p.name}</h3>
-        <div class="meta">${POS[p.pos]} · ${p.nat}</div>
-        ${p.years === 'с 2026' ? '<span class="tag tag-new">новичок 2026</span>' : ''}
+        <div class="meta">${p.years === 'с 2026' ? 'Новичок 2026' : 'В клубе ' + p.years}</div>
         <div class="mini"><span><b>${fmtN(p.apps)}</b> матчей</span><span><b>${fmtN(p.goals)}</b> голов</span></div>
-      </button>`).join('');
+        <div class="p-bar"><i style="width:${w}%"></i></div>
+        <small class="p-bar-l">Голы в Ла Лиге 26/27 относительно лучшего бомбардира</small>
+      </button>`; }).join('');
+    $('#players-empty').textContent = pos === 'fav' ? 'Пока никого нет: нажмите ★ на карточке игрока.' : 'Игроки не найдены.';
     $('#players-empty').hidden = list.length > 0;
     observeReveal(grid);
   }
@@ -66,7 +79,18 @@
   let openedId = null;
   const statBox = (v, l) => `<div class="pm-stat"><b>${v}</b><span>${l}</span></div>`;
 
+  const toggleFav = el => {
+    const id = +el.dataset.fav;
+    FAV.has(id) ? FAV.delete(id) : FAV.add(id); saveFav();
+    if (pos === 'fav') renderPlayers(); else el.classList.toggle('on', FAV.has(id));
+  };
+  grid.addEventListener('keydown', e => {
+    const el = e.target.closest('.fav-btn');
+    if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.stopPropagation(); toggleFav(el); }
+  });
   grid.addEventListener('click', e => {
+    const fav = e.target.closest('.fav-btn');
+    if (fav) { e.stopPropagation(); toggleFav(fav); return; }
     const c = e.target.closest('.player');
     if (!c) return;
     const p = D.players.find(x => x.id === +c.dataset.id);
@@ -218,7 +242,7 @@
     return a;
   };
   const fmtDate = iso => iso.split('-').reverse().join('.');
-  const shortName = s => s.replace(/^РБ\s+/, '').slice(0, 3);
+  const shortName = s => tr(s).replace(/^(РБ|RB)\s+/, '').slice(0, 3);
 
   function statVal(p, pr, key) {
     const s = pr.stats || {};
@@ -230,7 +254,7 @@
   function fmtStat(v, u) {
     if (v == null) return '—';
     const n = Number(v);
-    let s = typeof u === 'number' ? n.toFixed(u) : Number.isInteger(n) ? n.toLocaleString('ru-RU') : n.toFixed(1);
+    let s = typeof u === 'number' ? n.toFixed(u) : Number.isInteger(n) ? n.toLocaleString((window.LOCALE || 'ru-RU')) : n.toFixed(1);
     if (typeof u === 'string') s += u;
     return s;
   }
