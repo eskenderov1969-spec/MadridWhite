@@ -65,9 +65,31 @@
       </div>
     </div>
 
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Тема">
-      <span class="theme-icon" aria-hidden="true"></span>
-    </button>
+    <div class="vwrap" id="viewSw">
+      <button class="theme-btn" id="themeBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Настройки вида" title="Настройки вида">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>
+      </button>
+      <div class="vpanel" id="viewPanel" hidden>
+        <p class="vp-t">Тема</p>
+        <div class="vp-row" data-vp="skin">
+          <button type="button" data-v="dark"><i class="sw sw-dark"></i>Тёмная</button>
+          <button type="button" data-v="light"><i class="sw sw-light"></i>Светлая</button>
+          <button type="button" data-v="matchday"><i class="sw sw-md"></i>День матча</button>
+        </div>
+        <p class="vp-t">Карточки</p>
+        <div class="vp-row" data-vp="density">
+          <button type="button" data-v="large">Крупно</button>
+          <button type="button" data-v="compact">Компактно</button>
+        </div>
+        <p class="vp-t">Размер шрифта</p>
+        <div class="vp-row" data-vp="font">
+          <button type="button" data-v="s">A−</button>
+          <button type="button" data-v="m">A</button>
+          <button type="button" data-v="l">A+</button>
+        </div>
+        <button class="vp-reset" type="button" data-vp-reset>Сбросить настройки</button>
+      </div>
+    </div>
   </header>
 
   <div class="scrim" id="scrim"></div>
@@ -87,12 +109,14 @@
           </div>
           <div class="stats" id="stats"></div>
         </div>
-        <aside class="hero-card" id="heroCard" aria-label="Сводка сезона"></aside>
+        <aside class="hero-card" id="heroCard" aria-label="Сводка сезона"><div class="sk sk-card" aria-hidden="true"></div></aside>
       </div>
       <p class="muted small" id="statsNote"></p>
 
-      <div class="next-match reveal" id="nextHome"></div>
-      <div class="home-grid reveal" id="homeWidgets"></div>
+      <div class="ticker" id="ticker" aria-label="Лента клуба"></div>
+
+      <div class="next-match reveal" id="nextHome"><div class="sk sk-wide" aria-hidden="true"></div></div>
+      <div class="home-grid reveal" id="homeWidgets"><div class="sk sk-box" aria-hidden="true"></div><div class="sk sk-box" aria-hidden="true"></div></div>
 
       <div class="section-head">
         <h2 data-eyebrow="Свежее из клуба">Новости</h2>
@@ -104,7 +128,7 @@
         <div id="chips" class="chips" role="group" aria-label="Категории"></div>
       </div>
 
-      <div id="news-grid" class="cards"></div>
+      <div id="news-grid" class="cards"><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div></div>
       <p id="news-empty" class="muted empty" hidden>Ничего не найдено.</p>
     </section>
 
@@ -143,7 +167,7 @@
       </div>
       <div id="posChips" class="chips" role="group" aria-label="Позиции"></div>
 
-      <div id="players-grid" class="cards players"></div>
+      <div id="players-grid" class="cards players"><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div><div class="sk sk-tile" aria-hidden="true"></div></div>
       <p id="players-empty" class="muted empty" hidden>Игроки не найдены.</p>
 
       <div class="section-head"><h2>Сравнение игроков</h2></div>
@@ -333,6 +357,14 @@
     <p class="gold-line">Hala Madrid</p>
   </footer>
 
+
+  <nav class="tabbar" id="tabbar" aria-label="Основное меню">
+    <a href="#news" data-page="news"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Новости</span></a>
+    <a href="#squad" data-page="squad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6M15.5 14.2c3 0 5.5 1.8 5.5 5.3"/></svg><span>Состав</span></a>
+    <a href="#matches" data-page="matches"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5l3.8 2.8-1.4 4.4H9.6l-1.4-4.4z"/></svg><span>Матчи</span></a>
+    <a href="#transfers" data-page="transfers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4"/></svg><span>Трансферы</span></a>
+    <a href="#trophies" data-page="trophies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5c0 3 1.2 4.6 3.7 5M16 6h3.5c0 3-1.2 4.6-3.7 5M12 13v4M8.5 20h7M10 17h4"/></svg><span>Трофеи</span></a>
+  </nav>
   <button id="toTop" class="to-top" type="button" aria-label="Наверх">↑</button>
 
   <dialog id="palette" class="palette" aria-label="Поиск по сайту">
@@ -388,5 +420,6 @@
   <script src="features.js"></script>
   <script src="matches.js"></script>
   <script src="extras.js"></script>
+  <script src="view.js"></script>
 </body>
 </html>
