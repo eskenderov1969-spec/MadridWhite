@@ -2,6 +2,9 @@
 window.I18N = window.I18N || {};
 window.I18N.es = {
   ui: {
+    'Форма': 'Forma', 
+    'Настройки вида': 'Ajustes de vista', 'Тёмная': 'Oscuro', 'Светлая': 'Claro', 'День матча': 'Día de partido', 'Карточки': 'Tarjetas', 'Крупно': 'Grandes', 'Компактно': 'Compactas',
+    'Размер шрифта': 'Tamaño de letra', 'Сбросить настройки': 'Restablecer ajustes', 'Лента клуба': 'Cinta del club', 'Последний матч': 'Último partido', 'Следующий матч': 'Próximo partido', 'Лучший бомбардир': 'Máximo goleador',
     'Real Madrid — неофициальный фан-сайт': 'Real Madrid — web no oficial de aficionados',
     'Неофициальный фан-сайт о футбольном клубе Реал Мадрид: новости, клуб, стадион, история и данные.': 'Web no oficial de aficionados del Real Madrid: noticias, club, estadio, historia y datos.',
     'Сезон 2026 / 2027': 'Temporada 2026 / 2027', 'Сезон 2026/2027': 'Temporada 2026/2027',
@@ -221,6 +224,7 @@ window.I18N.es = {
     }
   },
   rules: {
+    place: 'Puesto $1',
     titleD: '⏱ $1 d $2 h $3 min para el partido · Real — @4', titleH: '⏱ $1 h $2 min para el partido · Real — @3',
     since: 'desde $1', clubSince: 'En el club desde $1', years: '$1 años', yearsNew: '$1 años en el nuevo club',
     games: '$1 partidos', pts: '$1 pts', of: '$1 de $2', matchday: 'Jornada $1', phase: 'Fase de liga, partido $1',
