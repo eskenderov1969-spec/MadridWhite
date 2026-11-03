@@ -136,7 +136,7 @@
     const th = (k, label, title) => `<th class="sortable${tblKey === k ? ' on' : ''}" data-sort="${k}" title="${title}">${label}</th>`;
     $('#mcTable').innerHTML = `
       <p class="muted small">Ла Лига 2026/27, ${D.league.asOf}. Нажмите на заголовок столбца, чтобы отсортировать.</p>
-      <div class="table-wrap">
+      <div class="table-wrap lg-wrap">
         <table class="table lg-table">
           <thead><tr><th>#</th><th>Команда</th><th title="Матчи">И</th>${th('w', 'В', 'Победы')}<th title="Ничьи">Н</th><th title="Поражения">П</th>${th('gf', 'Мячи', 'Забито — пропущено')}${th('gd', '±', 'Разница мячей')}${th('pts', 'О', 'Очки')}</tr></thead>
           <tbody>${rows.map(t => { const i = pos.get(t.team); return `
@@ -315,7 +315,27 @@
     });
     return D.players.map(p => ({ name: p.name, goals: (p.goals || 0) + (add[p.name] || 0) })).filter(p => p.goals > 0).sort((a, b) => b.goals - a.goals).slice(0, 5);
   }
+  function renderTicker() {
+    const el = $('#ticker');
+    if (!el) return;
+    const last = [...D.results].sort((a, b) => b.date.localeCompare(a.date))[0];
+    const nx = nextMatch();
+    const tbl = [...D.league.table].sort((x, y) => y.pts - x.pts || (y.gf - y.ga) - (x.gf - x.ga) || y.gf - x.gf);
+    const me = tbl.findIndex(t => t.me), top = topScorers()[0];
+    const fmtShort = new Intl.DateTimeFormat((window.LOCALE || 'ru-RU'), { day: 'numeric', month: 'long' });
+    const items = [];
+    if (last) { const [a, b] = num(last.score), h = last.venue === 'дома';
+      items.push(`<span class="tk"><b>Последний матч</b><span>${h ? 'Реал Мадрид' : last.opp} ${h ? a : b}:${h ? b : a} ${h ? last.opp : 'Реал Мадрид'}</span></span>`); }
+    if (nx) items.push(`<span class="tk"><b>Следующий матч</b><span>${nx.venue === 'дома' ? 'Реал Мадрид — ' + nx.opp : nx.opp + ' — Реал Мадрид'}</span><em>${fmtShort.format(day(nx.date))}${nx.kickoff ? ' · ' + fmtTime.format(new Date(nx.kickoff)) : ''}</em></span>`);
+    if (me >= 0) items.push(`<span class="tk"><b>Ла Лига</b><span>Место ${me + 1} · ${tbl[me].pts} очк.</span></span>`);
+    items.push(`<span class="tk"><b>Форма</b>${formHTML(5)}</span>`);
+    if (top) items.push(`<span class="tk"><b>Лучший бомбардир</b><span>${top.name} · ${top.goals}</span></span>`);
+    items.push(`<span class="tk"><b>Победы в Лиге чемпионов</b><span>3 из 3</span></span>`);
+    const row = items.join('<i class="tk-sep" aria-hidden="true">◆</i>');
+    el.innerHTML = `<div class="ticker-track"><div class="tk-set">${row}<i class="tk-sep" aria-hidden="true">◆</i></div><div class="tk-set" aria-hidden="true">${row}<i class="tk-sep" aria-hidden="true">◆</i></div></div>`;
+  }
   function renderHome() {
+    renderTicker();
     const s = seasonStats(), top = topScorers(), mx = top[0] ? top[0].goals : 1;
     $('#homeWidgets').innerHTML = `
       <div class="panel hw">
