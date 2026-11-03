@@ -9,11 +9,7 @@ try {
   const saved = localStorage.getItem('rm-theme');
   if (saved) root.dataset.theme = saved;
 } catch (e) {}
-$('#themeBtn').addEventListener('click', () => {
-  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  root.dataset.theme = next;
-  try { localStorage.setItem('rm-theme', next); } catch (e) {}
-});
+// переключение темы, плотности и шрифта — в view.js
 
 // ---------- Появление при прокрутке ----------
 const io = 'IntersectionObserver' in window
@@ -38,9 +34,15 @@ function showPage() {
   if (target === current && target !== 'match') return;
   current = target;
 
-  views.forEach(v => v.classList.toggle('active', v.id === target));
-  links.forEach(a => a.classList.toggle('active', a.dataset.page === (target === 'match' ? 'matches' : target)));
-  window.scrollTo({ top: 0 });
+  const swap = () => {
+    views.forEach(v => v.classList.toggle('active', v.id === target));
+    const pg = target === 'match' ? 'matches' : target;
+    links.forEach(a => a.classList.toggle('active', a.dataset.page === pg));
+    $$('.tabbar a').forEach(a => a.classList.toggle('active', a.dataset.page === pg));
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('vt-ready')) document.startViewTransition(swap);
+  else swap();
 
   const view = document.getElementById(target);
   $$('.reveal', view).forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 6) * 0.06}s`));
@@ -52,6 +54,8 @@ function showPage() {
   document.dispatchEvent(new CustomEvent('pagechange', { detail: target }));
 }
 window.addEventListener('hashchange', showPage);
+// браузер после загрузки сам прокручивает к якорю #раздел — возвращаем начало страницы
+window.addEventListener('load', () => { if (!history.state && location.hash) window.scrollTo({ top: 0, behavior: 'instant' }); });
 
 // ---------- Счётчики ----------
 const statsEl = $('#stats');
@@ -108,6 +112,15 @@ chipsEl.addEventListener('click', e => {
 });
 searchEl.addEventListener('input', renderNews);
 
+const COVER = {
+  'Матчи': '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><circle cx="32" cy="32" r="26"/><path d="M32 20l11 8-4 13H25l-4-13z" fill="currentColor"/><path d="M32 20V6M43 28l14-5M39 41l8 12M25 41l-8 12M21 28L7 23"/></svg>',
+  'Трансферы': '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h44M40 10l12 12-12 12M56 42H12M24 30L12 42l12 12"/></svg>'
+};
+function coverIcon(cat) {
+  if (COVER[cat]) return COVER[cat];
+  return window.CREST ? `<img src="${window.CREST}" alt="">` : '';
+}
+
 function renderNews() {
   const q = searchEl.value.trim().toLowerCase();
   const list = D.news.filter(n =>
@@ -116,7 +129,7 @@ function renderNews() {
 
   $('#news-grid').innerHTML = list.map((n, i) => `
     <button class="card reveal" data-id="${n.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
-      <div class="card-img"><span class="tag">${n.cat}</span></div>
+      <div class="card-img" data-cat="${n.cat}"><span class="ci-icon" aria-hidden="true">${coverIcon(n.cat)}</span><span class="tag">${n.cat}</span></div>
       <div class="card-body">
         <time datetime="${n.date}">${fmt.format(new Date(n.date))}</time>
         <h3>${n.title}</h3>
@@ -306,6 +319,7 @@ window.addEventListener('scroll', () => {
   const max = h.scrollHeight - h.clientHeight;
   progress.style.width = max > 0 ? `${(h.scrollTop / max) * 100}%` : '0';
   toTop.classList.toggle('show', h.scrollTop > 400);
+  document.querySelector('.header').classList.toggle('stuck', h.scrollTop > 40);
 }, { passive: true });
 toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
