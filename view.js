@@ -5,7 +5,7 @@
   var root = document.documentElement;
   var get = function (k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } };
   var set = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
-  var DEF = { skin: 'dark', density: 'large', font: 'm' };
+  var DEF = { skin: 'dark', density: 'large', font: 'm', sfx: 'off' };
   var FONT = { s: 0.92, m: 1, l: 1.12 };
 
   function apply(kind, v) {
@@ -15,6 +15,8 @@
       set('rm-theme', root.dataset.theme); set('rm-skin', v);
     } else if (kind === 'density') {
       root.dataset.density = v; set('rm-density', v);
+    } else if (kind === 'sfx') {
+      root.dataset.sfx = v; set('rm-sfx', v);
     } else if (kind === 'font') {
       root.style.setProperty('--fs', FONT[v] || 1); root.dataset.font = v; set('rm-font', v);
     }
@@ -24,13 +26,20 @@
   /* смена темы: «круговая волна» от нажатой кнопки (View Transitions API) */
   function reveal(from, fn) {
     var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!document.startViewTransition || calm) { fn(); return; }
+    if (calm) { fn(); return; }
+    if (!document.startViewTransition) {
+      /* запасной вариант для браузеров без View Transitions: плавное «затемнение» и обратно */
+      var veil = document.createElement('div'); veil.className = 'theme-veil'; document.body.appendChild(veil);
+      requestAnimationFrame(function () { veil.classList.add('on'); });
+      setTimeout(function () { fn(); veil.classList.remove('on'); setTimeout(function () { veil.remove(); }, 520); }, 260);
+      return;
+    }
     var r = from.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
     var rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     root.classList.add('theme-vt');
     var t = document.startViewTransition(fn);
     t.ready.then(function () {
-      root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + rad + 'px at ' + x + 'px ' + y + 'px)'] }, { duration: 700, easing: 'cubic-bezier(.22,.8,.24,1)', pseudoElement: '::view-transition-new(root)' });
+      root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + rad + 'px at ' + x + 'px ' + y + 'px)'] }, { duration: 800, easing: 'cubic-bezier(.22,.8,.24,1)', pseudoElement: '::view-transition-new(root)' });
     }).catch(function () {});
     t.finished.then(function () { root.classList.remove('theme-vt'); }, function () { root.classList.remove('theme-vt'); });
   }
@@ -49,6 +58,7 @@
   apply('skin', skin);
   apply('density', get('rm-density', DEF.density));
   apply('font', get('rm-font', DEF.font));
+  apply('sfx', get('rm-sfx', DEF.sfx));
 
   if (panel && btn) {
     var close = function () { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
@@ -56,7 +66,7 @@
     panel.addEventListener('click', function (e) {
       e.stopPropagation();
       var b = e.target.closest('button'); if (!b) return;
-      if (b.hasAttribute('data-vp-reset')) { apply('skin', DEF.skin); apply('density', DEF.density); apply('font', DEF.font); return; }
+      if (b.hasAttribute('data-vp-reset')) { apply('skin', DEF.skin); apply('density', DEF.density); apply('font', DEF.font); apply('sfx', DEF.sfx); return; }
       var row = b.closest('[data-vp]');
       if (row && row.dataset.vp === 'skin') reveal(b, function () { apply('skin', b.dataset.v); });
       else if (row) apply(row.dataset.vp, b.dataset.v);
@@ -70,5 +80,4 @@
   if (main) main.setAttribute('data-print', (window.tr ? tr('Real Madrid — неофициальный фан-сайт') : 'Real Madrid') + ' · ' + (window.SITE && window.SITE.asOf ? (window.tr ? tr(window.SITE.asOf) : window.SITE.asOf) : ''));
 
   /* плавные переходы между вкладками (View Transitions API) */
-  if (document.startViewTransition) root.classList.add('vt-ready');
 })();
