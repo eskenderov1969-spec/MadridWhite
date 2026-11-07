@@ -21,6 +21,20 @@
     mark(kind, v);
   }
 
+  /* смена темы: «круговая волна» от нажатой кнопки (View Transitions API) */
+  function reveal(from, fn) {
+    var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || calm) { fn(); return; }
+    var r = from.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    var rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    root.classList.add('theme-vt');
+    var t = document.startViewTransition(fn);
+    t.ready.then(function () {
+      root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + rad + 'px at ' + x + 'px ' + y + 'px)'] }, { duration: 700, easing: 'cubic-bezier(.22,.8,.24,1)', pseudoElement: '::view-transition-new(root)' });
+    }).catch(function () {});
+    t.finished.then(function () { root.classList.remove('theme-vt'); }, function () { root.classList.remove('theme-vt'); });
+  }
+
   var panel = document.getElementById('viewPanel'), btn = document.getElementById('themeBtn');
   function mark(kind, v) {
     if (!panel) return;
@@ -43,7 +57,9 @@
       e.stopPropagation();
       var b = e.target.closest('button'); if (!b) return;
       if (b.hasAttribute('data-vp-reset')) { apply('skin', DEF.skin); apply('density', DEF.density); apply('font', DEF.font); return; }
-      var row = b.closest('[data-vp]'); if (row) apply(row.dataset.vp, b.dataset.v);
+      var row = b.closest('[data-vp]');
+      if (row && row.dataset.vp === 'skin') reveal(b, function () { apply('skin', b.dataset.v); });
+      else if (row) apply(row.dataset.vp, b.dataset.v);
     });
     document.addEventListener('click', close);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
