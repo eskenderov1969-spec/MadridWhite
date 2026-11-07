@@ -2,6 +2,14 @@
 window.I18N = window.I18N || {};
 window.I18N.en = {
   ui: {
+    'График очков': 'Points chart',
+    'Профиль на 90 минут': 'Profile per 90 minutes',
+    'Для вратарей радар не строится.': 'The radar is not built for goalkeepers.',
+    'Радар доступен, если у обоих игроков не меньше 200 минут в Ла Лиге.': 'The radar is available when both players have at least 200 La Liga minutes.',
+    'Каждая ось — доля от лучшего значения в составе. Ла Лига 2026/27, после 10 туров; игроки от 200 минут.': 'Each axis is a share of the squad’s best value. La Liga 2026/27, after 10 rounds; players with 200+ minutes.',
+    'Справа от очков — сыгранные матчи.': 'Games played are shown to the right of the points.',
+    'Ход матча': 'Match timeline',
+    'Радар': 'Radar',
     'Форма': 'Form', 
     'Настройки вида': 'View settings', 'Тёмная': 'Dark', 'Светлая': 'Light', 'День матча': 'Match day', 'Карточки': 'Cards', 'Крупно': 'Large', 'Компактно': 'Compact',
     'Размер шрифта': 'Font size', 'Сбросить настройки': 'Reset settings', 'Лента клуба': 'Club ticker', 'Последний матч': 'Last match', 'Следующий матч': 'Next match', 'Лучший бомбардир': 'Top scorer',
@@ -58,7 +66,7 @@ window.I18N.en = {
     'Ближайших матчей в списке нет.': 'There are no upcoming matches in the list.',
     'победы · ничьи · поражения': 'wins · draws · losses', 'Все турниры': 'All competitions', 'Турнир': 'Competition',
     'Нажмите на матч, чтобы открыть его страницу. Счёт в списке показан по порядку «хозяева — гости».': 'Click a match to open its page. The score in the list is shown in “home — away” order.',
-    'Ла Лига 2026/27, на вечер 1 ноября 2026 · 11-й тур ещё не завершён. Нажмите на заголовок столбца, чтобы отсортировать.': 'La Liga 2026/27, as of the evening of 1 November 2026 · round 11 not yet finished. Click a column header to sort.',
+    'Ла Лига 2026/27, на 5 ноября 2026 · после 11-го тура. Нажмите на заголовок столбца, чтобы отсортировать.': 'La Liga 2026/27, as of 5 November 2026 · after round 11. Click a column header to sort.',
     'Команда': 'Team', 'Мячи': 'Goals', 'И': 'P', 'В': 'W', 'Н': 'D', 'П': 'L', 'Р': 'GD', 'О': 'Pts',
     'Матчи ': 'Matches', 'Забито — пропущено': 'Scored — conceded', 'Разница мячей': 'Goal difference', 'Очки': 'Points',
     'Лига Европы': 'Europa League', 'Лига конференций': 'Conference League', 'Зона вылета': 'Relegation zone',
@@ -116,24 +124,27 @@ window.I18N.en = {
     'Поиск 26/27': 'Search 26/27'
   },
   data: {
-    asOf: 'data as of 1 November 2026',
-    statsNote: '* Data as of 1 November 2026. Real’s last Champions League and La Liga titles came in 2023/24.',
-    playersNote: 'Squad as of 1 November 2026. Appearances and goals — La Liga 2026/27 after 10 rounds (official LaLiga statistics); the 1 November match against Racing is not yet counted in individual statistics; there is no data for Rodrygo.',
-    trophiesNote: 'Data as of 1 November 2026. In 2025/26 the club finished without trophies (for the first time since 2020/21) and has no trophies yet in 2026/27. Sources differ in small details — check against the club’s official website.',
-    transfersNote: 'Fees are as reported by the media (Sports Mole, TeamTalk, Marca): the club mostly did not disclose them, and sources differ in the details. Data as of 1 November 2026.',
-    leagueAsOf: 'as of the evening of 1 November 2026 · round 11 not yet finished',
-    leagueNote: 'Clubs have played between 9 and 11 games: round 11 is still going, and Athletic and several other teams have postponed matches. Teams level on points are ordered by goal difference; the league uses a different order (head-to-head).',
+    asOf: 'data as of 5 November 2026',
+    statsNote: '* Data as of 5 November 2026. Real’s last Champions League and La Liga titles came in 2023/24.',
+    playersNote: 'Squad as of 5 November 2026. Appearances and goals — La Liga 2026/27 after 10 rounds (official LaLiga statistics); the matches against Racing (1 November) and AEK (4 November) are not yet counted in individual statistics; there is no data for Rodrygo.',
+    trophiesNote: 'Data as of 5 November 2026. In 2025/26 the club finished without trophies (for the first time since 2020/21) and has no trophies yet in 2026/27. Sources differ in small details — check against the club’s official website.',
+    transfersNote: 'Fees are as reported by the media (Sports Mole, TeamTalk, Marca): the club mostly did not disclose them, and sources differ in the details. Data as of 5 November 2026.',
+    leagueAsOf: 'as of 5 November 2026 · after round 11',
+    leagueNote: 'Athletic and Rayo Vallecano have played 10 games, all the other clubs 11. Teams level on points are ordered by goal difference; the league uses a different order (head-to-head).',
     profilesSeason: 'La Liga 2026/27, after 10 rounds (as of 25 October 2026), official LaLiga statistics. Champions League not included.',
     profilesNote: 'Market value — Transfermarkt estimates as reported by the media; for some players the value is from April 2026 (shown in brackets).',
     stats: ['Founded', 'European Cups*', 'La Liga titles*', 'Bernabéu opened'],
-    now: [['Head coach', 'José Mourinho'], ['President', 'Florentino Pérez'], ['Captain', 'Federico Valverde'], ['Vice-captain', 'Vinícius Júnior'], ['La Liga: 27 points after 11 games', '3rd place'], ['Champions League wins', '3 of 3']],
+    now: [['Head coach', 'José Mourinho'], ['President', 'Florentino Pérez'], ['Captain', 'Federico Valverde'], ['Vice-captain', 'Vinícius Júnior'], ['La Liga: 27 points after 11 games', '3rd place'], ['Champions League wins', '4 of 4']],
     news: [
+      ['Preview: Valencia — Real, 7 November',
+        'In round 12 of La Liga Real play at Mestalla on Saturday 7 November, kick-off 21:00 Madrid time. Vinícius serves the last game of his suspension.',
+        'Real are third in the table (27 points), Valencia 19th (9 points). Vinícius will miss this game too: his four-match league ban ends with the trip to Valencia, and he can return for the game against Celta on 21 November. According to Sports Mole, Rodrygo (knee injury, expected back in early 2027), Ferland Mendy (hip injury) and Raúl Asencio (stress fracture, about three months) are also out. Next come Celta (21 November, home) and PSV (24 November, home).'],
+      ['AEK 2:3 Real: a win in stoppage time',
+        'Valverde’s goal in the 90+2nd minute gave Real a fourth win in four league-phase games of the Champions League.',
+        'Real came from behind twice in Athens. Koita opened the scoring in the 12th minute and Bellingham equalised in the 32nd (a goal in the 28th minute was ruled out for offside). Pilios put AEK ahead in the 75th minute, Mbappé levelled three minutes later, and in the 90+2nd substitute Valverde scored the winner with a long-range shot. Koita was sent off after the final whistle for dissent. Real have 12 points out of 12 and are second in the overall table behind PSG (goal difference +6 against +15). Vinícius missed the game through suspension. Goal minutes are from ESPN; other sources differ by a minute or two.'],
       ['Racing 0:3 Real: sixth win in a row',
         'Mbappé’s penalty in the 11th minute, Bellingham in the 21st and Diomande in the 36th secured the win in Santander.',
         'Real won 3:0 at El Sardinero, with all the goals coming in the first half: Mbappé converted a penalty (11th minute), then Bellingham (21st) and Diomande (36th) scored. It is the sixth straight win in all competitions. Mbappé took his La Liga tally to 12. Racing had been unbeaten at home before the game, and their last win over Real came in April 2007. Vinícius missed the game through suspension. After the match Mourinho said the team could have won 4:0 or 5:0. Real are third in the table on 27 points; Barcelona have 30. The awarding of the penalty caused debate.'],
-      ['Preview: AEK — Real, 4 November',
-        'The next match is the fourth in the Champions League league phase: on Wednesday 4 November in Athens, kick-off 18:45 Madrid time.',
-        'Real travel to Athens with three wins from three league-phase games (against Inter, Roma and RB Leipzig). Then comes a trip to Valencia on 7 November, kick-off 21:00 Madrid time. In La Liga Real are three points behind Barcelona.'],
       ['Clásico: Barcelona 1:2 Real',
         'Kylian Mbappé scored both goals at Camp Nou, in the 41st and 88th minutes. The second was his 100th for the club.',
         'Mbappé opened the scoring in the 41st minute — his shot deflected off Gerard Martín. Raphinha equalised, and in the 88th minute Mbappé, set up by Camavinga, won the game for Real. Afterwards he called the 100-goal milestone “just a detail” next to the team’s win. After 10 rounds Real are third, three points off the leader.'],
@@ -162,7 +173,7 @@ window.I18N.en = {
     ],
     bios: [
       'France forward. In La Liga 2026/27 he has scored 11 goals and provided 2 assists in 10 games. On 25 October 2026 he scored his 100th goal for Real. La Liga’s top scorer in 2025/26 (25 goals).',
-      'Club vice-captain. In La Liga 2026/27 he has 1 goal and 3 assists in 8 games. He was suspended after a red card.',
+      'Club vice-captain. In La Liga 2026/27 he has 1 goal and 3 assists in 8 games. Suspended after a red card: he missed the games against Racing and AEK, will miss the match in Valencia on 7 November and could return for the game against Celta on 21 November.',
       'England midfielder. La Liga 2026/27: 3 goals and 3 assists in 10 games, 74 ground duels won.',
       'Team captain. In La Liga 2026/27 he has played all 10 games — 801 minutes — and provided 2 assists.',
       'Turkey midfielder. La Liga 2026/27: 2 goals and 2 assists in 10 games.',
@@ -173,7 +184,7 @@ window.I18N.en = {
       'Brazil centre-back. In La Liga 2026/27 he has spent just 5 minutes on the pitch, in one game.',
       'Germany centre-back. On 16 June 2026 he extended his contract by a year, to 2027. La Liga 2026/27: 4 games, 1 goal.',
       'Spain centre-back. La Liga 2026/27: 8 games, 44 clearances and a red card.',
-      'Academy graduate, centre-back. He has not yet played in La Liga 2026/27.',
+      'Academy graduate, centre-back. He has not yet played in La Liga 2026/27; according to Sports Mole he is out for about three months with a stress fracture.',
       'England right-back. La Liga 2026/27: 6 games and 1 assist.',
       'Left-back. La Liga 2026/27: 5 games and 1 goal.',
       'France centre-back. Joined from Liverpool as a free agent on a four-year contract. He has played 9 La Liga 2026/27 games — 810 minutes.',
@@ -181,7 +192,7 @@ window.I18N.en = {
       'Netherlands right-back. Joined from Inter (reportedly for £17m, according to Sports Mole). He has played 8 La Liga 2026/27 games.',
       'Portugal midfielder. Joined from Manchester City as a free agent on a two-year contract. La Liga 2026/27: 8 games, 383 minutes.',
       'Academy graduate, midfielder. He has not yet played in La Liga 2026/27.',
-      'Brazilian winger, at the club since 2019. He does not appear in the official La Liga 2026/27 statistics; in October he was listed among the absent players.',
+      'Brazilian winger, at the club since 2019. He does not appear in the official La Liga 2026/27 statistics; in October he was listed among the absent players; according to Sports Mole he has a knee injury and is expected back in early 2027.',
       'Morocco attacking midfielder. La Liga 2026/27: 4 games, 120 minutes.',
       'Brazilian forward. He played on loan at Lyon from 1 January 2026 and returned to Real in the summer. He has played 2 La Liga 2026/27 games.',
       'Forward. Joined from Levante (reportedly for £21m, according to Sports Mole). In La Liga 2026/27 he has scored 2 goals as a substitute: 6 games, just 32 minutes in total.',
@@ -202,13 +213,15 @@ window.I18N.en = {
       ['Change of coach', 'In January 2026 Xabi Alonso left the club by mutual consent and Álvaro Arbeloa took charge.'],
       ['Champions League quarter-final', 'In 2025/26 Real beat Manchester City 5:1 on aggregate but lost 4:6 to Bayern in the quarter-final. The season ended without trophies — for the first time since 2020/21.'],
       ['The Mourinho era', 'On 11 June 2026 the club announced the appointment of José Mourinho. He started work on 13 July.'],
-      ['Clásico and Mbappé’s 100th goal', 'On 25 October Real won 2:1 at Camp Nou. Mbappé scored both goals — the second was his 100th for the club.']
+      ['Clásico and Mbappé’s 100th goal', 'On 25 October Real won 2:1 at Camp Nou. Mbappé scored both goals — the second was his 100th for the club.'],
+      ['A perfect start in the Champions League', 'By 4 November Real had won all four league-phase games: Inter 2:1, Roma 4:3, RB Leipzig 4:1 and AEK 3:2 in Athens.']
     ],
     faq: [
       ['Who coaches Real Madrid now?', 'Since July 2026, José Mourinho. The club announced his appointment on 11 June 2026.'],
       ['How did Real do in 2025/26?', 'The club finished second in La Liga (86 points), behind Barcelona, went out to Bayern in the Champions League quarter-final and finished without trophies.'],
       ['Why is the club called “Los Blancos”?', 'The nickname means “the whites”, after the club’s traditional white kit.'],
       ['What does “Real” in the name mean?', 'It is the Spanish word for “royal”. The title was granted to the club by King Alfonso XIII in 1920.'],
+      ['How is Real doing in the 2026/27 Champions League?', 'After four league-phase games Real have 12 points out of 12 and are second (goal difference +6) behind PSG — as of 5 November 2026.'],
       ['Whose stadium is it?', 'The club’s home ground is the Santiago Bernabéu in Madrid, named after the club’s long-serving president.']
     ],
     transfers: [
@@ -221,6 +234,7 @@ window.I18N.en = {
       'contract expired on 1 July; joined Udinese in September, according to TeamTalk', 'contract expired on 1 July'
     ],
     matchFacts: {
+      '2026-11-04': ['Fourth win in four league-phase games: 12 points out of 12.', 'The second comeback of the Champions League season (after Roma).', 'Bellingham’s first goal, in the 28th minute, was ruled out for offside.', 'Koita was sent off after the final whistle. Goal minutes are from ESPN; other sources differ by a minute or two.'],
       '2026-11-01': ['Sixth straight win in all competitions.', 'Mbappé took his La Liga tally to 12.', 'Racing had been unbeaten at home before the match; their last win over Real was in April 2007.', 'Vinícius did not play because of suspension.'],
       '2026-10-25': ['Barcelona’s first La Liga defeat of 2026/27.', 'The second goal was Mbappé’s 100th for Real.']
     }
