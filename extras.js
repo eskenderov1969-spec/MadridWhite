@@ -14,6 +14,7 @@
   function buildIndex() {
     const idx = [];
     $$('#mainNav a').forEach(a => idx.push({ g: 'Разделы', t: a.textContent.trim(), s: 'Перейти в раздел', hay: a.textContent, go: () => { location.hash = a.getAttribute('href'); } }));
+    idx.push({ g: 'Разделы', t: 'О проекте', s: 'Перейти в раздел', hay: 'о проекте about технологии', go: () => { location.hash = '#about'; } });
     D.players.forEach(p => idx.push({ g: 'Игроки', t: p.name, s: `${POS[p.pos]} · ${p.nat}`, hay: `${p.name} ${p.nat} ${POS[p.pos]}`, go: fillAndGo('#squad', '#playerSearch', p.name) }));
     D.results.forEach(r => idx.push({ g: 'Матчи', t: `${r.venue === 'дома' ? 'Реал' : r.opp} ${r.score} ${r.venue === 'дома' ? r.opp : 'Реал'}`.replace(/(\d+):(\d+)/, (m, a, b) => r.venue === 'дома' ? `${a}:${b}` : `${b}:${a}`),
       s: `${r.comp} · ${dFmt.format(day(r.date))}`, hay: `${r.opp} ${r.comp} ${r.score} матч результат`, go: () => { location.hash = '#match/' + r.date; } }));
