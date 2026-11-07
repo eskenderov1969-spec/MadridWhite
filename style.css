@@ -1306,12 +1306,6 @@ body { font-size: 1rem; }
 }
 
 /* --- переходы между вкладками --- */
-html.vt-ready .view.active { animation: none; }
-.stadium-bg { view-transition-name: rm-bg; }
-::view-transition-old(root) { animation: vtOut .26s ease both; }
-::view-transition-new(root) { animation: vtIn .42s var(--ease) both; }
-@keyframes vtOut { to { opacity: 0; transform: translateY(-8px) scale(.995); } }
-@keyframes vtIn { from { opacity: 0; transform: translateY(16px); } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 
 /* --- панель настроек вида --- */
@@ -1575,3 +1569,16 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 .car-nav button:hover { background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #0b1f4b; transform: scale(1.08); }
 
 @media (prefers-reduced-motion: reduce) { .w, .sm-draw path { animation: none; } .sm-draw path { stroke-dashoffset: 0; } }
+
+/* ============ Плавные переходы между вкладками и темами ============ */
+.view.active { animation: viewIn .7s var(--ease) both; }
+.view.active.leaving { animation: viewOut .2s ease forwards; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(18px) scale(.995); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes viewOut { to { opacity: 0; transform: translateY(-10px); filter: blur(3px); } }
+/* страница не «моргает» при смене раздела: корневой переход не нужен */
+.theme-vt::view-transition-old(root), .theme-vt::view-transition-new(root) { animation: none !important; }
+/* запасной вариант смены темы */
+.theme-veil { position: fixed; inset: 0; z-index: 350; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 40%, rgba(27, 58, 138, .85), #070b16 70%); transition: opacity .26s ease; }
+.theme-veil.on { opacity: 1; }
+.theme-veil:not(.on) { transition-duration: .5s; }
+@media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
