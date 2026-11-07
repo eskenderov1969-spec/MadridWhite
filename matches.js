@@ -315,6 +315,7 @@
     });
     return D.players.map(p => ({ name: p.name, goals: (p.goals || 0) + (add[p.name] || 0) })).filter(p => p.goals > 0).sort((a, b) => b.goals - a.goals).slice(0, 5);
   }
+  window.RM_TOP = topScorers;
   function renderTicker() {
     const el = $('#ticker');
     if (!el) return;
