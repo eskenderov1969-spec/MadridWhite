@@ -2,6 +2,20 @@
 window.I18N = window.I18N || {};
 window.I18N.es = {
   ui: {
+    'Сегодня матч': 'Día de partido',
+    'Матч начался': 'El partido ha comenzado',
+    'по вашему времени': 'hora local',
+    'Начало через': 'Comienza en',
+    'Подиум бомбардиров': 'Podio de goleadores',
+    '🎉 Салют': '🎉 Celebrar',
+    'Атака и защита': 'Ataque y defensa',
+    'Пропущено за матч (меньше — лучше)': 'Goles en contra por partido (menos es mejor)',
+    'Забито за матч': 'Goles a favor por partido',
+    'Много забивают, мало пропускают': 'Marcan mucho y encajan poco',
+    'Мало забивают, много пропускают': 'Marcan poco y encajan mucho',
+    'Каждая точка — клуб Ла Лиги: размер зависит от очков, пунктир — средние значения лиги. Подписаны лидеры, «Реал» и клубы с крайними значениями; остальных видно при наведении.': 'Cada punto es un club de La Liga: su tamaño depende de los puntos y las líneas discontinuas son las medias de la liga. Están rotulados los líderes, el Real y los clubes con valores extremos; el resto se ve al pasar el cursor.',
+    'перейти в раздел (g, затем первая буква)': 'ir a una sección (g y luego una letra)',
+    'показать все сочетания клавиш': 'mostrar todos los atajos de teclado',
     'О проекте': 'Sobre el proyecto',
     'Для чего этот сайт': 'Para qué sirve este sitio',
     'Учебный проект: неофициальный фан-сайт футбольного клуба «Реал Мадрид». Сайт работает без сервера и без сборки — достаточно открыть файл index.html в браузере.': 'Proyecto escolar: un sitio de aficionados no oficial del Real Madrid. No necesita servidor ni compilación: basta con abrir index.html en el navegador.',
