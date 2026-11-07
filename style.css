@@ -1545,3 +1545,33 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 .hero-fx { translate: 0 calc(var(--sy, 0) * .12px); }
 
 [data-theme="light"] .files dt { color: #8a6a10; }
+
+/* ============ Движение (motion.js) ============ */
+/* заставка: контур герба «рисуется», затем проявляется сам герб */
+.splash-mark { position: relative; height: min(34vh, 260px); aspect-ratio: 200 / 290; display: grid; place-items: center; }
+.sm-draw { position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; overflow: visible; filter: drop-shadow(0 0 10px rgba(212, 175, 55, .6)); animation: smFade .7s 1.7s ease forwards; }
+.sm-draw path { fill: none; stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: smDraw 1.3s var(--ease) forwards; }
+.sm-crown { animation-delay: .1s !important; } .sm-shield { animation-delay: .35s !important; } .sm-in { animation-delay: .75s !important; stroke-width: 1.4 !important; stroke: var(--gold-soft) !important; }
+@keyframes smDraw { to { stroke-dashoffset: 0; } }
+@keyframes smFade { to { opacity: 0; } }
+.splash img { animation: smCrest 1s 1.5s var(--ease) both; }
+@keyframes smCrest { from { opacity: 0; transform: scale(.9); filter: blur(6px) drop-shadow(0 10px 40px rgba(212, 175, 55, .5)); } to { opacity: 1; transform: none; filter: drop-shadow(0 10px 40px rgba(212, 175, 55, .5)); } }
+.splash span { animation: splashIn .9s 2s var(--ease) both !important; }
+
+/* заголовки по словам */
+.w { display: inline-block; animation: wordIn .8s var(--ease) both; animation-delay: calc(var(--wi, 0) * 80ms + 120ms); }
+@keyframes wordIn { from { opacity: 0; transform: translateY(.55em) rotateX(40deg); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* карусель трофеев */
+.tr-switch { margin-bottom: 12px; }
+.trophies.carousel { display: flex; gap: 18px; overflow-x: auto; padding: 30px max(24px, calc(50% - 125px)) 34px; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; perspective: 1000px; }
+.trophies.carousel::-webkit-scrollbar { display: none; }
+.trophies.carousel.drag { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.trophies.carousel .trophy { flex: 0 0 250px; scroll-snap-align: center; transition: transform .12s linear, opacity .12s linear, border-color .3s, box-shadow .3s; will-change: transform; }
+.trophies.carousel .trophy.reveal { opacity: 1; }
+.car-nav { display: flex; justify-content: center; gap: 12px; margin: -6px 0 14px; }
+.car-nav[hidden] { display: none; }
+.car-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--card); color: var(--heading); font-size: 1.1rem; cursor: pointer; transition: background .25s, transform .25s var(--ease); }
+.car-nav button:hover { background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #0b1f4b; transform: scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) { .w, .sm-draw path { animation: none; } .sm-draw path { stroke-dashoffset: 0; } }
