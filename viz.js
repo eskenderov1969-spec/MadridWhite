@@ -62,7 +62,7 @@
     var pa = P[a.id], pb = P[b.id];
     var gk = function (p) { return p && p.pos === 'GK'; };
     if (a.pos === 'GK' || b.pos === 'GK') return '<p class="muted small">Для вратарей радар не строится.</p>';
-    var va = AXES.map(function (x) { return per90(pa, x[1]); }), vb = AXES.map(function (x) { return per90(pb, x[1]); });
+    var va = a._vals || AXES.map(function (x) { return per90(pa, x[1]); }), vb = b._vals || AXES.map(function (x) { return per90(pb, x[1]); });
     if (va.indexOf(null) >= 0 || vb.indexOf(null) >= 0) return '<p class="muted small">Радар доступен, если у обоих игроков не меньше 200 минут в Ла Лиге.</p>';
     var mx = maxes(), n = AXES.length, C = 130, R = 96;
     var grid = [0.25, 0.5, 0.75, 1].map(function (k) {
@@ -155,5 +155,17 @@
   var mp = document.getElementById('matchPage');
   if (mp) new MutationObserver(function () { if (!$('.mt-line', mp)) decorateMatch(); }).observe(mp, { childList: true });
 
+  /* среднее по полевым игрокам состава (от 200 минут) — для сравнения в лаборатории */
+  function avgPlayer() {
+    var sums = AXES.map(function () { return 0; }), n = 0;
+    D.players.forEach(function (p) {
+      if (p.pos === 'GK') return;
+      var v = AXES.map(function (x) { return per90(P[p.id], x[1]); });
+      if (v.indexOf(null) >= 0) return;
+      n++; v.forEach(function (x, i) { sums[i] += x; });
+    });
+    return n ? { id: -1, name: 'Среднее по составу', pos: 'MF', _vals: sums.map(function (x) { return x / n; }) } : null;
+  }
+  window.VIZ = { radar: radarHTML, avg: avgPlayer };
   watchCompare();
 })();
