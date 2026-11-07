@@ -10,7 +10,7 @@ window.I18N_NAMES = {
     'Рауль Асенсио': 'Raúl Asencio', 'Трент Александер-Арнольд': 'Trent Alexander-Arnold', 'Альваро Каррерас': 'Álvaro Carreras',
     'Ибраима Конате': 'Ibrahima Konaté', 'Марк Куркурелья': 'Marc Cucurella', 'Денцел Дюмфрис': 'Denzel Dumfries', 'Деннис Дюмфрис': 'Denzel Dumfries',
     'Бернарду Силва': 'Bernardo Silva', 'Тьяго Питарч': 'Thiago Pitarch', 'Родриго': 'Rodrygo', 'Брахим Диас': 'Brahim Díaz',
-    'Эндрик': 'Endrick', 'Карлос Эспи': 'Carlos Espí', 'Ян Диоманде': 'Yan Diomande',
+    'Эндрик': 'Endrick', 'Карлос Эспи': 'Carlos Espí', 'Ян Диоманде': 'Yan Diomande', 'Аубакари Койта': 'Aboubakary Koita', 'Ставрос Пилиос': 'Stavros Pilios',
     'Альфредо Ди Стефано': 'Alfredo Di Stéfano', 'Ференц Пушкаш': 'Ferenc Puskás', 'Франсиско Хенто': 'Francisco Gento',
     'Рауль': 'Raúl', 'Икер Касильяс': 'Iker Casillas', 'Криштиану Роналду': 'Cristiano Ronaldo', 'Карим Бензема': 'Karim Benzema',
     'Сантильяна': 'Santillana', 'Рафинья': 'Raphinha', 'Гонсало Гарсия': 'Gonzalo García', 'Сесар Паласиос': 'César Palacios',
