@@ -27,31 +27,41 @@ const views = $$('.view');
 const links = $$('.nav a');
 let current = null;
 
+let flushNav = null;   // завершает незаконченный переход, если пользователь кликает быстро
 function showPage() {
   const raw = location.hash.slice(1);
   const id = raw.split('/')[0];   // «match/2026-10-25» → раздел match
   const target = document.getElementById(id) && document.getElementById(id).classList.contains('view') ? id : 'news';
   if (target === current && target !== 'match') return;
+  if (flushNav) flushNav();
+  const prev = current;
   current = target;
 
   const swap = () => {
-    views.forEach(v => v.classList.toggle('active', v.id === target));
+    views.forEach(v => { v.classList.remove('leaving'); v.classList.toggle('active', v.id === target); });
     const pg = target === 'match' ? 'matches' : target;
     links.forEach(a => a.classList.toggle('active', a.dataset.page === pg));
     $$('.tabbar a').forEach(a => a.classList.toggle('active', a.dataset.page === pg));
     window.scrollTo({ top: 0, behavior: 'instant' });
+
+    const view = document.getElementById(target);
+    $$('.reveal', view).forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 6) * 0.06}s`));
+    observeReveal(view);
+
+    if (target === 'news') runCounters();
+    if (target === 'history') renderTimeline();
+    if (target === 'data-lab') renderChart(activeChart);
+    document.dispatchEvent(new CustomEvent('pagechange', { detail: target }));
   };
-  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('vt-ready')) document.startViewTransition(swap);
-  else swap();
 
-  const view = document.getElementById(target);
-  $$('.reveal', view).forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 6) * 0.06}s`));
-  observeReveal(view);
-
-  if (target === 'news') runCounters();
-  if (target === 'history') renderTimeline();
-  if (target === 'data-lab') renderChart(activeChart);
-  document.dispatchEvent(new CustomEvent('pagechange', { detail: target }));
+  // плавный переход: текущий раздел мягко гаснет, новый появляется (работает во всех браузерах)
+  const prevEl = prev && prev !== target ? document.getElementById(prev) : null;
+  if (!prevEl || matchMedia('(prefers-reduced-motion: reduce)').matches) { swap(); return; }
+  prevEl.classList.add('leaving');
+  let done = false;
+  const finish = () => { if (done) return; done = true; flushNav = null; clearTimeout(timer); swap(); };
+  const timer = setTimeout(finish, 200);
+  flushNav = finish;
 }
 window.addEventListener('hashchange', showPage);
 // браузер после загрузки сам прокручивает к якорю #раздел — возвращаем начало страницы
