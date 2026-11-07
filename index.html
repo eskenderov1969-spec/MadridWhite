@@ -18,7 +18,14 @@
     <i class="sb-glow g1"></i><i class="sb-glow g2"></i><i class="sb-glow g3"></i><i class="sb-beams"></i><svg class="sb-pitch" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="600" cy="800" r="170"/><circle cx="600" cy="800" r="6" fill="currentColor"/><rect x="330" y="640" width="540" height="160"/><rect x="460" y="730" width="280" height="70"/><path d="M470 640a130 130 0 0 0 260 0"/><path d="M0 800h1200"/></g></svg><i class="sb-grain"></i>
   </div>
   <div class="splash" id="splash" aria-hidden="true">
-    <img data-crest alt="" onerror="this.remove()">
+    <div class="splash-mark">
+      <svg class="sm-draw" viewBox="0 -40 200 290" aria-hidden="true">
+        <path class="sm-crown" pathLength="1" d="M60 6 L60 -16 L80 -2 L100 -28 L120 -2 L140 -16 L140 6 Z"/>
+        <path class="sm-shield" pathLength="1" d="M100 14 C72 28 42 32 14 32 L14 122 C14 178 54 214 100 236 C146 214 186 178 186 122 L186 32 C158 32 128 28 100 14 Z"/>
+        <path class="sm-in" pathLength="1" d="M100 40 C78 50 56 54 30 54 L30 120 C30 166 62 196 100 216 C138 196 170 166 170 120 L170 54 C144 54 122 50 100 40 Z"/>
+      </svg>
+      <img data-crest alt="" onerror="this.remove()">
+    </div>
     <span>Hala Madrid</span>
   </div>
   <div class="progress" id="progress"></div>
@@ -87,6 +94,11 @@
           <button type="button" data-v="m">A</button>
           <button type="button" data-v="l">A+</button>
         </div>
+        <p class="vp-t">Звук и вибрация</p>
+        <div class="vp-row" data-vp="sfx">
+          <button type="button" data-v="off">Выкл</button>
+          <button type="button" data-v="on">Вкл</button>
+        </div>
         <button class="vp-reset" type="button" data-vp-reset>Сбросить настройки</button>
       </div>
     </div>
@@ -98,14 +110,12 @@
 
     <!-- НОВОСТИ -->
     <section id="news" class="view active">
-      <a class="md-banner" id="mdBanner" href="#matches" hidden></a>
       <div class="hero">
         <canvas class="hero-fx" id="heroFx" aria-hidden="true"></canvas>
         <div class="hero-main">
           <p class="pill-badge"><i></i>Hala Madrid · основан в 1902 году</p>
           <h1>Real Madrid <span>Football Club</span></h1>
           <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте. Состав, трофеи и данные сезона 2026/27.</p>
-          <p class="hero-facts" id="heroFacts" aria-hidden="true"></p>
           <div class="hero-actions">
             <a class="btn btn-gold" href="#squad">Состав 26/27 <span aria-hidden="true">→</span></a>
             <a class="btn btn-ghost" href="#stadium">Тур по «Бернабеу»</a>
@@ -122,7 +132,6 @@
       <div class="next-match reveal" id="nextHome"><div class="sk sk-wide" aria-hidden="true"></div></div>
       <div class="panel ribbon reveal" id="seasonRibbon"></div>
       <div class="home-grid reveal" id="homeWidgets"><div class="sk sk-box" aria-hidden="true"></div><div class="sk sk-box" aria-hidden="true"></div></div>
-      <div class="panel podium reveal" id="podium"></div>
 
       <div class="section-head">
         <h2 data-eyebrow="Свежее из клуба">Новости</h2>
@@ -346,8 +355,6 @@
             <dt><kbd>Ctrl</kbd> + <kbd>K</kbd></dt><dd>открыть поиск</dd>
             <dt><kbd>/</kbd></dt><dd>открыть поиск</dd>
             <dt><kbd>Esc</kbd></dt><dd>закрыть окно или панель</dd>
-            <dt><kbd>g</kbd> <kbd>n</kbd></dt><dd>перейти в раздел (g, затем первая буква)</dd>
-            <dt><kbd>?</kbd></dt><dd>показать все сочетания клавиш</dd>
           </dl>
           <h3 class="about-sub">Источники и ограничения</h3>
           <ul class="list">
@@ -506,5 +513,6 @@
   <script src="viz.js"></script>
   <script src="wow.js"></script>
   <script src="plus.js"></script>
+  <script src="motion.js"></script>
 </body>
 </html>
