@@ -99,6 +99,7 @@
     <!-- НОВОСТИ -->
     <section id="news" class="view active">
       <div class="hero">
+        <canvas class="hero-fx" id="heroFx" aria-hidden="true"></canvas>
         <div class="hero-main">
           <p class="pill-badge"><i></i>Hala Madrid · основан в 1902 году</p>
           <h1>Real Madrid <span>Football Club</span></h1>
@@ -106,6 +107,7 @@
           <div class="hero-actions">
             <a class="btn btn-gold" href="#squad">Состав 26/27 <span aria-hidden="true">→</span></a>
             <a class="btn btn-ghost" href="#stadium">Тур по «Бернабеу»</a>
+            <a class="btn btn-ghost" href="#about">О проекте</a>
           </div>
           <div class="stats" id="stats"></div>
         </div>
@@ -116,6 +118,7 @@
       <div class="ticker" id="ticker" aria-label="Лента клуба"></div>
 
       <div class="next-match reveal" id="nextHome"><div class="sk sk-wide" aria-hidden="true"></div></div>
+      <div class="panel ribbon reveal" id="seasonRibbon"></div>
       <div class="home-grid reveal" id="homeWidgets"><div class="sk sk-box" aria-hidden="true"></div><div class="sk sk-box" aria-hidden="true"></div></div>
 
       <div class="section-head">
@@ -279,6 +282,78 @@
 
     </section>
 
+    <!-- О ПРОЕКТЕ -->
+    <section id="about" class="view">
+      <h2 class="page-title" data-eyebrow="Для чего этот сайт">О проекте</h2>
+      <p class="lead about-lead">Учебный проект: неофициальный фан-сайт футбольного клуба «Реал Мадрид». Сайт работает без сервера и без сборки — достаточно открыть файл index.html в браузере.</p>
+
+      <div class="about-counters reveal" id="aboutCounters"></div>
+
+      <div class="section-head"><h2>Как это устроено</h2></div>
+      <div class="flow reveal" aria-label="Схема работы сайта">
+        <div class="flow-step"><b>1</b><h3>Данные</h3><p>Клубная информация лежит в файлах data.js и profiles.js.</p></div>
+        <i class="flow-arrow" aria-hidden="true"></i>
+        <div class="flow-step"><b>2</b><h3>JavaScript</h3><p>Скрипты собирают страницы, графики, таблицы и календарь.</p></div>
+        <i class="flow-arrow" aria-hidden="true"></i>
+        <div class="flow-step"><b>3</b><h3>CSS</h3><p>Оформление, анимации и адаптивность под телефон и печать.</p></div>
+        <i class="flow-arrow" aria-hidden="true"></i>
+        <div class="flow-step"><b>4</b><h3>Переводы</h3><p>Движок переводов показывает сайт на русском, английском или испанском.</p></div>
+      </div>
+
+      <div class="section-head"><h2>Технологии</h2></div>
+      <div class="cards about-cards">
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">&lt;/&gt;</span><h3>HTML5</h3><p>Семантическая разметка: разделы, навигация, подписи для программ чтения с экрана.</p></article>
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">{ }</span><h3>CSS3</h3><p>Переменные, сетки, стеклянные панели, анимации, три режима оформления, печатная версия.</p></article>
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">JS</span><h3>JavaScript без фреймворков</h3><p>Переходы между разделами, графики на SVG, поиск, календарь, обратный отсчёт до матча.</p></article>
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">≡</span><h3>Данные отдельно от кода</h3><p>Чтобы обновить сайт, достаточно поправить data.js и profiles.js — вёрстку трогать не нужно.</p></article>
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">Aa</span><h3>Три языка</h3><p>Русский, английский и испанский. Выбор языка запоминается в браузере.</p></article>
+        <article class="panel reveal"><span class="ab-ico" aria-hidden="true">♿</span><h3>Удобство</h3><p>Работа с клавиатуры, видимый фокус, учёт системной настройки «уменьшить анимацию».</p></article>
+      </div>
+
+      <div class="section-head"><h2>Возможности сайта</h2></div>
+      <ul class="feat-grid reveal">
+        <li>Матч-центр: календарь, результаты, таблица Ла Лиги, сезон в цифрах</li>
+        <li>Страница каждого матча с авторами голов и шкалой минут</li>
+        <li>Лаборатория данных: карточки игроков, радар, графики формы</li>
+        <li>Сравнение двух игроков с радарной диаграммой</li>
+        <li>Таблица Ла Лиги с переключением на график очков</li>
+        <li>Поиск по всему сайту (Ctrl+K)</li>
+        <li>Избранные игроки и матчи</li>
+        <li>Добавление матча в календарь (файл .ics)</li>
+        <li>Тёмная, светлая темы и режим «День матча»</li>
+        <li>Печатная версия страниц</li>
+      </ul>
+
+      <div class="two-col about-two">
+        <div class="panel reveal">
+          <h3>Файлы проекта</h3>
+          <dl class="files">
+            <dt>index.html</dt><dd>разметка всех разделов</dd>
+            <dt>style.css</dt><dd>оформление и анимации</dd>
+            <dt>data.js</dt><dd>новости, матчи, таблица, трофеи</dd>
+            <dt>profiles.js</dt><dd>карточки и статистика игроков</dd>
+            <dt>script.js, features.js, matches.js</dt><dd>работа разделов</dd>
+            <dt>extras.js, view.js, viz.js, wow.js</dt><dd>поиск, настройки вида, графики, эффекты</dd>
+            <dt>i18n.js, lang-*.js</dt><dd>переводы интерфейса и данных</dd>
+          </dl>
+        </div>
+        <div class="panel reveal">
+          <h3>Горячие клавиши</h3>
+          <dl class="files keys">
+            <dt><kbd>Ctrl</kbd> + <kbd>K</kbd></dt><dd>открыть поиск</dd>
+            <dt><kbd>/</kbd></dt><dd>открыть поиск</dd>
+            <dt><kbd>Esc</kbd></dt><dd>закрыть окно или панель</dd>
+          </dl>
+          <h3 class="about-sub">Источники и ограничения</h3>
+          <ul class="list">
+            <li>Данные собраны вручную из открытых источников (ESPN, LaLiga, Sports Mole, Marca и других).</li>
+            <li>Личная статистика игроков обновляется вручную и может отставать от последних матчей.</li>
+            <li>Сайт неофициальный и не связан с клубом Real Madrid C.F.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- ЛАБОРАТОРИЯ ДАННЫХ -->
     <section id="data-lab" class="view">
       <h2 class="page-title" data-eyebrow="Данные и аналитика">Лаборатория данных</h2>
@@ -313,6 +388,8 @@
           <p class="muted small" id="formNote"></p>
         </div>
       </div>
+
+      <div class="panel reveal" id="labRadar" hidden></div>
 
       <div class="section-head"><h2>Клубные графики</h2></div>
 
@@ -351,7 +428,7 @@
         </div>
       </div>
       <nav class="foot-links" aria-label="Быстрые ссылки">
-        <a href="#news">Новости</a><a href="#squad">Состав</a><a href="#matches">Матчи</a><a href="#transfers">Трансферы</a><a href="#stadium">Стадион</a><a href="#trophies">Трофеи</a>
+        <a href="#news">Новости</a><a href="#squad">Состав</a><a href="#matches">Матчи</a><a href="#transfers">Трансферы</a><a href="#stadium">Стадион</a><a href="#about">О проекте</a><a href="#trophies">Трофеи</a>
       </nav>
     </div>
     <p class="gold-line">Hala Madrid</p>
@@ -422,5 +499,6 @@
   <script src="extras.js"></script>
   <script src="view.js"></script>
   <script src="viz.js"></script>
+  <script src="wow.js"></script>
 </body>
 </html>
