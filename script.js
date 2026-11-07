@@ -364,6 +364,6 @@ $$('.page-title, .section-head h2').forEach(h => {
   try { seen = sessionStorage.getItem('splash') === '1'; sessionStorage.setItem('splash', '1'); } catch (e) {}
   if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { sp.remove(); return; }
   document.body.classList.add('splash-on');
-  setTimeout(() => sp.classList.add('hide'), 1100);
-  setTimeout(() => { sp.remove(); document.body.classList.remove('splash-on'); }, 1700);
+  setTimeout(() => sp.classList.add('hide'), 2900);
+  setTimeout(() => { sp.remove(); document.body.classList.remove('splash-on'); }, 3500);
 })();
