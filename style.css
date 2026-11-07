@@ -1535,78 +1535,13 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 @media (prefers-reduced-motion: reduce) { .rb-card.next.first, .flow-arrow::after { animation: none; } .section-head h2::after { transition: none; } }
 .files.keys { margin-bottom: 24px; }
 
-/* ============ Ещё больше возможностей (plus.js, viz.js) ============ */
+/* ============ Плавность (plus.js, view.js) ============ */
 /* круговая смена темы */
 .theme-vt::view-transition-old(root), .theme-vt::view-transition-new(root) { animation: none !important; mix-blend-mode: normal; }
 .theme-vt::view-transition-old(root) { z-index: 1; } .theme-vt::view-transition-new(root) { z-index: 2; }
-
-/* баннер «Сегодня матч» */
-.md-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 0 18px; padding: 12px 20px; border-radius: 999px; text-decoration: none; color: var(--heading); border: 1px solid var(--gold); background: linear-gradient(90deg, rgba(212, 175, 55, .22), rgba(27, 58, 138, .25)); box-shadow: 0 0 30px var(--glow); animation: mdGlow 2.6s ease-in-out infinite; }
-.md-banner[hidden] { display: none; }
-.md-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff5a5a; box-shadow: 0 0 0 0 rgba(255, 90, 90, .7); animation: mdPulse 1.6s infinite; }
-.md-t { text-transform: uppercase; letter-spacing: .08em; font-size: .82rem; color: var(--gold); }
-.md-teams { font-weight: 600; } .md-time { font-family: var(--display); font-size: 1.1rem; color: var(--gold-soft); } .md-banner small { color: var(--muted); }
-.md-cd { margin-left: auto; font-variant-numeric: tabular-nums; } .md-cd b { font-family: var(--display); font-size: 1.2rem; color: var(--gold); }
-@keyframes mdPulse { 70% { box-shadow: 0 0 0 10px rgba(255, 90, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0); } }
-@keyframes mdGlow { 50% { box-shadow: 0 0 46px var(--glow); } }
-@media (max-width: 560px) { .md-banner { border-radius: 20px; padding: 12px 16px; } .md-cd { margin-left: 0; width: 100%; } }
-
-/* факты в герое */
-.hero-facts { min-height: 1.6em; margin: -6px 0 20px; font-size: 1rem; color: var(--gold-soft); letter-spacing: .02em; }
-.hero-facts::before { content: "◆ "; color: var(--gold); }
-.hero-facts.in { animation: factIn .6s var(--ease); }
-@keyframes factIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 /* параллакс */
 .hero-card { translate: 0 calc(var(--sy, 0) * -.05px); }
 .hero-fx { translate: 0 calc(var(--sy, 0) * .12px); }
 
-/* подиум */
-.podium h3 { margin-top: 0; }
-.pd-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 14px; height: 230px; max-width: 620px; margin: 10px auto 12px; }
-.pd-col { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
-.pd-name { font-size: .86rem; margin-bottom: 8px; color: var(--heading); }
-.pd-bar { position: relative; height: 0; min-height: 0; border-radius: 14px 14px 4px 4px; background: linear-gradient(180deg, rgba(212, 175, 55, .75), rgba(27, 58, 138, .55)); border: 1px solid var(--border); transition: height 1.1s var(--ease); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px 0 10px; overflow: hidden; }
-.podium.in .pd-bar { height: calc((100% - 34px) * var(--k)); }
-.pd-col.p1 .pd-bar { background: linear-gradient(180deg, var(--gold-soft), var(--gold) 45%, rgba(27, 58, 138, .7)); }
-.pd-rank { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(7, 11, 22, .55); color: var(--gold-soft); font-weight: 700; font-size: .85rem; }
-.pd-bar strong { font-family: var(--display); font-size: 1.8rem; color: #fff; }
-.pd-col.p1 .pd-bar strong { color: #0b1f4b; }
-
-/* график «Атака и защита» */
-.sc-wrap { display: grid; grid-template-columns: 22px 1fr; grid-template-rows: auto 22px; gap: 6px 10px; margin-bottom: 8px; }
-.sc-ylab { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: .74rem; color: var(--muted); }
-.sc-xlab { grid-column: 2; text-align: center; font-size: .74rem; color: var(--muted); }
-.sc-plot { position: relative; aspect-ratio: 16 / 10; min-height: 300px; border-radius: 16px; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(212, 175, 55, .08), transparent 40%), var(--card); }
-.sc-vline, .sc-hline { position: absolute; border: 0 dashed var(--border); } .sc-vline { top: 0; bottom: 0; border-left-width: 1px; } .sc-hline { left: 0; right: 0; border-top-width: 1px; }
-.sc-q { position: absolute; font-style: normal; font-size: .7rem; color: var(--muted); opacity: .8; max-width: 40%; } .sc-q.tr { right: 12px; bottom: 10px; text-align: right; } .sc-q.bl { left: 12px; top: 10px; }
-.sc-dot { position: absolute; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); padding: 0; border-radius: 50%; border: 2px solid var(--card-solid, #101a33); background: #7f8aa8; cursor: pointer; transform: scale(0); transition: transform .6s var(--ease) var(--d, 0ms), box-shadow .25s; }
-.vz-scatter.on .sc-dot { transform: scale(1); }
-.sc-dot.me { background: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, .35), 0 0 22px var(--glow); z-index: 3; }
-.sc-dot span { position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); display: none; flex-direction: column; white-space: nowrap; padding: 4px 9px; border-radius: 8px; background: var(--card-solid, #101a33); border: 1px solid var(--border); font-size: .72rem; color: var(--heading); text-align: center; pointer-events: none; }
-.sc-dot span small { color: var(--muted); font-size: .68rem; }
-.sc-dot.lab span, .sc-dot.hot span, .sc-dot:focus-visible span { display: flex; }
-.sc-dot.lab:not(.hot):not(.me) span { background: transparent; border-color: transparent; padding: 0; font-size: .68rem; } .sc-dot.lab:not(.hot) span small { display: none; }
-.sc-dot.hot { z-index: 5; transform: scale(1.25); box-shadow: 0 0 0 3px var(--gold); } .sc-dot.hot span { z-index: 6; }
-
-/* курсор-кольцо */
-.cur-ring, .cur-dot { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 400; opacity: 0; transition: opacity .3s; }
-.has-cur .cur-ring, .has-cur .cur-dot { opacity: 1; }
-.cur-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; border: 1.5px solid rgba(212, 175, 55, .75); transition: opacity .3s, width .25s var(--ease), height .25s var(--ease), margin .25s var(--ease), background .25s; }
-.cur-ring.big { width: 56px; height: 56px; margin: -28px 0 0 -28px; background: rgba(212, 175, 55, .12); }
-.cur-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--gold); }
-
-/* салют и подсказка по клавишам */
-.confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 300; }
-.kbd-help { border: 1px solid var(--gold); border-radius: 20px; padding: 24px 28px; background: var(--card-solid, #101a33); color: var(--text); max-width: min(460px, 92vw); box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
-.kbd-help::backdrop { background: rgba(3, 6, 14, .65); backdrop-filter: blur(4px); }
-.kbd-help h3 { margin: 0 0 14px; } .kbd-help .btn { margin-top: 18px; }
-.kbd-help .files { grid-template-columns: 110px 1fr; }
-
-@media print { .cur-ring, .cur-dot, .confetti, .md-banner, .kbd-help { display: none !important; } }
-@media (prefers-reduced-motion: reduce) { .md-banner, .md-dot, .hero-facts.in { animation: none; } .pd-bar, .sc-dot { transition: none; } }
-[data-theme="light"] .md-t, [data-theme="light"] .md-time, [data-theme="light"] .md-cd b, [data-theme="light"] .hero-facts, [data-theme="light"] .files dt { color: #8a6a10; }
-[data-theme="light"] .md-banner { background: linear-gradient(90deg, rgba(212, 175, 55, .22), rgba(27, 58, 138, .1)), #fff; }
-[data-theme="light"] .sc-dot span, [data-theme="light"] .kbd-help { background: #fff; }
-[data-theme="light"] .pd-bar strong { color: #0b1f4b; } [data-theme="light"] .pd-rank { background: rgba(255, 255, 255, .7); color: #0b1f4b; }
-[data-theme="light"] .cur-ring { border-color: rgba(138, 106, 16, .8); } [data-theme="light"] .cur-dot { background: #8a6a10; }
+[data-theme="light"] .files dt { color: #8a6a10; }
