@@ -98,12 +98,14 @@
 
     <!-- НОВОСТИ -->
     <section id="news" class="view active">
+      <a class="md-banner" id="mdBanner" href="#matches" hidden></a>
       <div class="hero">
         <canvas class="hero-fx" id="heroFx" aria-hidden="true"></canvas>
         <div class="hero-main">
           <p class="pill-badge"><i></i>Hala Madrid · основан в 1902 году</p>
           <h1>Real Madrid <span>Football Club</span></h1>
           <p class="lead">Новости, история, стадион и статистика королевского клуба — всё в одном месте. Состав, трофеи и данные сезона 2026/27.</p>
+          <p class="hero-facts" id="heroFacts" aria-hidden="true"></p>
           <div class="hero-actions">
             <a class="btn btn-gold" href="#squad">Состав 26/27 <span aria-hidden="true">→</span></a>
             <a class="btn btn-ghost" href="#stadium">Тур по «Бернабеу»</a>
@@ -120,6 +122,7 @@
       <div class="next-match reveal" id="nextHome"><div class="sk sk-wide" aria-hidden="true"></div></div>
       <div class="panel ribbon reveal" id="seasonRibbon"></div>
       <div class="home-grid reveal" id="homeWidgets"><div class="sk sk-box" aria-hidden="true"></div><div class="sk sk-box" aria-hidden="true"></div></div>
+      <div class="panel podium reveal" id="podium"></div>
 
       <div class="section-head">
         <h2 data-eyebrow="Свежее из клуба">Новости</h2>
@@ -343,6 +346,8 @@
             <dt><kbd>Ctrl</kbd> + <kbd>K</kbd></dt><dd>открыть поиск</dd>
             <dt><kbd>/</kbd></dt><dd>открыть поиск</dd>
             <dt><kbd>Esc</kbd></dt><dd>закрыть окно или панель</dd>
+            <dt><kbd>g</kbd> <kbd>n</kbd></dt><dd>перейти в раздел (g, затем первая буква)</dd>
+            <dt><kbd>?</kbd></dt><dd>показать все сочетания клавиш</dd>
           </dl>
           <h3 class="about-sub">Источники и ограничения</h3>
           <ul class="list">
@@ -500,5 +505,6 @@
   <script src="view.js"></script>
   <script src="viz.js"></script>
   <script src="wow.js"></script>
+  <script src="plus.js"></script>
 </body>
 </html>
