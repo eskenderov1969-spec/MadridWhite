@@ -2,6 +2,11 @@
 window.I18N = window.I18N || {};
 window.I18N.en = {
   ui: {
+    'Карусель': 'Carousel',
+    'Сетка': 'Grid',
+    'Звук и вибрация': 'Sound and vibration',
+    'Выкл': 'Off',
+    'Вкл': 'On',
     'Сегодня матч': 'Match day',
     'Матч начался': 'The match has started',
     'по вашему времени': 'your time',
