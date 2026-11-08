@@ -2,6 +2,15 @@
 window.I18N = window.I18N || {};
 window.I18N.es = {
   ui: {
+    'Тактическая доска': 'Pizarra táctica',
+    'Выберите схему и перетаскивайте игроков. Нажмите на игрока на поле, затем на имя в списке — и он займёт это место. Включите «Стрелки», чтобы рисовать на поле.': 'Elige un esquema y arrastra a los jugadores. Pulsa un jugador del campo y luego un nombre de la lista para que ocupe ese puesto. Activa «Flechas» para dibujar sobre el campo.',
+    'Схема': 'Esquema',
+    'Подставить состав': 'Rellenar la alineación',
+    'Стрелки': 'Flechas',
+    'Отменить стрелку': 'Deshacer flecha',
+    'Очистить стрелки': 'Borrar flechas',
+    'Скачать картинку': 'Descargar imagen',
+    'Состав на доске подставляется автоматически из списка игроков и не является прогнозом. Расстановка и стрелки сохраняются в этом браузере.': 'La alineación de la pizarra se rellena automáticamente con la lista de jugadores y no es una predicción. La disposición y las flechas se guardan en este navegador.',
     'Карусель': 'Carrusel',
     'Сетка': 'Cuadrícula',
     'Звук и вибрация': 'Sonido y vibración',
@@ -121,7 +130,7 @@ window.I18N.es = {
     'Сезон 2026/27 в цифрах': 'Temporada 2026/27 en cifras', 'побед': 'victorias', 'победы': 'victorias', 'поражения': 'derrotas', 'мячи': 'goles', '«сухих» матчей': 'porterías a cero',
     'Подробнее в матч-центре →': 'Más en el centro de partidos →',
     'Бомбардиры Реала в Ла Лиге': 'Goleadores del Real en La Liga',
-    'Голы после 10 туров (LaLiga) и мячи матча 1 ноября.': 'Goles tras 10 jornadas (LaLiga) más los goles del partido del 1 de noviembre.',
+    'Голы после 10 туров (LaLiga) и мячи матчей 1 и 7 ноября.': 'Goles tras 10 jornadas (LaLiga) más los goles de los partidos del 1 y el 7 de noviembre.',
     'Ничего не найдено.': 'No se ha encontrado nada.', 'Поиск по новостям…': 'Buscar noticias…', 'Поиск по новостям': 'Buscar noticias', 'Категории': 'Categorías',
     'год основания': 'año de fundación', 'город': 'ciudad', '«белые» — прозвище': '«los blancos»: apodo', 'Белый': 'Blanco', 'цвет формы': 'color de la camiseta',
     'Все': 'Todos', 'Вратари': 'Porteros', 'Защитники': 'Defensas', 'Полузащитники': 'Centrocampistas', 'Нападающие': 'Delanteros', '★ Избранные': '★ Favoritos',
@@ -146,7 +155,7 @@ window.I18N.es = {
     'Ближайших матчей в списке нет.': 'No hay próximos partidos en la lista.',
     'победы · ничьи · поражения': 'victorias · empates · derrotas', 'Все турниры': 'Todas las competiciones', 'Турнир': 'Competición',
     'Нажмите на матч, чтобы открыть его страницу. Счёт в списке показан по порядку «хозяева — гости».': 'Pulsa un partido para abrir su página. El marcador de la lista sigue el orden «local — visitante».',
-    'Ла Лига 2026/27, на 5 ноября 2026 · после 11-го тура. Нажмите на заголовок столбца, чтобы отсортировать.': 'La Liga 2026/27, a 5 de noviembre de 2026 · tras la jornada 11. Pulsa el encabezado de una columna para ordenar.',
+    'Ла Лига 2026/27, на 8 ноября 2026 · после 12-го тура, без матча «Атлетико» — «Барселона». Нажмите на заголовок столбца, чтобы отсортировать.': 'La Liga 2026/27, a 8 de noviembre de 2026 · tras la jornada 12, sin el partido Atlético — Barcelona. Pulsa el encabezado de una columna para ordenar.',
     'Команда': 'Equipo', 'Мячи': 'Goles', 'И': 'PJ', 'В': 'G', 'Н': 'E', 'П': 'P', 'Р': 'DG', 'О': 'Pts',
     'Забито — пропущено': 'A favor — en contra', 'Разница мячей': 'Diferencia de goles', 'Очки': 'Puntos',
     'Лига Европы': 'Liga Europa', 'Лига конференций': 'Liga de la Conferencia', 'Зона вылета': 'Descenso',
@@ -202,21 +211,21 @@ window.I18N.es = {
     'Реализованные пенальти': 'Penaltis marcados'
   },
   data: {
-    asOf: 'datos a 5 de noviembre de 2026',
-    statsNote: '* Datos a 5 de noviembre de 2026. Los últimos títulos del Real en la Liga de Campeones y en La Liga son de la temporada 2023/24.',
-    playersNote: 'Plantilla a 5 de noviembre de 2026. Partidos y goles: La Liga 2026/27 tras 10 jornadas (estadísticas oficiales de LaLiga); los partidos ante el Racing (1 de noviembre) y el AEK (4 de noviembre) aún no cuentan en las estadísticas individuales; de Rodrygo no hay datos.',
-    trophiesNote: 'Datos a 5 de noviembre de 2026. En 2025/26 el club acabó sin títulos (por primera vez desde 2020/21) y en 2026/27 todavía no tiene ninguno. Las fuentes difieren en detalles menores: conviene contrastar con la web oficial del club.',
-    transfersNote: 'Las cantidades son las publicadas por los medios (Sports Mole, TeamTalk, Marca): el club en su mayoría no las reveló y las fuentes difieren en los detalles. Datos a 5 de noviembre de 2026.',
-    leagueAsOf: 'a 5 de noviembre de 2026 · tras la jornada 11',
-    leagueNote: 'El Athletic y el Rayo Vallecano han jugado 10 partidos; el resto de clubes, 11. A igualdad de puntos se ordena por diferencia de goles; la liga aplica otro criterio (enfrentamientos directos).',
+    asOf: 'datos a 8 de noviembre de 2026',
+    statsNote: '* Datos a 8 de noviembre de 2026. Los últimos títulos del Real en la Liga de Campeones y en La Liga son de la temporada 2023/24.',
+    playersNote: 'Plantilla a 8 de noviembre de 2026. Partidos y goles: La Liga 2026/27 tras 10 jornadas (estadísticas oficiales de LaLiga); los partidos ante el Racing (1 de noviembre), el AEK (4 de noviembre) y el Valencia (7 de noviembre) aún no cuentan en las estadísticas individuales; de Rodrygo no hay datos.',
+    trophiesNote: 'Datos a 8 de noviembre de 2026. En 2025/26 el club acabó sin títulos (por primera vez desde 2020/21) y en 2026/27 todavía no tiene ninguno. Las fuentes difieren en detalles menores: conviene contrastar con la web oficial del club.',
+    transfersNote: 'Las cantidades son las publicadas por los medios (Sports Mole, TeamTalk, Marca): el club en su mayoría no las reveló y las fuentes difieren en los detalles. Datos a 8 de noviembre de 2026.',
+    leagueAsOf: 'a 8 de noviembre de 2026 · tras la jornada 12, sin el partido Atlético — Barcelona',
+    leagueNote: 'El Barcelona, el Atlético, el Athletic y el Rayo Vallecano han jugado 11 partidos; el resto, 12. El partido de la jornada 12 entre Atlético y Barcelona (8 de noviembre, 21:00 hora de Madrid) no está incluido. A igualdad de puntos se ordena por diferencia de goles; la liga aplica otro criterio (enfrentamientos directos).',
     profilesSeason: 'La Liga 2026/27, tras 10 jornadas (a 25 de octubre de 2026), estadísticas oficiales de LaLiga. No incluye la Liga de Campeones.',
     profilesNote: 'Valor de mercado: estimaciones de Transfermarkt según los medios; en algunos jugadores el valor es de abril de 2026 (indicado entre paréntesis).',
     stats: ['Año de fundación', 'Copas de Europa*', 'Títulos de La Liga*', 'Inauguración del Bernabéu'],
-    now: [['Entrenador', 'José Mourinho'], ['Presidente', 'Florentino Pérez'], ['Capitán', 'Federico Valverde'], ['Vicecapitán', 'Vinícius Júnior'], ['La Liga: 27 puntos tras 11 partidos', '3.º puesto'], ['Victorias en la Liga de Campeones', '4 de 4']],
+    now: [['Entrenador', 'José Mourinho'], ['Presidente', 'Florentino Pérez'], ['Capitán', 'Federico Valverde'], ['Vicecapitán', 'Vinícius Júnior'], ['La Liga: 30 puntos tras 12 partidos', '2.º puesto'], ['Victorias en la Liga de Campeones', '4 de 4']],
     news: [
-      ['Previa: Valencia — Real, 7 de noviembre',
-        'En la jornada 12 de La Liga el Real juega en Mestalla el sábado 7 de noviembre a las 21:00, hora de Madrid. Vinícius cumple el último partido de su sanción.',
-        'El Real es tercero en la tabla (27 puntos) y el Valencia, decimonoveno (9 puntos). Vinícius se perderá también este partido: su sanción de cuatro partidos en la liga termina con el viaje a Valencia y podrá volver para el encuentro ante el Celta el 21 de noviembre. Según Sports Mole, tampoco estarán Rodrygo (lesión de rodilla, regreso previsto a principios de 2027), Ferland Mendy (lesión de cadera) y Raúl Asencio (fractura por estrés, unos tres meses). Después llegan el Celta (21 de noviembre, en casa) y el PSV (24 de noviembre, en casa).'],
+      ['Valencia 0:3 Real: octava victoria seguida',
+        'Valverde, Arda Güler y Kylian Mbappé marcaron en Mestalla; Gayà, del Valencia, fue expulsado en el minuto 79.',
+        'El Real ganó 3:0 en Valencia. Valverde abrió el marcador con un disparo desde el borde del área después de que la falta lanzada por Mbappé rebotara en la barrera y le cayera a él (las fuentes dan minutos distintos, del 28 al 30). En el minuto 36 Arda Güler marcó de primeras tras un pase de Bellingham. En el 75 Mbappé superó al portero Dimitrievski tras un pase de Güler: su séptimo partido seguido marcando. En el minuto 79 Gayà fue expulsado por una falta sobre Mbappé, que se iba solo. El Real suma 30 puntos y empata con el Barcelona, que tiene un partido menos y jugó esa misma noche contra el Atlético (ese resultado aún no está en el sitio). Vinícius no jugó por sanción y podría volver para el partido ante el Celta el 21 de noviembre. Después llegan el parón por selecciones, el Celta (21 de noviembre, en casa) y el PSV (24 de noviembre, en casa).'],
       ['AEK 2:3 Real: victoria en el tiempo añadido',
         'El gol de Valverde en el minuto 90+2 dio al Real su cuarta victoria en cuatro partidos de la fase de liga de la Liga de Campeones.',
         'El Real remontó dos veces en Atenas. Koita abrió el marcador en el minuto 12 y Bellingham empató en el 32 (un gol en el minuto 28 fue anulado por fuera de juego). Pilios adelantó al AEK en el 75, Mbappé igualó tres minutos después y en el 90+2 Valverde, que había entrado como suplente, marcó el gol de la victoria con un disparo desde lejos. Koita fue expulsado tras el pitido final por protestar al árbitro. El Real suma 12 puntos de 12 y es segundo en la clasificación general, por detrás del PSG (diferencia de goles +6 frente a +15). Vinícius no jugó por sanción. Los minutos de los goles son de ESPN; otras fuentes difieren en uno o dos minutos.'],
@@ -251,7 +260,7 @@ window.I18N.es = {
     ],
     bios: [
       'Delantero de la selección de Francia. En La Liga 2026/27 ha marcado 11 goles y dado 2 asistencias en 10 partidos. El 25 de octubre de 2026 marcó su gol número 100 con el Real. Máximo goleador de La Liga en 2025/26 (25 goles).',
-      'Vicecapitán del club. En La Liga 2026/27 lleva 1 gol y 3 asistencias en 8 partidos. Sancionado tras una tarjeta roja: se perdió los partidos ante el Racing y el AEK, no jugará en Valencia el 7 de noviembre y podría volver para el partido ante el Celta el 21 de noviembre.',
+      'Vicecapitán del club. En La Liga 2026/27 lleva 1 gol y 3 asistencias en 8 partidos. Sancionado tras una tarjeta roja: se perdió los partidos ante el Racing, el AEK y el Valencia y podría volver para el partido ante el Celta el 21 de noviembre.',
       'Centrocampista de la selección de Inglaterra. La Liga 2026/27: 3 goles y 3 asistencias en 10 partidos, 74 duelos ganados en el suelo.',
       'Capitán del equipo. En La Liga 2026/27 ha jugado los 10 partidos (801 minutos) y ha dado 2 asistencias.',
       'Centrocampista de la selección de Turquía. La Liga 2026/27: 2 goles y 2 asistencias en 10 partidos.',
@@ -312,6 +321,7 @@ window.I18N.es = {
       'contrato finalizado el 1 de julio; según TeamTalk, fichó por el Udinese en septiembre', 'contrato finalizado el 1 de julio'
     ],
     matchFacts: {
+      '2026-11-07': ['Octava victoria seguida en todas las competiciones.', 'Mbappé ha marcado en siete partidos consecutivos.', 'Gayà (Valencia) fue expulsado en el minuto 79 por una falta sobre Mbappé, que se iba solo.', 'Las fuentes dan minutos distintos para el gol de Valverde (28–30), por eso aparece como aproximado.'],
       '2026-11-04': ['Cuarta victoria en cuatro partidos de la fase de liga: 12 puntos de 12.', 'Segunda remontada de la temporada en la Liga de Campeones (tras la del Roma).', 'El primer gol de Bellingham, en el minuto 28, fue anulado por fuera de juego.', 'Koita fue expulsado tras el pitido final. Los minutos de los goles son de ESPN; otras fuentes difieren en uno o dos minutos.'],
       '2026-11-01': ['Sexta victoria seguida en todas las competiciones.', 'Mbappé subió a 12 sus goles en La Liga.', 'El Racing no había perdido en casa antes del partido; su última victoria ante el Real fue en abril de 2007.', 'Vinícius no jugó por sanción.'],
       '2026-10-25': ['Primera derrota del Barcelona en La Liga 2026/27.', 'El segundo gol fue el número 100 de Mbappé con el Real.']
