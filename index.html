@@ -231,42 +231,18 @@
     <!-- СТАДИОН -->
     <section id="stadium" class="view">
       <h2 class="page-title" data-eyebrow="Мадрид · с 1947 года">Стадион Бернабеу</h2>
-      <div class="two-col">
-        <div class="panel reveal">
-          <h3>Сантьяго Бернабеу</h3>
-          <p>Домашняя арена клуба в Мадриде. Открыта в 1947 году и названа в честь Сантьяго Бернабеу, многолетнего президента клуба. Позже стадион прошёл масштабную реконструкцию.</p>
-          <ul class="list">
-            <li>Открытие: 1947 год</li>
-            <li>Город: Мадрид</li>
-            <li>Домашний клуб: Реал Мадрид</li>
-          </ul>
-          <p class="muted small">Вместимость, адрес и схему проезда можно добавить позже.</p>
-        </div>
-
-        <div class="panel pitch-panel reveal">
-          <div class="pitch-top">
-            <h3>Схема расстановки</h3>
-            <select id="formation" class="select" aria-label="Схема">
-              <option value="433">4-3-3</option>
-              <option value="442">4-4-2</option>
-              <option value="352">3-5-2</option>
-            </select>
-          </div>
-          <svg class="pitch" id="pitch" viewBox="0 0 210 136" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Футбольное поле с расстановкой">
-            <rect width="210" height="136" rx="6" class="grass"/>
-            <g class="lines">
-              <rect x="8" y="8" width="194" height="120"/>
-              <line x1="105" y1="8" x2="105" y2="128"/>
-              <circle cx="105" cy="68" r="14"/>
-              <rect x="8" y="38" width="26" height="60"/>
-              <rect x="176" y="38" width="26" height="60"/>
-              <rect x="8" y="54" width="9" height="28"/>
-              <rect x="193" y="54" width="9" height="28"/>
-            </g>
-            <g id="players"></g>
-          </svg>
-        </div>
+      <div class="panel reveal">
+        <h3>Сантьяго Бернабеу</h3>
+        <p>Домашняя арена клуба в Мадриде. Открыта в 1947 году и названа в честь Сантьяго Бернабеу, многолетнего президента клуба. Позже стадион прошёл масштабную реконструкцию.</p>
+        <ul class="list">
+          <li>Открытие: 1947 год</li>
+          <li>Город: Мадрид</li>
+          <li>Домашний клуб: Реал Мадрид</li>
+        </ul>
+        <p class="muted small">Вместимость, адрес и схему проезда можно добавить позже.</p>
       </div>
+
+      <div class="panel board reveal" id="board"></div>
     </section>
 
     <!-- ИСТОРИЯ -->
@@ -514,5 +490,6 @@
   <script src="wow.js"></script>
   <script src="plus.js"></script>
   <script src="motion.js"></script>
+  <script src="board.js"></script>
 </body>
 </html>
