@@ -114,40 +114,16 @@
     }).join('') + '</div>' +
     '<p class="muted small">Справа от очков — сыгранные матчи.</p>';
   }
-  function scatterHTML() {
-    var T = D.league.table, nf = new Intl.NumberFormat(window.LOCALE || 'ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    var gf = T.map(function (t) { return t.gf / t.p; }), ga = T.map(function (t) { return t.ga / t.p; });
-    var pad = 0.15, x0 = Math.min.apply(0, gf) - pad, x1 = Math.max.apply(0, gf) + pad, y0 = Math.min.apply(0, ga) - pad, y1 = Math.max.apply(0, ga) + pad;
-    var mx = gf.reduce(function (a, b) { return a + b; }, 0) / T.length, my = ga.reduce(function (a, b) { return a + b; }, 0) / T.length;
-    var X = function (v) { return ((v - x0) / (x1 - x0) * 100).toFixed(2); }, Y = function (v) { return ((v - y0) / (y1 - y0) * 100).toFixed(2); };
-    var byPts = T.slice().sort(function (a, b) { return b.pts - a.pts; }), top = byPts.slice(0, 3).map(function (t) { return t.team; });
-    var worstGA = T[ga.indexOf(Math.max.apply(0, ga))].team, worstGF = T[gf.indexOf(Math.min.apply(0, gf))].team;
-    var dots = T.map(function (t, i) {
-      var size = 10 + t.pts / byPts[0].pts * 14, lab = t.me || top.indexOf(t.team) >= 0 || t.team === worstGA || t.team === worstGF;
-      return '<button type="button" class="sc-dot' + (t.me ? ' me' : '') + (lab ? ' lab' : '') + '" style="left:' + X(gf[i]) + '%;top:' + Y(ga[i]) + '%;--s:' + size.toFixed(1) + 'px;--d:' + i * 30 + 'ms">' +
-        '<span><b>' + t.team + '</b><small>' + nf.format(gf[i]) + ' / ' + nf.format(ga[i]) + '</small></span></button>';
-    }).join('');
-    return '<div class="sc-wrap"><span class="sc-ylab">Пропущено за матч (меньше — лучше)</span><div class="sc-plot">' +
-      '<i class="sc-vline" style="left:' + X(mx) + '%"></i><i class="sc-hline" style="top:' + Y(my) + '%"></i>' +
-      '<em class="sc-q tr">Много забивают, мало пропускают</em><em class="sc-q bl">Мало забивают, много пропускают</em>' + dots + '</div>' +
-      '<span class="sc-xlab">Забито за матч</span></div>' +
-      '<p class="muted small">Каждая точка — клуб Ла Лиги: размер зависит от очков, пунктир — средние значения лиги. Подписаны лидеры, «Реал» и клубы с крайними значениями; остальных видно при наведении.</p>';
-  }
   function decorateTable() {
     var pane = document.getElementById('mcTable'); if (!pane) return;
     var wrap = $('.lg-wrap', pane); if (!wrap || $('.vz-switch', pane)) return;
     var sw = document.createElement('div'); sw.className = 'vz-switch'; sw.setAttribute('role', 'group');
-    sw.innerHTML = '<button type="button" data-m="table">Таблица</button><button type="button" data-m="chart">График очков</button><button type="button" data-m="scatter">Атака и защита</button>';
+    sw.innerHTML = '<button type="button" data-m="table">Таблица</button><button type="button" data-m="chart">График очков</button>';
     pane.insertBefore(sw, wrap);
     var chart = document.createElement('div'); chart.className = 'vz-chart'; chart.hidden = true; chart.innerHTML = pointsChart();
     wrap.parentNode.insertBefore(chart, wrap.nextSibling);
-    var sc = document.createElement('div'); sc.className = 'vz-scatter'; sc.hidden = true; sc.innerHTML = scatterHTML();
-    chart.parentNode.insertBefore(sc, chart.nextSibling);
-    sc.addEventListener('pointerover', function (e) { var d = e.target.closest('.sc-dot'); $$('.sc-dot', sc).forEach(function (x) { x.classList.toggle('hot', x === d); }); });
-    sc.addEventListener('pointerleave', function () { $$('.sc-dot', sc).forEach(function (x) { x.classList.remove('hot'); }); });
     function apply(m) {
-      tblMode = m; wrap.hidden = m !== 'table'; chart.hidden = m !== 'chart'; sc.hidden = m !== 'scatter';
-      if (m === 'scatter') { sc.classList.remove('on'); requestAnimationFrame(function () { requestAnimationFrame(function () { sc.classList.add('on'); }); }); }
+      tblMode = m; wrap.hidden = m !== 'table'; chart.hidden = m !== 'chart';
       $$('button', sw).forEach(function (b) { var on = b.dataset.m === m; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
       if (m === 'chart') { chart.classList.remove('on'); requestAnimationFrame(function () { requestAnimationFrame(function () { chart.classList.add('on'); }); }); }
     }
@@ -158,7 +134,7 @@
   if (pane) { new MutationObserver(function () { if ($('.lg-wrap', pane) && !$('.vz-switch', pane)) decorateTable(); }).observe(pane, { childList: true }); decorateTable(); }
 
   /* ---------- 5. шкала голов на странице матча ---------- */
-  function minute(s) { var m = /^(\d+)(?:\+(\d+))?/.exec(s || ''); return m ? +m[1] + (m[2] ? +m[2] * 0.6 : 0) : null; }
+  function minute(s) { var m = /^\D*(\d+)(?:\+(\d+))?/.exec(s || ''); return m ? +m[1] + (m[2] ? +m[2] * 0.6 : 0) : null; }
   function decorateMatch() {
     var box = document.getElementById('matchPage'); if (!box || $('.mt-line', box)) return;
     var head = $('.mp-head', box); if (!head) return;
