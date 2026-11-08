@@ -315,7 +315,6 @@
     });
     return D.players.map(p => ({ name: p.name, goals: (p.goals || 0) + (add[p.name] || 0) })).filter(p => p.goals > 0).sort((a, b) => b.goals - a.goals).slice(0, 5);
   }
-  window.RM_TOP = topScorers;
   function renderTicker() {
     const el = $('#ticker');
     if (!el) return;
@@ -351,7 +350,7 @@
         <h3>Бомбардиры Реала в Ла Лиге</h3>
         <div class="hbars">${top.map(p => `
           <div class="hbar"><span>${p.name}</span><span class="track"><i class="fill" style="width:${p.goals / mx * 100}%"></i></span><b>${p.goals}</b></div>`).join('')}</div>
-        <p class="muted small">Голы после 10 туров (LaLiga) и мячи матча 1 ноября.</p>
+        <p class="muted small">Голы после 10 туров (LaLiga) и мячи матчей 1 и 7 ноября.</p>
       </div>`;
   }
 
