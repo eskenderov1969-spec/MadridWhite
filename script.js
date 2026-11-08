@@ -181,24 +181,6 @@ $('#legends').innerHTML = D.legends.map((l, i) => {
 $('#faq').innerHTML = D.faq.map(f => `
   <details><summary>${f.q}</summary><p>${f.a}</p></details>`).join('');
 
-// ---------- Схема расстановки ----------
-const FORMATIONS = {
-  433: [[16,68],[48,22],[48,50],[48,86],[48,114],[86,36],[86,68],[86,100],[132,24],[140,68],[132,112]],
-  442: [[16,68],[48,22],[48,50],[48,86],[48,114],[88,24],[88,52],[88,84],[88,112],[132,50],[132,86]],
-  352: [[16,68],[46,34],[46,68],[46,102],[80,16],[88,42],[90,68],[88,94],[80,120],[134,50],[134,86]],
-};
-const playersG = $('#players');
-playersG.innerHTML = FORMATIONS[433].map((_, i) =>
-  `<circle class="pl${i === 0 ? ' gk' : ''}" r="5.2" cx="0" cy="0" style="transform:translate(${FORMATIONS[433][i][0]}px,${FORMATIONS[433][i][1]}px)"/>`).join('');
-
-function setFormation(key) {
-  $$('.pl', playersG).forEach((c, i) => {
-    const [x, y] = FORMATIONS[key][i];
-    c.style.transform = `translate(${x}px, ${y}px)`;
-  });
-}
-$('#formation').addEventListener('change', e => setFormation(e.target.value));
-
 // ---------- История ----------
 let histFilter = 'all';
 function renderTimeline() {
