@@ -1975,3 +1975,50 @@ $$('.page-title, .section-head h2').forEach(h => {
     });
   }
 })();
+
+;
+/* ======== club-polish ======== */
+(function () {
+  var D = window.SITE, $ = function (q, r) { return (r || document).querySelector(q); };
+  // 1. шкала эпох легенд (по годам из data.js)
+  var box = $('#legendEras');
+  if (box && D && D.legends) {
+    var P = D.legends.map(function (l) { var m = String(l.years).match(/(\d{4})\D+(\d{4})/); return m ? { l: l, a: +m[1], b: +m[2] } : null; }).filter(Boolean);
+    var MIN = 1950, MAX = new Date().getFullYear() + 0, span = MAX - MIN;
+    var ticks = []; for (var y = MIN; y <= MAX; y += 10) ticks.push(y);
+    box.innerHTML = '<h3>Эпохи легенд</h3><div class="era-chart">' +
+      '<div class="era-axis">' + ticks.map(function (t) { return '<span style="left:' + ((t - MIN) / span * 100) + '%">' + t + '</span>'; }).join('') + '</div>' +
+      P.map(function (p, i) {
+        return '<div class="era-row" data-i="' + i + '"><span class="era-name">' + p.l.name + '</span><span class="era-track">' +
+          '<i class="era-bar" style="left:' + ((p.a - MIN) / span * 100) + '%;width:' + ((p.b - p.a) / span * 100) + '%;--i:' + i + '"><em>' + p.a + '–' + p.b + '</em></i></span></div>';
+      }).join('') + '</div><p class="muted small era-note">Годы выступлений за клуб. Наведите на строку — подсветится карточка легенды.</p>';
+    var cards = document.querySelectorAll('#legends .legend');
+    box.addEventListener('pointerover', function (e) {
+      var r = e.target.closest('.era-row'); cards.forEach(function (c) { c.classList.remove('hl'); });
+      if (r && cards[+r.dataset.i]) cards[+r.dataset.i].classList.add('hl');
+    });
+    box.addEventListener('pointerleave', function () { cards.forEach(function (c) { c.classList.remove('hl'); }); });
+  }
+  // 2. свет под курсором на карточках клуба
+  if (matchMedia('(hover:hover)').matches) {
+    document.getElementById('club').addEventListener('pointermove', function (e) {
+      var c = e.target.closest('.fact, .legend'); if (!c) return;
+      var r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  }
+  // 3. плавное раскрытие вопросов
+  var faq = $('#faq');
+  if (faq && !matchMedia('(prefers-reduced-motion: reduce)').matches && Element.prototype.animate) {
+    faq.addEventListener('click', function (e) {
+      var sum = e.target.closest('summary'); if (!sum) return;
+      var d = sum.parentElement; e.preventDefault();
+      if (d._anim) d._anim.cancel();
+      var h0 = d.offsetHeight, opening = !d.open;
+      if (opening) d.open = true;
+      var h1 = opening ? d.scrollHeight : sum.offsetHeight + 2;
+      d.style.overflow = 'hidden';
+      d._anim = d.animate({ height: [h0 + 'px', h1 + 'px'] }, { duration: 320, easing: 'cubic-bezier(.22,.8,.3,1)' });
+      d._anim.onfinish = d._anim.oncancel = function () { if (!opening) d.open = false; d.style.overflow = ''; d._anim = null; };
+    });
+  }
+})();
