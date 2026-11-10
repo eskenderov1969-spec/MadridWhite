@@ -1744,3 +1744,68 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 .ptable td.num { position: relative; min-width: 70px; } .ptable td.num b { position: relative; color: var(--gold); font-family: var(--display); }
 .tb-b { position: absolute; left: 12px; bottom: 6px; height: 3px; border-radius: 3px; width: calc((100% - 24px) * var(--w) / 100%); background: linear-gradient(90deg, #8c6d12, var(--gold-soft)); opacity: .55; }
 @media (prefers-reduced-motion: reduce) { .ptable tbody tr { animation: none; } }
+
+/* ======== matches polish ======== */
+.tb { background: var(--c1, var(--card)); color: var(--c2, var(--heading)); box-shadow: inset 0 0 0 3px var(--c3, transparent); }
+.nm-badge.tb { border-color: rgba(255,255,255,.25); box-shadow: inset 0 0 0 4px var(--c3, transparent), 0 8px 24px rgba(0,0,0,.35); text-shadow: none; }
+.tb-s { width: 30px; height: 30px; border-radius: 50%; display: inline-grid; place-items: center; flex: none; font-family: var(--display); font-weight: 700; font-size: .72rem; letter-spacing: .02em; border: 1px solid rgba(255,255,255,.22); }
+.tb-crest { background: none; box-shadow: none; border: 0; }
+.tb-crest img { width: 100%; height: 100%; object-fit: contain; }
+.tb-end { margin-left: 4px; }
+.lg-team { display: inline-flex; align-items: center; gap: 10px; }
+.lg-team .tb-s { width: 24px; height: 24px; font-size: .6rem; }
+
+/* верхняя карточка */
+#nextFull { position: relative; overflow: hidden; }
+#nextFull::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 30%), rgba(240,220,142,.13), transparent 70%); }
+#nextFull:hover::before { opacity: 1; }
+.cd b { display: block; }
+.cd b.flip { animation: digitFlip .45s var(--ease); }
+@keyframes digitFlip { 0% { transform: translateY(-45%) rotateX(70deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.cd.urgent > div { border-color: rgba(255,120,90,.6); box-shadow: 0 0 22px rgba(255,120,90,.25); animation: urgentPulse 1.6s ease-in-out infinite; }
+.cd.urgent b { color: #ffb199; }
+@keyframes urgentPulse { 50% { box-shadow: 0 0 34px rgba(255,120,90,.45); } }
+.nm-prog { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: 18px auto 0; max-width: 640px; font-size: .72rem; color: var(--muted); }
+.nm-prog i { height: 6px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); overflow: hidden; display: block; }
+.nm-prog u { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #8c6d12, var(--gold), var(--gold-soft)); animation: progIn 1.4s var(--ease) .3s forwards; text-decoration: none; }
+@keyframes progIn { to { width: var(--p); } }
+@media (max-width: 640px) { .nm-prog { grid-template-columns: 1fr; text-align: center; gap: 6px; } }
+
+/* вкладки с ползунком */
+.mc-tabs.slid { position: relative; }
+.tab-slider { position: absolute; left: 0; top: 0; border-radius: var(--r-sm, 12px); background: linear-gradient(135deg, var(--gold), var(--gold-soft)); box-shadow: 0 4px 16px var(--glow); transition: transform .45s var(--ease), width .45s var(--ease); pointer-events: none; z-index: 0; }
+.mc-tabs.slid .tab { position: relative; z-index: 1; }
+.mc-tabs.slid .tab.active { background: transparent; box-shadow: none; border-color: transparent; color: #0b1f4b; }
+.mc-pane.pane-in { animation: paneIn .45s var(--ease); }
+@keyframes paneIn { from { opacity: 0; transform: translateY(14px); } }
+
+/* результаты */
+.mc-filter { align-items: center; }
+.chip-sep { width: 1px; align-self: stretch; background: var(--border); margin: 4px 6px; }
+a.mrow.res { animation: rowIn .45s var(--ease) both; animation-delay: calc(var(--i, 0) * 35ms); border-left: 4px solid transparent; }
+a.mrow.res.win { border-left-color: var(--gold); } a.mrow.res.loss { border-left-color: #ff6b6b; } a.mrow.res.draw { border-left-color: #9aa7c7; }
+.rs-line { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin-top: 4px; }
+.rs-team { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.rs-team:first-child { justify-content: flex-end; text-align: right; }
+.rs-line > .rs-team:last-child { justify-content: flex-start; text-align: left; }
+.rs-team b { font-size: .98rem; color: var(--heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs-team.me b { color: var(--gold); }
+.rs-team .nm-crest { width: 30px; height: 30px; flex: none; }
+.rs-score { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); font-family: var(--display); font-size: 1.35rem; color: var(--heading); font-variant-numeric: tabular-nums; }
+.rs-score em { font-style: normal; color: var(--gold); }
+a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var(--glow); }
+@media (max-width: 640px) { .rs-line { grid-template-columns: 1fr auto 1fr; gap: 6px; } .rs-team b { font-size: .8rem; } .rs-team .tb-s, .rs-team .nm-crest { display: none; } .rs-score { padding: 4px 10px; font-size: 1.1rem; } }
+
+/* таблица */
+.lg-table tbody tr { transition: background .2s; }
+.lg-table tbody tr:hover td { background: rgba(212,175,55,.08); }
+.lg-pts { position: relative; min-width: 64px; }
+.lg-pts i { position: absolute; left: 6px; bottom: 5px; height: 3px; border-radius: 3px; width: calc((100% - 12px) * var(--w) / 100%); background: linear-gradient(90deg, #8c6d12, var(--gold-soft)); opacity: .55; }
+.lg-pts b { position: relative; }
+@media (prefers-reduced-motion: reduce) { .cd b.flip, .cd.urgent > div, a.mrow.res, .mc-pane.pane-in { animation: none; } .tab-slider { transition: none; } .nm-prog u { animation: none; width: var(--p); } }
+.tb-crest img { width: 100%; height: 100%; }
+.lg-team .tb-crest { width: 28px; height: 28px; }
+.lg-table td:nth-child(2) { vertical-align: middle; }
+.lg-team { display: flex; align-items: center; }
+.lg-team .tb-crest, .lg-team .tb-crest img { width: 28px; height: 28px; display: block; }
+.lg-team .tb-crest { display: grid; }
