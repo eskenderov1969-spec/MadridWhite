@@ -426,15 +426,22 @@ $$('.page-title, .section-head h2').forEach(h => {
       const pr = (window.PROFILES || {})[p.id] || {};
       const num = pr.num != null ? pr.num : '';
       const w = p.goals == null ? 0 : Math.round((p.goals / maxG) * 100);
+      const st = pr.stats || {};
+      const photo = (window.PHOTOS || []).find(f => f.split('.')[0] === pr.slug);
+      const art = photo
+        ? `<img class="f-photo" src="assets/players/${photo}" alt="${p.name}" loading="lazy">`
+        : `<svg class="f-sil" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="40" r="22"/><path d="M14 120c0-30 20-46 46-46s46 16 46 46z"/></svg>`;
       return `
-      <button class="card player reveal" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
-        <span class="ghost-num" aria-hidden="true">${num !== '' ? '#' + num : ''}</span>
-        <div class="p-top"><span class="num-badge">${num !== '' ? num : initials(p.name)}</span><span class="pos-pill pos-${p.pos}">${POS[p.pos]}</span><span class="p-nat">${p.nat}</span><span class="fav-btn${FAV.has(p.id) ? ' on' : ''}" data-fav="${p.id}" role="button" tabindex="0" aria-label="В избранное" title="В избранное">★</span></div>
+      <button class="card player fifa reveal pb-${p.pos}${photo ? ' has-photo' : ''}" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
+        <span class="fav-btn${FAV.has(p.id) ? ' on' : ''}" data-fav="${p.id}" role="button" tabindex="0" aria-label="В избранное" title="В избранное">★</span>
+        <div class="f-left"><b class="f-num">${num !== '' ? num : initials(p.name)}</b><span class="f-pos">${p.pos}</span></div>
+        <div class="f-art"><span class="ghost-num" aria-hidden="true">${num !== '' ? num : ''}</span>${art}</div>
         <h3>${p.name}</h3>
-        <div class="meta">${p.years === 'с 2026' ? 'Новичок 2026' : 'В клубе ' + p.years}</div>
-        <div class="mini"><span><b>${fmtN(p.apps)}</b> матчей</span><span><b>${fmtN(p.goals)}</b> голов</span></div>
-        <div class="p-bar"><i style="width:${w}%"></i></div>
-        <small class="p-bar-l">Голы в Ла Лиге 26/27 относительно лучшего бомбардира</small>
+        <div class="meta">${p.nat} · ${p.years === 'с 2026' ? 'Новичок 2026' : 'В клубе ' + p.years}</div>
+        <div class="f-stats">
+          <span><b>${fmtN(p.apps)}</b>матчей</span><span><b>${fmtN(p.goals)}</b>голов</span>
+          <span><b>${st.assists != null ? st.assists : '—'}</b>передач</span><span><b>${st.minutes != null ? st.minutes : '—'}</b>минут</span>
+        </div>
       </button>`; }).join('');
     $('#players-empty').textContent = pos === 'fav' ? 'Пока никого нет: нажмите ★ на карточке игрока.' : 'Игроки не найдены.';
     $('#players-empty').hidden = list.length > 0;
@@ -2021,4 +2028,71 @@ $$('.page-title, .section-head h2').forEach(h => {
       d._anim.onfinish = d._anim.oncancel = function () { if (!opening) d.open = false; d.style.overflow = ''; d._anim = null; };
     });
   }
+})();
+
+;
+/* ======== squad-polish ======== */
+(function () {
+  var D = window.SITE, PR = window.PROFILES || {};
+  var grid = document.getElementById('players-grid'); if (!grid) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); };
+  // свет под курсором на карточках
+  if (matchMedia('(hover:hover)').matches) grid.addEventListener('pointermove', function (e) {
+    var c = e.target.closest('.player'); if (!c) return; var r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%'); c.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+  });
+  // переключатель «Карточки / Таблица»
+  var tb = $('#squad .toolbar');
+  var mode = 'cards'; try { mode = localStorage.getItem('rm-squad-mode') || 'cards'; } catch (e) {}
+  var sw = document.createElement('div'); sw.className = 'seg'; sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'Вид списка');
+  sw.innerHTML = '<button type="button" data-m="cards">Сетка карточек</button><button type="button" data-m="table">Таблица игроков</button>';
+  tb.appendChild(sw);
+  var wrap = document.createElement('div'); wrap.id = 'playersTable'; wrap.className = 'table-wrap ptable-wrap'; wrap.hidden = true;
+  grid.parentNode.insertBefore(wrap, grid.nextSibling);
+  var COLS = [
+    ['num', '№', function (p) { return (PR[p.id] || {}).num; }],
+    ['name', 'Игрок', function (p) { return p.name; }],
+    ['pos', 'Поз.', function (p) { return p.pos; }],
+    ['nat', 'Страна', function (p) { return p.nat; }],
+    ['apps', 'Матчи', function (p) { return p.apps; }],
+    ['min', 'Мин.', function (p) { return (PR[p.id] || {}).stats && PR[p.id].stats.minutes; }],
+    ['goals', 'Голы', function (p) { return p.goals; }],
+    ['ast', 'Пер.', function (p) { return (PR[p.id] || {}).stats && PR[p.id].stats.assists; }],
+    ['yc', 'ЖК', function (p) { return (PR[p.id] || {}).stats && PR[p.id].stats.yellow; }],
+    ['rc', 'КК', function (p) { return (PR[p.id] || {}).stats && PR[p.id].stats.red; }]
+  ];
+  var sortKey = null, dir = -1, building = false;
+  function order() { return Array.prototype.map.call(grid.querySelectorAll('.player'), function (c) { return +c.dataset.id; }); }
+  function build() {
+    var ids = order(), rows = ids.map(function (id) { return D.players.find(function (p) { return p.id === id; }); }).filter(Boolean);
+    if (sortKey) { var col = COLS.filter(function (c) { return c[0] === sortKey; })[0];
+      rows = rows.slice().sort(function (a, b) { var x = col[2](a), y = col[2](b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+        return (typeof x === 'string' ? x.localeCompare(y, 'ru') : x - y) * dir; }); }
+    var mx = {}; COLS.forEach(function (c) { if (['apps', 'min', 'goals', 'ast'].indexOf(c[0]) > -1) mx[c[0]] = Math.max.apply(null, [1].concat(D.players.map(function (p) { var v = c[2](p); return v == null ? 0 : v; }))); });
+    building = true;
+    wrap.innerHTML = '<table class="ptable"><thead><tr>' + COLS.map(function (c) {
+      return '<th data-k="' + c[0] + '"' + (sortKey === c[0] ? ' class="s' + (dir > 0 ? 'a' : 'd') + '"' : '') + ' tabindex="0">' + c[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      rows.map(function (p, i) { return '<tr data-id="' + p.id + '" tabindex="0" style="--i:' + Math.min(i, 14) + '">' + COLS.map(function (c) {
+        var v = c[2](p), t = v == null ? '—' : v;
+        if (mx[c[0]]) return '<td class="num"><span class="tb-b" style="--w:' + ((v || 0) / mx[c[0]] * 100) + '%"></span><b>' + t + '</b></td>';
+        if (c[0] === 'pos') return '<td><span class="pos-pill pos-' + p.pos + '">' + p.pos + '</span></td>';
+        if (c[0] === 'name') return '<td class="nm-c">' + t + '</td>';
+        return '<td>' + t + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>';
+    setTimeout(function () { building = false; }, 0);
+  }
+  function apply() {
+    sw.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b.dataset.m === mode); });
+    grid.hidden = mode === 'table'; wrap.hidden = mode !== 'table';
+    if (mode === 'table') build();
+  }
+  sw.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; mode = b.dataset.m; try { localStorage.setItem('rm-squad-mode', mode); } catch (x) {} apply(); });
+  new MutationObserver(function () { if (mode === 'table' && !building) build(); }).observe(grid, { childList: true });
+  wrap.addEventListener('click', function (e) {
+    var th = e.target.closest('th');
+    if (th) { var k = th.dataset.k; if (sortKey === k) dir = -dir; else { sortKey = k; dir = (k === 'name' || k === 'nat' || k === 'pos') ? 1 : -1; } build(); return; }
+    var tr = e.target.closest('tr[data-id]'); if (!tr) return;
+    var card = grid.querySelector('.player[data-id="' + tr.dataset.id + '"]'); if (card) card.click();
+  });
+  wrap.addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; var t = e.target; if (t.matches('th,tr')) t.click(); });
+  apply();
 })();
