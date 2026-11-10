@@ -320,9 +320,9 @@
             <dt>style.css</dt><dd>оформление и анимации</dd>
             <dt>data.js</dt><dd>новости, матчи, таблица, трофеи</dd>
             <dt>profiles.js</dt><dd>карточки и статистика игроков</dd>
-            <dt>script.js, features.js, matches.js</dt><dd>работа разделов</dd>
-            <dt>extras.js, view.js, viz.js, wow.js</dt><dd>поиск, настройки вида, графики, эффекты</dd>
-            <dt>i18n.js, lang-*.js</dt><dd>переводы интерфейса и данных</dd>
+            <dt>app.js</dt><dd>вся логика: разделы, поиск, графики, эффекты</dd>
+            <dt>lang.js</dt><dd>переводы интерфейса и данных</dd>
+            <dt>crest.js</dt><dd>герб клуба, встроенный в код</dd>
           </dl>
         </div>
         <div class="panel reveal">
@@ -477,19 +477,7 @@
   <script>document.getElementById("favicon").href = window.CREST; document.querySelectorAll("img[data-crest]").forEach(function (i) { i.src = window.CREST; });</script>
   <script src="data.js"></script>
   <script src="profiles.js"></script>
-  <script src="lang-names.js"></script>
-  <script src="lang-en.js"></script>
-  <script src="lang-es.js"></script>
-  <script src="i18n.js"></script>
-  <script src="script.js"></script>
-  <script src="features.js"></script>
-  <script src="matches.js"></script>
-  <script src="extras.js"></script>
-  <script src="view.js"></script>
-  <script src="viz.js"></script>
-  <script src="wow.js"></script>
-  <script src="plus.js"></script>
-  <script src="motion.js"></script>
-  <script src="board.js"></script>
+  <script src="lang.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
