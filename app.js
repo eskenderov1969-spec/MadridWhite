@@ -141,7 +141,7 @@ function renderNews() {
     (!q || hay(n.title + ' ' + n.text).toLowerCase().includes(q)));
 
   $('#news-grid').innerHTML = list.map((n, i) => `
-    <button class="card reveal" data-id="${n.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
+    <button class="card reveal${i === 0 && cat === 'Все' && !q ? ' featured' : ''}" data-id="${n.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
       <div class="card-img" data-cat="${n.cat}"><span class="ci-icon" aria-hidden="true">${coverIcon(n.cat)}</span><span class="tag">${n.cat}</span></div>
       <div class="card-body">
         <time datetime="${n.date}">${fmt.format(new Date(n.date))}</time>
@@ -1085,7 +1085,7 @@ $$('.page-title, .section-head h2').forEach(h => {
     if (me >= 0) items.push(`<span class="tk"><b>Ла Лига</b><span>Место ${me + 1} · ${tbl[me].pts} очк.</span></span>`);
     items.push(`<span class="tk"><b>Форма</b>${formHTML(5)}</span>`);
     if (top) items.push(`<span class="tk"><b>Лучший бомбардир</b><span>${top.name} · ${top.goals}</span></span>`);
-    items.push(`<span class="tk"><b>Победы в Лиге чемпионов</b><span>3 из 3</span></span>`);
+    { const cl = (D.now.find(n => n.k.toLowerCase().startsWith('победы')) || {}).v; if (cl) items.push(`<span class="tk"><b>Победы в Лиге чемпионов</b><span>${cl}</span></span>`); }
     const row = items.join('<i class="tk-sep" aria-hidden="true">◆</i>');
     el.innerHTML = `<div class="ticker-track"><div class="tk-set">${row}<i class="tk-sep" aria-hidden="true">◆</i></div><div class="tk-set" aria-hidden="true">${row}<i class="tk-sep" aria-hidden="true">◆</i></div></div>`;
   }
@@ -1096,17 +1096,23 @@ $$('.page-title, .section-head h2').forEach(h => {
       <div class="panel hw">
         <h3>Сезон 2026/27 в цифрах</h3>
         <div class="hw-tiles">
-          <div><b>${s.w}</b><span>побед</span></div><div><b>${s.l}</b><span>поражения</span></div>
-          <div><b>${s.gf}:${s.ga}</b><span>мячи</span></div><div><b>${s.cs}</b><span>«сухих» матчей</span></div>
+          <div><b data-to="${s.w}">0</b><span>побед</span></div><div><b data-to="${s.l}">0</b><span>поражения</span></div>
+          <div><b>${s.gf}:${s.ga}</b><span>мячи</span></div><div><b data-to="${s.cs}">0</b><span>«сухих» матчей</span></div>
+        </div>
+        <div class="gd-chart" role="img" aria-label="Разница мячей по матчам сезона">
+          <div class="gd-head"><span>Разница мячей по матчам</span><span class="gd-leg"><i class="w"></i>победа <i class="d"></i>ничья <i class="l"></i>поражение</span></div>
+          <div class="gd-bars">${[...D.results].reverse().map((r, i) => { const [a, b] = num(r.score), d = a - b, o = outcome(r.score);
+            return `<span class="gd ${o[0]}" style="--h:${Math.max(Math.abs(d), .35) * 17}%;--i:${i}" title="${r.opp}, ${r.score}"><em>${r.score}</em></span>`; }).join('')}</div>
         </div>
         <a class="btn btn-ghost hw-link" href="#matches">Подробнее в матч-центре →</a>
       </div>
       <div class="panel hw">
         <h3>Бомбардиры Реала в Ла Лиге</h3>
         <div class="hbars">${top.map(p => `
-          <div class="hbar"><span>${p.name}</span><span class="track"><i class="fill" style="width:${p.goals / mx * 100}%"></i></span><b>${p.goals}</b></div>`).join('')}</div>
-        <p class="muted small">Голы после 10 туров (LaLiga) и мячи матчей 1 и 7 ноября.</p>
+          <div class="hbar"><span>${p.name}</span><span class="track"><i class="fill" style="--w:${p.goals / mx * 100}%"></i></span><b>${p.goals}</b></div>`).join('')}</div>
+        <p class="muted small hw-note">Голы после 10 туров (LaLiga) и мячи матчей 1 и 7 ноября.</p>
       </div>`;
+    $$('#homeWidgets .hw-tiles b[data-to]').forEach(b => { const to = +b.dataset.to; b.textContent = '0'; setTimeout(() => { const t0 = performance.now(); (function tick(now) { const p = Math.min((now - t0) / 1100, 1); b.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0); }, 350); });
   }
 
   // ---------- Календарь .ics, «поделиться» ----------
@@ -1954,4 +1960,18 @@ $$('.page-title, .section-head h2').forEach(h => {
 
   if (!load()) autofill();
   render();
+})();
+
+;
+/* ======== home-polish ======== */
+(function () {
+  // подсветка карточек новостей под курсором
+  var g = document.getElementById('news-grid');
+  if (g && matchMedia('(hover:hover)').matches) {
+    g.addEventListener('pointermove', function (e) {
+      var c = e.target.closest('.card'); if (!c) return;
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  }
 })();
