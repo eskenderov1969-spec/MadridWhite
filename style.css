@@ -1694,3 +1694,53 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 @media (max-width: 640px) { .era-axis { margin-left: 0; } .era-row { grid-template-columns: 1fr; } .era-name { padding: 0 0 2px; } .era-bar em { display: none; } }
 @media (prefers-reduced-motion: reduce) { .legend .avatar::after { animation: none; } .era-bar { transition: none; } }
 @media print { .legend .avatar::after { display: none; } }
+
+/* ======== squad polish: карточки в стиле FIFA и таблица ======== */
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card); }
+.seg button { font: inherit; font-size: .84rem; font-weight: 600; padding: 0 16px; min-height: 44px; border: 0; background: none; color: var(--muted); cursor: pointer; transition: background .25s, color .25s; }
+.seg button.active { background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #0b1f4b; }
+.seg button:not(.active):hover { color: var(--heading); }
+#squad .toolbar { flex-wrap: wrap; }
+
+#players-grid.players { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+#players-grid .player.fifa { --pc: #d4af37; padding: 14px 16px 16px; text-align: center; display: grid; grid-template-columns: 54px 1fr 54px; grid-template-rows: auto auto auto auto; overflow: hidden; border-radius: 20px;
+  background: radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--pc) 32%, transparent), transparent 70%), linear-gradient(170deg, rgba(26,42,88,.95), rgba(9,16,38,.97)); border: 1px solid color-mix(in srgb, var(--pc) 60%, transparent); }
+#players-grid .player.fifa.pb-GK { --pc: #e6c44f; } #players-grid .player.fifa.pb-DF { --pc: #5b8bf0; } #players-grid .player.fifa.pb-MF { --pc: #3fb08a; } #players-grid .player.fifa.pb-FW { --pc: #e2563f; }
+#players-grid[hidden], #playersTable[hidden] { display: none !important; }
+.player.fifa::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 4; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 30%), rgba(255,255,255,.16), transparent 60%), linear-gradient(115deg, transparent 35%, rgba(240,220,142,.12) 50%, transparent 65%); }
+.player.fifa:hover::before { opacity: 1; }
+.player.fifa .fav-btn { position: absolute; right: 12px; top: 10px; z-index: 5; }
+.f-left { grid-column: 1; grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 2; padding-top: 4px; }
+.f-num { font-family: var(--display); font-size: 2.1rem; line-height: 1; color: var(--heading); }
+.f-pos { font-size: .72rem; font-weight: 700; letter-spacing: .1em; color: var(--pc); padding-top: 4px; border-top: 2px solid var(--pc); margin-top: 4px; }
+.f-art { grid-column: 1 / -1; grid-row: 1 / span 2; position: relative; height: 150px; display: grid; place-items: end center; z-index: 1; }
+.f-art .ghost-num { position: absolute; left: 50%; top: 4px; right: auto; transform: translateX(-50%); font-size: 6.2rem; top: -2px; color: color-mix(in srgb, var(--pc) 16%, transparent); z-index: 0; }
+.f-sil { width: 120px; height: 120px; z-index: 1; fill: color-mix(in srgb, var(--pc) 46%, #0b1634); stroke: color-mix(in srgb, var(--pc) 70%, transparent); stroke-width: 1; filter: drop-shadow(0 6px 14px rgba(0,0,0,.4)); transition: transform .5s var(--ease); position: relative; }
+.f-photo { height: 150px; width: auto; max-width: 100%; object-fit: contain; object-position: bottom; position: relative; filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); transition: transform .5s var(--ease); }
+.player.fifa:hover .f-sil, .player.fifa:hover .f-photo { transform: translateY(-4px) scale(1.05); }
+.player.fifa h3 { grid-column: 1 / -1; grid-row: 3; margin: 8px 0 0; font-size: 1.12rem; text-transform: uppercase; letter-spacing: .03em; position: relative; z-index: 2; }
+.player.fifa .meta { grid-column: 1 / -1; grid-row: 4; margin: 2px 0 10px; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--pc) 45%, transparent); font-size: .72rem; }
+.f-stats { grid-column: 1 / -1; grid-row: 5; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; position: relative; z-index: 2; }
+.f-stats span { display: flex; flex-direction: column; font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.f-stats b { font-family: var(--display); font-size: 1.35rem; line-height: 1.15; color: var(--gold); letter-spacing: 0; }
+[data-density="compact"] .player.fifa .f-art { height: 100px; } [data-density="compact"] .f-sil { width: 88px; height: 88px; } [data-density="compact"] .player.fifa .meta { display: block; }
+[data-theme="light"] .player.fifa { background: radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--pc) 26%, transparent), transparent 70%), linear-gradient(170deg, #fff, #e9eefb); }
+[data-theme="light"] .f-sil { fill: color-mix(in srgb, var(--pc) 40%, #fff); }
+[data-theme="light"] .f-stats b { color: #7a5f0b; }
+
+/* таблица состава */
+.ptable-wrap { margin-top: 16px; overflow-x: auto; }
+.ptable { width: 100%; border-collapse: collapse; min-width: 640px; font-size: .9rem; }
+.ptable th { position: sticky; top: 0; text-align: left; padding: 12px 12px; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); cursor: pointer; user-select: none; background: rgba(8,14,32,.85); white-space: nowrap; }
+[data-theme="light"] .ptable th { background: #eef2fb; }
+.ptable th:hover { color: var(--heading); }
+.ptable th.sa::after { content: " ▲"; color: var(--gold); } .ptable th.sd::after { content: " ▼"; color: var(--gold); }
+.ptable td { padding: 10px 12px; border-top: 1px solid var(--border); }
+.ptable tbody tr { cursor: pointer; transition: background .2s; animation: rowIn .45s var(--ease) both; animation-delay: calc(var(--i) * 28ms); }
+.ptable tbody tr:hover, .ptable tbody tr:focus-visible { background: rgba(212,175,55,.09); outline: none; }
+@keyframes rowIn { from { opacity: 0; transform: translateX(-10px); } }
+.ptable .nm-c { font-weight: 600; color: var(--heading); white-space: nowrap; }
+.ptable td.num { position: relative; min-width: 70px; } .ptable td.num b { position: relative; color: var(--gold); font-family: var(--display); }
+.tb-b { position: absolute; left: 12px; bottom: 6px; height: 3px; border-radius: 3px; width: calc((100% - 24px) * var(--w) / 100%); background: linear-gradient(90deg, #8c6d12, var(--gold-soft)); opacity: .55; }
+@media (prefers-reduced-motion: reduce) { .ptable tbody tr { animation: none; } }
