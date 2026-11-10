@@ -760,8 +760,8 @@ $$('.page-title, .section-head h2').forEach(h => {
 
 ;
 /* ======== matches.js ======== */
-// Матч-центр (календарь с обратным отсчётом, результаты, таблица Ла Лиги, страница матча) и трансферы.
-// Данные — в data.js: upcoming, results, league, matchInfo, transfers.
+// Матч-центр (календарь с обратным отсчётом, результаты, таблица Ла Лиги, страница матча) .
+// Данные — в data.js: upcoming, results, league, matchInfo.
 (function () {
   const POS = { GK: 'Вратарь', DF: 'Защитник', MF: 'Полузащитник', FW: 'Нападающий' };
   const fmtLong = new Intl.DateTimeFormat((window.LOCALE || 'ru-RU'), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -995,32 +995,6 @@ $$('.page-title, .section-head h2').forEach(h => {
     window.scrollTo({ top: 0 });
   }
 
-  // ---------- Трансферы ----------
-  let trFilter = 'all';
-  function renderTransfers() {
-    const T = D.transfers;
-    const ins = T.filter(t => t.dir === 'in'), outs = T.filter(t => t.dir === 'out');
-    $('#transfersNote').textContent = D.transfersNote;
-    $('#trSummary').innerHTML = `
-      <div class="fact"><b>${ins.length}</b><span>пришли (с возвращением из аренды)</span></div>
-      <div class="fact"><b>${outs.length}</b><span>ушли</span></div>
-      <div class="fact"><b>${T.filter(t => t.fee === 'Бесплатно').length}</b><span>бесплатных трансферов</span></div>
-      <div class="fact"><b>${ins[0].name}</b><span>самая дорогая покупка: ${ins[0].fee}</span></div>`;
-    const chips = [['all', 'Все'], ['in', 'Пришли'], ['out', 'Ушли']];
-    $('#trChips').innerHTML = chips.map(([k, n]) => `<button class="chip${k === trFilter ? ' active' : ''}" data-k="${k}" type="button">${n}</button>`).join('');
-    const list = T.filter(t => trFilter === 'all' || t.dir === trFilter);
-    $('#trGrid').innerHTML = list.map((t, i) => `
-      <article class="card tr-card reveal" style="--d:${Math.min(i, 6) * 0.05}s">
-        <div class="tr-top"><span class="tr-dir ${t.dir}">${t.dir === 'in' ? '↓ Пришёл' : '↑ Ушёл'}</span><span class="tr-kind">${t.kind}</span></div>
-        <h3>${t.name}</h3>
-        <span class="pos-pill pos-${t.pos}">${POS[t.pos]}</span>
-        <div class="tr-row"><small>${t.dir === 'in' ? 'Откуда' : 'Куда'}</small><b>${t.club}</b></div>
-        <div class="tr-row"><small>Сумма</small><b class="tr-fee">${t.fee}</b></div>
-        ${t.contract ? `<div class="tr-row"><small>${t.dir === 'in' ? 'Контракт' : 'Контракт у нового клуба'}</small><b>${t.contract.replace(' у нового клуба', '')}</b></div>` : ''}
-        ${t.feeNote ? `<p class="tr-note">${t.feeNote}</p>` : ''}
-      </article>`).join('');
-    observeReveal($('#trGrid'));
-  }
 
 
   // ---------- Календарь-сетка ----------
@@ -1226,10 +1200,6 @@ $$('.page-title, .section-head h2').forEach(h => {
     if (b.dataset.v) resVenue = b.dataset.v; else resFilter = b.dataset.c;
     renderRes();
   });
-  $('#trChips').addEventListener('click', e => {
-    const b = e.target.closest('.chip'); if (!b) return;
-    trFilter = b.dataset.k; renderTransfers();
-  });
 
   function renderNext() {
     const m = nextMatch();
@@ -1240,18 +1210,17 @@ $$('.page-title, .section-head h2').forEach(h => {
   function onPage(p) {
     if (p === 'match') renderMatch();
     if (p === 'matches') { renderNext(); renderCal(); observeReveal($('#matches')); }
-    if (p === 'transfers') renderTransfers();
   }
   document.addEventListener('pagechange', e => onPage(e.detail));
 
   // Старт
-  renderNext(); renderCal(); renderRes(); renderTable(); renderTransfers(); renderHome(); titleTick();
+  renderNext(); renderCal(); renderRes(); renderTable(); renderHome(); titleTick();
   if (location.hash.startsWith('#match/')) renderMatch();
 })();
 
 ;
 /* ======== extras.js ======== */
-// Поиск по сайту (Ctrl+K или «/»): разделы, игроки, матчи, новости, трансферы.
+// Поиск по сайту (Ctrl+K или «/»): разделы, игроки, матчи, новости.
 (function () {
   const dlg = $('#palette'), input = $('#palInput'), list = $('#palList');
   if (!dlg || typeof dlg.showModal !== 'function') { const b = $('#searchBtn'); if (b) b.hidden = true; return; }
@@ -1274,7 +1243,6 @@ $$('.page-title, .section-head h2').forEach(h => {
     D.upcoming.forEach(u => idx.push({ g: 'Календарь', t: `${u.venue === 'дома' ? 'Реал — ' + u.opp : u.opp + ' — Реал'}`, s: `${u.comp} · ${dFmt.format(day(u.date))}`, hay: `${u.opp} ${u.comp} календарь ближайший матч`, go: () => { location.hash = '#matches'; } }));
     D.league.table.forEach(t => idx.push({ g: 'Таблица', t: t.team, s: `${t.pts} очк. · ${t.p} матчей`, hay: `${t.team} таблица ла лига`, go: () => { location.hash = '#matches'; setTimeout(() => { const b = $('#mcTabs [data-tab=table]'); if (b) b.click(); }, 60); } }));
     D.news.forEach(n => idx.push({ g: 'Новости', t: n.title, s: dFmt.format(day(n.date)), hay: `${n.title} ${n.text}`, go: fillAndGo('#news', '#search', n.title) }));
-    (D.transfers || []).forEach(t => idx.push({ g: 'Трансферы', t: t.name, s: `${t.dir === 'in' ? 'пришёл из' : 'ушёл в'} · ${t.club}`, hay: `${t.name} ${t.club} трансфер`, go: () => { location.hash = '#transfers'; } }));
     D.legends.forEach(l => idx.push({ g: 'Легенды', t: l.name, s: `${l.role} · ${l.years}`, hay: `${l.name} ${l.role}`, go: () => { location.hash = '#club'; } }));
     return idx;
   }
@@ -2167,4 +2135,68 @@ $$('.page-title, .section-head h2').forEach(h => {
   if (nf && matchMedia('(hover:hover)').matches) nf.addEventListener('pointermove', function (e) {
     var r = nf.getBoundingClientRect(); nf.style.setProperty('--mx', (e.clientX - r.left) + 'px'); nf.style.setProperty('--my', (e.clientY - r.top) + 'px');
   });
+})();
+
+;
+/* ======== stadium ======== */
+(function () {
+  var sec = document.getElementById('stadium'); if (!sec) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 1. счётчики в верхнем блоке
+  function count(el) {
+    var to = +el.dataset.to; if (reduce) { el.textContent = to; return; }
+    var t0 = performance.now(), dur = 1500;
+    (function tick(now) { var p = Math.min((now - t0) / dur, 1); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
+  }
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); count(e.target); } }); }, { threshold: .4 }) : null;
+  $$('.st-kpis [data-to]').forEach(function (el) { if (io) io.observe(el); else el.textContent = el.dataset.to; });
+
+  // 2. параллакс фото
+  var hero = $('.st-hero');
+  function par() { if (!hero || !sec.classList.contains('active')) return; var r = hero.getBoundingClientRect(); hero.style.setProperty('--py', Math.max(-80, Math.min(80, -r.top * .18)).toFixed(1) + 'px'); }
+  if (!reduce) { window.addEventListener('scroll', par, { passive: true }); par(); }
+
+  // 3. схема: крыша / газон / экран
+  var svg = $('.st-svg'), ctrl = $('.st-ctrl');
+  if (svg && ctrl) {
+    var LAB = { roof: ['Крыша: закрыта', 'Крыша: открыта'], pitch: ['Газон: на поле', 'Газон: убран'], screen: ['Экран 360°: подсветить', 'Экран 360°: подсвечен'] };
+    var state = { roof: true, pitch: true, screen: false };
+    function sync() {
+      svg.classList.toggle('roof-open', !state.roof); svg.classList.toggle('pitch-off', !state.pitch); svg.classList.toggle('screen-on', state.screen);
+      $$('[data-sw]', ctrl).forEach(function (b) {
+        var k = b.dataset.sw, on = state[k]; b.classList.toggle('active', k === 'screen' ? state.screen : on); b.setAttribute('aria-pressed', String(k === 'screen' ? state.screen : on));
+        var t = LAB[k][k === 'screen' ? (state.screen ? 1 : 0) : (on ? 0 : 1)]; if (b.textContent !== t) b.textContent = t;
+      });
+    }
+    ctrl.addEventListener('click', function (e) { var b = e.target.closest('[data-sw]'); if (!b) return; state[b.dataset.sw] = !state[b.dataset.sw]; sync(); });
+    sync();
+  }
+
+  // 4. график вместимости
+  var tlHead = $$('.section-head', sec).filter(function (h) { return /Хронология/.test(h.textContent); })[0] || $('.st-tl', sec);
+  if (tlHead && !$('#capChart')) {
+    var D = [['1947', 75145, 'при открытии'], ['1954', 125000, 'после расширения'], ['сейчас', 80000, 'более 80 000']];
+    var mx = 125000, wrap = document.createElement('div');
+    wrap.innerHTML = '<div class="section-head"><h2>Вместимость по годам</h2></div><div class="panel cap reveal" id="capChart">' +
+      D.map(function (d, i) { return '<div class="cap-row" style="--i:' + i + '"><span class="cap-y">' + d[0] + '</span><span class="cap-track"><i style="--w:' + (d[1] / mx * 100).toFixed(1) + '%"></i></span><b>' + (i === 2 ? '≈ ' : '') + d[1].toLocaleString('ru-RU').replace(/\u00a0/g, ' ') + '</b></div>'; }).join('') +
+      '<p class="muted small">Первое значение — вместимость при открытии, второе — после расширения 1954 года (самая большая в истории), третье — приблизительно: источники называют от 78 297 до 85 000 мест. Рекорд посещаемости — 129 690 зрителей, 1956 год.</p></div>';
+    var before = tlHead.classList.contains('section-head') ? tlHead : tlHead.previousElementSibling;
+    var added = []; while (wrap.firstChild) { added.push(wrap.firstChild); before.parentNode.insertBefore(wrap.firstChild, before); }
+    try { observeReveal(sec); } catch (e) { var cp = $('#capChart'); if (cp) cp.classList.add('in'); }
+  }
+
+  // 5. хронология: линия рисуется при прокрутке
+  var tl = $('.st-tl', sec);
+  if (tl) {
+    var items = $$('li', tl);
+    function line() {
+      if (!sec.classList.contains('active')) return;
+      var r = tl.getBoundingClientRect(), vh = innerHeight, p = Math.max(0, Math.min(1, (vh * .62 - r.top) / r.height));
+      tl.style.setProperty('--prog', reduce ? 1 : p.toFixed(3));
+      var edge = r.top + r.height * p;
+      items.forEach(function (li) { var b = li.getBoundingClientRect(); li.classList.toggle('lit', reduce || b.top + 30 < vh * .62); });
+    }
+    window.addEventListener('scroll', line, { passive: true }); window.addEventListener('resize', line); window.addEventListener('pagechange', function () { setTimeout(line, 120); }); line();
+  }
 })();
