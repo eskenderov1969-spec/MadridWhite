@@ -774,6 +774,18 @@ $$('.page-title, .section-head h2').forEach(h => {
   const crest = () => (window.CREST
     ? `<img src="${window.CREST}" alt="" onerror="this.outerHTML='<b>RM</b>'">` : '<b>RM</b>');
   const initials = n => tr(n).replace(/[^А-Яа-яA-Za-z ]/g, '').split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  const TEAM_COL = { 'Валенсия': ['#ffffff', '#e8741e'], 'АЕК Афины': ['#f7d117', '#111111'], 'Расинг Сантандер': ['#0b7a3b', '#ffffff'], 'Барселона': ['#a50044', '#ffffff', '#004d98'],
+    'РБ Лейпциг': ['#dd0741', '#ffffff'], 'Севилья': ['#ffffff', '#d4001f'], 'Рома': ['#8e1f2f', '#f0bc42'], 'Вильярреал': ['#f7e11b', '#005187'], 'Атлетико': ['#cb3524', '#ffffff', '#272e61'],
+    'Эльче': ['#ffffff', '#0a7a3a'], 'Райо Вальекано': ['#ffffff', '#d4001f'], 'Интер': ['#0e1e5b', '#ffffff', '#111111'], 'Бетис': ['#0bb363', '#ffffff'], 'Малага': ['#2f8fd8', '#ffffff'],
+    'Реал Сосьедад': ['#0067b1', '#ffffff'], 'Эспаньол': ['#1d5bbf', '#ffffff'], 'Сельта': ['#8ac3ee', '#0b3a66'], 'ПСВ': ['#e2001a', '#ffffff'], 'Арсенал': ['#ef0107', '#ffffff'],
+    'ЛАСК': ['#161616', '#ffffff'], 'Шахтёр Донецк': ['#f47920', '#111111'], 'Атлетик Бильбао': ['#e5231b', '#ffffff'], 'Депортиво': ['#1d4fa8', '#ffffff'], 'Алавес': ['#0f4fa8', '#ffffff'],
+    'Хетафе': ['#005999', '#ffffff'], 'Осасуна': ['#d91a21', '#0b1f4b'], 'Леванте': ['#b4122d', '#0b3a8a'] };
+  // «герб» соперника: круг с буквами в цветах клуба (чужие эмблемы не используются)
+  function teamBadge(name, cls) {
+    const c = TEAM_COL[name];
+    const st = c ? `--c1:${c[0]};--c2:${c[1]};--c3:${c[2] || 'transparent'}` : '';
+    return `<span class="${cls || 'tb-s'} tb" style="${st}" aria-hidden="true">${initials(name)}</span>`;
+  }
   const num = s => s.split(':').map(Number);
   const outcome = s => { const [a, b] = num(s); return a > b ? 'win' : a < b ? 'loss' : 'draw'; };
   const OUT = { win: ['В', 'Победа'], draw: ['Н', 'Ничья'], loss: ['П', 'Поражение'] };
@@ -784,7 +796,7 @@ $$('.page-title, .section-head h2').forEach(h => {
 
   function teamsHTML(m) {
     const real = `<div class="nm-team"><span class="nm-crest">${crest()}</span><strong>Реал Мадрид</strong></div>`;
-    const opp = `<div class="nm-team"><span class="nm-badge">${initials(m.opp)}</span><strong>${m.opp}</strong></div>`;
+    const opp = `<div class="nm-team">${teamBadge(m.opp, 'nm-badge')}<strong>${m.opp}</strong></div>`;
     const home = m.venue === 'дома';
     return (home ? real : opp) + '<span class="nm-vs">VS</span>' + (home ? opp : real);
   }
@@ -805,6 +817,9 @@ $$('.page-title, .section-head h2').forEach(h => {
       <div class="nm-teams">${teamsHTML(m)}</div>
       <p class="nm-when"><b>${fmtLong.format(day(m.date))}</b><span>${m.venue === 'дома' ? 'Дома, «Сантьяго Бернабеу»' : 'В гостях'} · ${when}</span></p>
       <div class="cd" data-kick="${m.kickoff || ''}" data-date="${m.date}"></div>
+      ${(() => { const L = [...D.results].sort((a, b) => b.date.localeCompare(a.date))[0]; if (!L || !m.kickoff) return '';
+        const t0 = Date.parse(L.date + 'T20:00:00Z'), t1 = Date.parse(m.kickoff), p = Math.max(0, Math.min(1, (Date.now() - t0) / (t1 - t0)));
+        return `<div class="nm-prog" title="Сколько времени прошло между прошлым и следующим матчем"><span>${fmtDay.format(day(L.date))} ${fmtMon.format(day(L.date)).replace('.', '')} · <span>${L.opp}</span> ${L.score}</span><i><u style="--p:${(p * 100).toFixed(1)}%"></u></i><span>${fmtDay.format(day(m.date))} ${fmtMon.format(day(m.date)).replace('.', '')} · <span>${m.opp}</span></span></div>`; })()}
       <div class="nm-form"><small>Форма · пять последних матчей</small>${formHTML(5)}</div>
       <div class="nm-actions">
         ${compact ? '<a class="btn btn-gold" href="#matches">Матч-центр <span aria-hidden="true">→</span></a>' : ''}
@@ -814,6 +829,15 @@ $$('.page-title, .section-head h2').forEach(h => {
 
   function cdHTML(parts) {
     return parts.map(([v, l]) => `<div><b>${String(v).padStart(2, '0')}</b><span>${l}</span></div>`).join('');
+  }
+  function setCd(el, parts) {
+    const cells = el.querySelectorAll(':scope > div > b');
+    if (cells.length !== parts.length) { el.innerHTML = cdHTML(parts); return; }
+    parts.forEach(([v], i) => {
+      const t = String(v).padStart(2, '0'), b = cells[i];
+      if (b.textContent !== t) { b.textContent = t; b.classList.remove('flip'); void b.offsetWidth; b.classList.add('flip'); }
+    });
+    parts.forEach(([, l], i) => { const sp = cells[i].nextElementSibling; if (sp && sp.textContent !== l) sp.textContent = l; });
   }
   function plural(n, a, b, c) {
     const m = n % 100, k = n % 10;
@@ -827,7 +851,8 @@ $$('.page-title, .section-head h2').forEach(h => {
         const diff = kick - Date.now();
         if (diff <= 0) { el.innerHTML = '<p class="cd-live">Матч начался или только что завершился. Обновите страницу позже — календарь переключится на следующую игру.</p>'; return; }
         const s = Math.floor(diff / 1000);
-        el.innerHTML = cdHTML([[Math.floor(s / 86400), 'дней'], [Math.floor(s % 86400 / 3600), 'часов'], [Math.floor(s % 3600 / 60), 'минут'], [s % 60, 'секунд']]);
+        el.classList.toggle('urgent', s < 86400);
+        setCd(el, [[Math.floor(s / 86400), 'дней'], [Math.floor(s % 86400 / 3600), 'часов'], [Math.floor(s % 3600 / 60), 'минут'], [s % 60, 'секунд']]);
       } else {
         const d = Math.max(0, Math.ceil((Date.parse(el.dataset.date + 'T00:00:00') - Date.now()) / 86400e3));
         el.innerHTML = `<div class="cd-days"><b>${d}</b><span>${plural(d, 'день', 'дня', 'дней')} до матча</span></div>`;
@@ -848,6 +873,7 @@ $$('.page-title, .section-head h2').forEach(h => {
         ${dateBlock(m.date)}
         <div class="mr-main"><span class="mr-comp">${m.comp}</span>
           <strong>${m.venue === 'дома' ? 'Реал Мадрид — ' + m.opp : m.opp + ' — Реал Мадрид'}</strong></div>
+        ${teamBadge(m.opp, 'tb-s tb-end')}
         <span class="mr-venue">${m.venue}</span>
         <span class="mr-time">${m.kickoff ? fmtTime.format(new Date(m.kickoff)) : 'время уточняется'}</span>
       </div>`).join('')}</div>
@@ -856,7 +882,7 @@ $$('.page-title, .section-head h2').forEach(h => {
   }
 
   // ---------- Результаты ----------
-  let resFilter = 'all';
+  let resFilter = 'all', resVenue = 'all';
   function renderRes() {
     const R = D.results;
     const w = R.filter(r => outcome(r.score) === 'win').length;
@@ -864,7 +890,7 @@ $$('.page-title, .section-head h2').forEach(h => {
     const l = R.filter(r => outcome(r.score) === 'loss').length;
     const gf = R.reduce((a, r) => a + num(r.score)[0], 0), ga = R.reduce((a, r) => a + num(r.score)[1], 0);
     const comps = ['all', ...new Set(R.map(r => r.comp))];
-    const list = R.filter(r => resFilter === 'all' || r.comp === resFilter);
+    const list = R.filter(r => (resFilter === 'all' || r.comp === resFilter) && (resVenue === 'all' || r.venue === resVenue));
     $('#mcRes').innerHTML = `
       <div class="facts">
         <div class="fact"><b>${R.length}</b><span>матчей</span></div>
@@ -872,17 +898,21 @@ $$('.page-title, .section-head h2').forEach(h => {
         <div class="fact"><b>${gf} : ${ga}</b><span>разница мячей ${gf - ga > 0 ? '+' : ''}${gf - ga}</span></div>
       </div>
       <div class="chips mc-filter" role="group" aria-label="Турнир">${comps.map(c =>
-        `<button class="chip${c === resFilter ? ' active' : ''}" data-c="${c}" type="button">${c === 'all' ? 'Все турниры' : c}</button>`).join('')}</div>
-      <div class="mrows">${list.map(r => {
+        `<button class="chip${c === resFilter ? ' active' : ''}" data-c="${c}" type="button">${c === 'all' ? 'Все турниры' : c}</button>`).join('')}
+        <span class="chip-sep" aria-hidden="true"></span>${[['all', 'Все матчи'], ['дома', 'Дома'], ['в гостях', 'В гостях']].map(([v, t]) =>
+        `<button class="chip${v === resVenue ? ' active' : ''}" data-v="${v}" type="button">${t}</button>`).join('')}</div>
+      <div class="mrows">${list.length ? list.map((r, i) => {
         const o = outcome(r.score), [a, b] = num(r.score), home = r.venue === 'дома';
+        const me = `<span class="rs-team me"><span class="nm-crest tb-crest">${crest()}</span><b>Реал Мадрид</b></span>`;
+        const op = `<span class="rs-team">${teamBadge(r.opp)}<b>${r.opp}</b></span>`;
         return `
-        <a class="mrow res" href="#match/${r.date}">
+        <a class="mrow res ${o}" href="#match/${r.date}" style="--i:${Math.min(i, 12)}">
           ${dateBlock(r.date)}
           <div class="mr-main"><span class="mr-comp">${r.comp} · ${r.venue}</span>
-            <strong>${home ? 'Реал Мадрид' : r.opp} <i>${home ? a : b}:${home ? b : a}</i> ${home ? r.opp : 'Реал Мадрид'}</strong></div>
+            <div class="rs-line">${home ? me : op}<span class="rs-score"><i>${home ? a : b}</i><em>:</em><i>${home ? b : a}</i></span>${home ? op : me}</div></div>
           <span class="res-badge ${o}" title="${OUT[o][1]}">${OUT[o][0]}</span>
           <span class="mr-go" aria-hidden="true">›</span>
-        </a>`; }).join('')}</div>
+        </a>`; }).join('') : '<p class="muted empty">По выбранным фильтрам матчей нет.</p>'}</div>
       <p class="muted small">Нажмите на матч, чтобы открыть его страницу. Счёт в списке показан по порядку «хозяева — гости».</p>`;
   }
 
@@ -895,6 +925,8 @@ $$('.page-title, .section-head h2').forEach(h => {
     const keyFn = { pts: t => t.pts, gd: gdOf, gf: t => t.gf, w: t => t.w };
     const rows = tblKey === 'pts' ? base : [...base].sort((x, y) => keyFn[tblKey](y) - keyFn[tblKey](x) || y.pts - x.pts);
     const zone = i => (i < 4 ? 'z-cl' : i === 4 ? 'z-el' : i === 5 ? 'z-conf' : i >= base.length - 3 ? 'z-rel' : '');
+    const maxPts = Math.max(1, ...base.map(t => t.pts));
+    const prevTop = new Map($$('#mcTable .lg-table tbody tr').map(tr => [tr.dataset.t, tr.getBoundingClientRect().top]));
     const th = (k, label, title) => `<th class="sortable${tblKey === k ? ' on' : ''}" data-sort="${k}" title="${title}">${label}</th>`;
     $('#mcTable').innerHTML = `
       <p class="muted small">Ла Лига 2026/27, ${D.league.asOf}. Нажмите на заголовок столбца, чтобы отсортировать.</p>
@@ -902,12 +934,20 @@ $$('.page-title, .section-head h2').forEach(h => {
         <table class="table lg-table">
           <thead><tr><th>#</th><th>Команда</th><th title="Матчи">И</th>${th('w', 'В', 'Победы')}<th title="Ничьи">Н</th><th title="Поражения">П</th>${th('gf', 'Мячи', 'Забито — пропущено')}${th('gd', '±', 'Разница мячей')}${th('pts', 'О', 'Очки')}</tr></thead>
           <tbody>${rows.map(t => { const i = pos.get(t.team); return `
-            <tr class="${zone(i)}${t.me ? ' me' : ''}"><td>${i + 1}</td><td>${t.team}</td><td>${t.p}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
-            <td>${t.gf}–${t.ga}</td><td>${gdOf(t) > 0 ? '+' : ''}${gdOf(t)}</td><td><b>${t.pts}</b></td></tr>`; }).join('')}</tbody>
+            <tr class="${zone(i)}${t.me ? ' me' : ''}" data-t="${t.team}"><td>${i + 1}</td><td><span class="lg-team">${t.me ? `<span class="tb-s tb-crest">${crest()}</span>` : teamBadge(t.team)}${t.team}</span></td><td>${t.p}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
+            <td>${t.gf}–${t.ga}</td><td>${gdOf(t) > 0 ? '+' : ''}${gdOf(t)}</td><td class="lg-pts"><i style="--w:${(t.pts / maxPts * 100).toFixed(1)}%"></i><b>${t.pts}</b></td></tr>`; }).join('')}</tbody>
         </table>
       </div>
       <div class="lg-legend"><span><i class="z-cl"></i>Лига чемпионов</span><span><i class="z-el"></i>Лига Европы</span><span><i class="z-conf"></i>Лига конференций</span><span><i class="z-rel"></i>Зона вылета</span></div>
       <p class="muted small">${D.league.note}</p>`;
+    // плавная перестановка строк при сортировке
+    if (prevTop.size && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      $$('#mcTable .lg-table tbody tr').forEach(tr => {
+        const y0 = prevTop.get(tr.dataset.t); if (y0 == null) return;
+        const dy = y0 - tr.getBoundingClientRect().top; if (!dy) return;
+        tr.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.22,.8,.3,1)' });
+      });
+    }
   }
 
   // ---------- Страница матча ----------
@@ -926,7 +966,7 @@ $$('.page-title, .section-head h2').forEach(h => {
     const info = (D.matchInfo || {})[r.date] || {};
     const news = info.newsId ? D.news.find(n => n.id === info.newsId) : null;
     const realSide = `<div class="mp-team"><span class="nm-crest">${crest()}</span><strong>Реал Мадрид</strong></div>`;
-    const oppSide = `<div class="mp-team"><span class="nm-badge">${initials(r.opp)}</span><strong>${r.opp}</strong></div>`;
+    const oppSide = `<div class="mp-team">${teamBadge(r.opp, 'nm-badge')}<strong>${r.opp}</strong></div>`;
     const sc = home ? `${a}<i>:</i>${b}` : `${b}<i>:</i>${a}`;
     const scorers = (info.scorers || []).map(g => `
       <li class="${g.side}"><span class="g-min">${g.min}</span><span class="g-ball" aria-hidden="true">⚽</span><b>${g.name}${g.note ? ` <em>(${g.note})</em>` : ''}</b><small>${g.side === 'real' ? 'Реал Мадрид' : r.opp}</small></li>`).join('');
@@ -1183,7 +1223,8 @@ $$('.page-title, .section-head h2').forEach(h => {
   });
   $('#mcRes').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
-    resFilter = b.dataset.c; renderRes();
+    if (b.dataset.v) resVenue = b.dataset.v; else resFilter = b.dataset.c;
+    renderRes();
   });
   $('#trChips').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
@@ -2095,4 +2136,35 @@ $$('.page-title, .section-head h2').forEach(h => {
   });
   wrap.addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; var t = e.target; if (t.matches('th,tr')) t.click(); });
   apply();
+})();
+
+;
+/* ======== matches-polish ======== */
+(function () {
+  var $ = function (q, r) { return (r || document).querySelector(q); };
+  var tabs = $('#mcTabs'); if (!tabs) return;
+  // ползунок под вкладками
+  var sl = document.createElement('span'); sl.className = 'tab-slider'; sl.setAttribute('aria-hidden', 'true'); tabs.prepend(sl); tabs.classList.add('slid');
+  function place(animate) {
+    var a = $('.tab.active', tabs); if (!a || !a.offsetWidth) return;
+    if (!animate) sl.style.transition = 'none';
+    sl.style.width = a.offsetWidth + 'px'; sl.style.transform = 'translateX(' + a.offsetLeft + 'px)'; sl.style.height = a.offsetHeight + 'px'; sl.style.top = a.offsetTop + 'px';
+    if (!animate) { void sl.offsetWidth; sl.style.transition = ''; }
+  }
+  tabs.addEventListener('click', function () { requestAnimationFrame(function () { place(true); }); });
+  if (window.ResizeObserver) new ResizeObserver(function () { place(false); }).observe(tabs);
+  window.addEventListener('pagechange', function () { setTimeout(function () { place(false); }, 60); });
+  window.addEventListener('resize', function () { place(false); });
+  place(false);
+  // анимация смены содержимого
+  tabs.addEventListener('click', function (e) {
+    var b = e.target.closest('.tab'); if (!b) return;
+    var ids = { cal: 'mcCal', res: 'mcRes', table: 'mcTable', season: 'mcSeason' }, p = document.getElementById(ids[b.dataset.tab]);
+    if (!p) return; p.classList.remove('pane-in'); void p.offsetWidth; p.classList.add('pane-in');
+  });
+  // свет под курсором на верхней карточке матча
+  var nf = document.getElementById('nextFull');
+  if (nf && matchMedia('(hover:hover)').matches) nf.addEventListener('pointermove', function (e) {
+    var r = nf.getBoundingClientRect(); nf.style.setProperty('--mx', (e.clientX - r.left) + 'px'); nf.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
 })();
