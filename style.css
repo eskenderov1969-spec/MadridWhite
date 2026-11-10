@@ -1664,3 +1664,33 @@ kbd { display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px s
 .hw-note { margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .hero h1 span, .pill-badge i { animation: none; } .gd { transition: none; } }
 @media print { .hero h1 span { -webkit-text-fill-color: currentColor; background: none; } }
+
+/* ======== club polish ======== */
+#legends.cards { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { #legends.cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { #legends.cards { grid-template-columns: 1fr; } }
+#club .fact, #club .legend { position: relative; overflow: hidden; }
+#club .fact::before, #club .legend::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(200px circle at var(--mx, 50%) var(--my, 50%), rgba(240,220,142,.15), transparent 70%); }
+#club .fact:hover::before, #club .legend:hover::before { opacity: 1; }
+.legend .avatar { position: relative; }
+.legend .avatar::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px dashed rgba(240,220,142,.55); animation: spinRing 14s linear infinite; }
+@keyframes spinRing { to { transform: rotate(360deg); } }
+.legend.hl { border-color: var(--gold); box-shadow: 0 0 28px var(--glow); transform: translateY(-6px); }
+
+.eras { padding: 22px 24px 18px; margin-bottom: 20px; }
+.eras h3 { margin: 0 0 14px; font-size: 1.05rem; }
+.era-chart { position: relative; }
+.era-axis { position: relative; height: 22px; margin-left: 200px; border-bottom: 1px solid var(--border); }
+.era-axis span { position: absolute; bottom: 4px; transform: translateX(-50%); font-size: .7rem; color: var(--muted); font-weight: 600; }
+.era-row { display: grid; grid-template-columns: 200px 1fr; align-items: center; padding: 5px 0; border-radius: 8px; transition: background .2s; }
+.era-row:hover { background: rgba(212,175,55,.07); }
+.era-name { font-size: .88rem; font-weight: 600; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.era-track { position: relative; height: 22px; background-image: repeating-linear-gradient(90deg, var(--border) 0 1px, transparent 1px calc(100% / 7.6)); }
+.era-bar { position: absolute; top: 2px; height: 18px; border-radius: 999px; background: linear-gradient(90deg, #8c6d12, var(--gold), var(--gold-soft)); transform: scaleX(0); transform-origin: left; transition: transform .9s var(--ease) calc(var(--i) * 90ms + .2s); display: flex; align-items: center; justify-content: flex-end; }
+.reveal.in .era-bar { transform: none; }
+.era-bar em { font-style: normal; font-size: .64rem; font-weight: 700; color: #0b1f4b; padding: 0 9px; white-space: nowrap; }
+.era-note { margin: 10px 0 0; }
+@media (max-width: 640px) { .era-axis { margin-left: 0; } .era-row { grid-template-columns: 1fr; } .era-name { padding: 0 0 2px; } .era-bar em { display: none; } }
+@media (prefers-reduced-motion: reduce) { .legend .avatar::after { animation: none; } .era-bar { transition: none; } }
+@media print { .legend .avatar::after { display: none; } }
