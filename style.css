@@ -1973,3 +1973,34 @@ a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var
 .yi-prog u { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #8c6d12, var(--gold), var(--gold-soft)); text-decoration: none; animation: yiIn 1s var(--ease) .1s forwards; }
 @keyframes yiIn { to { width: var(--p); } }
 @media (prefers-reduced-motion: reduce) { .dn-seg, .tr-cup, .fin-node svg { transition: none; } .yi-prog u { animation: none; width: var(--p); } }
+
+/* ======== about polish ======== */
+.ab-note { margin: 8px 0 0; }
+.flow-step { cursor: pointer; transition: transform .35s var(--ease), border-color .35s, box-shadow .35s, background .35s; }
+.flow-step:hover { transform: translateY(-3px); }
+.flow-step.lit { border-color: var(--gold); box-shadow: 0 0 24px var(--glow); background: linear-gradient(160deg, rgba(212,175,55,.14), var(--card)); transform: translateY(-4px); }
+.flow-step.done { border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
+.flow-step.lit b { animation: stepPop .5s var(--ease); } @keyframes stepPop { 40% { transform: scale(1.35); } }
+.flow-arrow.lit { background: linear-gradient(90deg, var(--gold), var(--gold-soft)); }
+.flow-detail { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.flow-detail p { margin: 0; flex: 1 1 320px; color: var(--text); }
+.fd-chips { display: flex; gap: 8px; flex-wrap: wrap; } .fd-chips code, .fl-row code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; color: var(--gold-soft); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); }
+.about-cards .panel { position: relative; overflow: hidden; }
+.about-cards .panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(212,175,55,.18), transparent 70%); }
+.about-cards .panel:hover::before { opacity: 1; }
+.ab-ico { transition: transform .4s var(--ease); } .about-cards .panel:hover .ab-ico { transform: rotate(-8deg) scale(1.12); }
+.feat-grid li.ft { display: flex; align-items: center; gap: 12px; padding: 12px 14px; transition: transform .25s var(--ease), border-color .25s; }
+.feat-grid li.ft::before { display: none; }
+.ft-ic { flex: 0 0 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(212,175,55,.28), rgba(27,58,138,.35)); font-size: 1rem; }
+.ft-tx { flex: 1; } .ft-go { color: var(--gold); transition: transform .25s var(--ease); font-style: normal; }
+.feat-grid li.lnk { cursor: pointer; } .feat-grid li.lnk:hover { transform: translateX(4px); border-color: var(--gold); } .feat-grid li.lnk:hover .ft-go { transform: translateX(5px); }
+.flist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.fl-row { width: 100%; font: inherit; color: inherit; display: grid; grid-template-columns: 112px 1fr 18px; gap: 12px; align-items: center; text-align: left; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); cursor: pointer; transition: border-color .25s, transform .25s var(--ease); }
+.fl-row:hover { border-color: var(--gold); transform: translateX(3px); } .fl-row code { padding: 2px 8px; justify-self: start; } .fl-d { color: var(--muted); font-size: .88rem; } .fl-row i { font-style: normal; color: var(--gold); text-align: center; }
+.fl-more { margin: 0; max-height: 0; overflow: hidden; opacity: 0; padding: 0 14px; font-size: .88rem; color: var(--text); transition: max-height .35s var(--ease), opacity .3s, padding .3s; }
+.flist li.open .fl-more { max-height: 90px; opacity: 1; padding: 8px 14px 4px; }
+.flist li.open .fl-row { border-color: var(--gold); }
+.hk-tip { margin: 0 0 10px; } .keys dt.hk { transition: transform .15s, filter .2s; } .keys dt.btn-k { cursor: pointer; }
+.keys dt.hk.press { transform: translateY(2px) scale(.94); filter: drop-shadow(0 0 10px var(--gold)); } .keys dt.hk.press kbd { background: var(--gold); color: #0b1f4b; border-color: var(--gold); }
+@media (max-width: 860px) { .fl-row { grid-template-columns: 1fr 18px; } .fl-d { grid-column: 1; } .fl-row i { grid-row: 1; grid-column: 2; } }
+@media (prefers-reduced-motion: reduce) { .flow-step.lit b { animation: none; } .fl-more { transition: none; } }
