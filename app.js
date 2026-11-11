@@ -551,11 +551,13 @@ $$('.page-title, .section-head h2').forEach(h => {
   });
   $('#trophyNote').textContent = D.trophiesNote;
 
+  const CUP_SVG = '<svg viewBox="0 0 64 64"><path class="c-h" d="M18 12H8c0 10 4 16 12 18M46 12h10c0 10-4 16-12 18"/><path class="c-b" d="M18 6h28v16a14 14 0 0 1-28 0z"/><path class="c-s" d="M29 36h6v10h-6z"/><path class="c-b" d="M21 58v-6a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v6z"/><path class="c-sh" d="M24 10v12a8 8 0 0 0 3 6"/></svg>';
   function renderTrophies() {
     const list = D.trophies.filter(t => group === 'Все' || t.group === group);
     const max = Math.max(...D.trophies.map(t => t.count));
     $('#trophyGrid').innerHTML = list.map((t, i) => `
-      <div class="trophy reveal" style="--d:${Math.min(i, 6) * 0.06}s">
+      <div class="trophy reveal${t.count >= 15 ? ' main' : ''}" style="--d:${Math.min(i, 6) * 0.06}s">
+        <span class="tr-cup" aria-hidden="true">${CUP_SVG}</span>
         <span class="tag">${t.group}</span>
         <b data-to="${t.count}">0</b>
         <h3>${t.name}</h3>
@@ -2288,4 +2290,58 @@ $$('.page-title, .section-head h2').forEach(h => {
   window.addEventListener('timelinerender', function () { setTimeout(line, 80); });
   window.addEventListener('pagechange', function () { setTimeout(line, 150); });
   syncEra(); line();
+})();
+
+;
+/* ======== trophies-polish ======== */
+(function () {
+  var D = window.SITE, sec = document.getElementById('trophies'); if (!sec || !D) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var plural = function (n, a, b, c) { var m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
+
+  // --- 1. диаграмма «Испания / Европа / Мир»
+  var tb = $('.total-box', sec);
+  if (tb) {
+    var G = [['Испания', '#d4af37'], ['Европа', '#5b8bf0'], ['Мир', '#c9d6f2']];
+    var sums = G.map(function (g) { return D.trophies.filter(function (t) { return t.group === g[0]; }).reduce(function (s, t) { return s + t.count; }, 0); });
+    var tot = sums.reduce(function (a, b) { return a + b; }, 0), R = 44, C = 2 * Math.PI * R, off = 0;
+    var segs = G.map(function (g, i) { var len = sums[i] / tot * C, el = '<circle class="dn-seg" data-g="' + g[0] + '" cx="60" cy="60" r="' + R + '" stroke="' + g[1] + '" stroke-dasharray="0 ' + C.toFixed(2) + '" data-len="' + len.toFixed(2) + '" data-c="' + C.toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '"/>'; off += len; return el; }).join('');
+    var panel = document.createElement('div'); panel.className = 'panel donut reveal';
+    panel.innerHTML = '<svg viewBox="0 0 120 120" class="dn-svg" role="img" aria-label="Трофеи по группам"><circle class="dn-bg" cx="60" cy="60" r="' + R + '"/>' + segs + '</svg>' +
+      '<div class="dn-mid"><b data-to="' + tot + '">0</b><span>всего трофеев</span></div>' +
+      '<div class="dn-leg">' + G.map(function (g, i) { return '<button type="button" class="dn-li" data-g="' + g[0] + '"><i style="background:' + g[1] + '"></i><span>' + g[0] + '</span><b>' + sums[i] + '</b><em>' + Math.round(sums[i] / tot * 100) + '%</em></button>'; }).join('') + '</div>';
+    tb.parentNode.insertBefore(panel, tb.nextSibling);
+    try { observeReveal(sec); } catch (e) { panel.classList.add('in'); }
+    function grow() { $$('.dn-seg', panel).forEach(function (c, i) { setTimeout(function () { c.setAttribute('stroke-dasharray', c.dataset.len + ' ' + c.dataset.c); }, reduce ? 0 : 200 + i * 250); }); var n = $('.dn-mid b', panel); if (reduce) n.textContent = n.dataset.to; else { var t0 = performance.now(); (function tick(x) { var p = Math.min((x - t0) / 1400, 1); n.textContent = Math.round(+n.dataset.to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0); } }
+    var shown = false;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en, ob) { if (en[0].isIntersecting && !shown) { shown = true; grow(); ob.disconnect(); } }, { threshold: .4 }).observe(panel); else grow();
+    function pick(g) { var b = $('#trophyChips .chip[data-g="' + g + '"]'); if (b) b.click(); }
+    panel.addEventListener('click', function (e) { var b = e.target.closest('[data-g]'); if (!b) return; var cur = $('#trophyChips .chip.active'); pick(cur && cur.dataset.g === b.dataset.g ? 'Все' : b.dataset.g); });
+    $('#trophyChips').addEventListener('click', function () { setTimeout(function () { var cur = $('#trophyChips .chip.active'), g = cur ? cur.dataset.g : 'Все';
+      $$('[data-g]', panel).forEach(function (el) { el.classList.toggle('on', g === el.dataset.g); el.classList.toggle('off', g !== 'Все' && g !== el.dataset.g); }); }, 0); });
+  }
+
+  // --- 2. лента финалов Лиги чемпионов
+  var yc = $('#yearChips'), info = $('#yearInfo');
+  if (yc && D.finals) {
+    var F = D.finals, last = F[F.length - 1].year, html = '', run = [];
+    function flush() { if (!run.length) return; var inner = run.join(''); html += run.length >= 3 ? '<span class="fin-run" data-n="' + run.length + '"><span class="fin-rl"><b>' + run.length + '</b> <span>подряд</span></span>' + inner + '</span>' : inner; run = []; }
+    F.forEach(function (f, i) {
+      var gap = i ? f.year - F[i - 1].year : 1;
+      if (gap > 2) { flush(); if (gap >= 5) html += '<span class="fin-gap"><b>' + gap + '</b> <span>' + plural(gap, 'год', 'года', 'лет') + '</span></span>'; }
+      run.push('<button type="button" class="chip fin-node' + (f.year === last ? ' active' : '') + '" data-y="' + f.year + '"><svg viewBox="0 0 64 64" aria-hidden="true"><path class="c-b" d="M18 6h28v16a14 14 0 0 1-28 0z"/><path class="c-h" d="M18 12H8c0 10 4 16 12 18M46 12h10c0 10-4 16-12 18"/><path class="c-b" d="M29 36h6v10h-6zM21 58v-6a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v6z"/></svg><b>' + f.year + '</b><small>' + f.score.split(' ')[0] + '</small></button>');
+    });
+    flush(); yc.innerHTML = html; yc.classList.add('fin-ribbon');
+    var act = $('.fin-node.active', yc); if (act && act.scrollIntoView) setTimeout(function () { yc.scrollLeft = yc.scrollWidth; }, 50);
+    // дополнение карточки финала: прогресс «n из 15»
+    function decorate() {
+      if (!info || $('.yi-prog', info)) return; var big = $('.big', info); if (!big) return;
+      var y = +big.textContent, n = F.map(function (f) { return f.year; }).indexOf(y) + 1; if (!n) return;
+      var d = document.createElement('div'); d.className = 'yi-prog'; d.innerHTML = '<i><u style="--p:' + (n / F.length * 100).toFixed(1) + '%"></u></i><span>' + n + ' из ' + F.length + '</span>';
+      info.lastElementChild.appendChild(d);
+    }
+    new MutationObserver(function () { decorate(); }).observe(info, { childList: true }); decorate();
+    yc.addEventListener('click', function (e) { var b = e.target.closest('.fin-node'); if (b && b.scrollIntoView) b.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' }); });
+  }
 })();
