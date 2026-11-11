@@ -1682,7 +1682,7 @@ $$('.page-title, .section-head h2').forEach(h => {
   /* ---------- 4. страница «О проекте»: счётчики ---------- */
   (function () {
     var box = document.getElementById('aboutCounters'); if (!box) return;
-    var items = [[D.players.length, 'Игроков в составе'], [D.results.length, 'Матчей сезона в базе'], [D.news.length, 'Новостей'], [3, 'Языка интерфейса'], [3, 'Темы оформления']];
+    var items = [[D.players.length, 'Игроков в составе'], [D.results.length, 'Матчей сезона в базе'], [D.news.length, 'Новостей'], [D.trophies.reduce(function (n, t) { return n + t.count; }, 0), 'Трофеев в базе'], [3, 'Языка интерфейса'], [3, 'Темы оформления']];
     box.innerHTML = items.map(function (it) { return '<div><b data-to="' + it[0] + '">0</b><span>' + it[1] + '</span></div>'; }).join('');
     var ran = false;
     function run() {
@@ -2343,5 +2343,92 @@ $$('.page-title, .section-head h2').forEach(h => {
     }
     new MutationObserver(function () { decorate(); }).observe(info, { childList: true }); decorate();
     yc.addEventListener('click', function (e) { var b = e.target.closest('.fin-node'); if (b && b.scrollIntoView) b.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' }); });
+  }
+})();
+
+;
+/* ======== about-polish ======== */
+(function () {
+  var sec = document.getElementById('about'); if (!sec) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var go = function (h) { location.hash = h; };
+
+  // заметка под счётчиками
+  var cn = document.getElementById('aboutCounters');
+  if (cn && !$('.ab-note', sec)) { var n = document.createElement('p'); n.className = 'muted small ab-note'; n.textContent = 'Цифры считаются из данных сайта прямо в браузере'; cn.parentNode.insertBefore(n, cn.nextSibling); }
+
+  // --- схема «Как это устроено»
+  var flow = $('.flow', sec);
+  if (flow) {
+    var steps = $$('.flow-step', flow), arrows = $$('.flow-arrow', flow);
+    var info = [
+      ['Все новости, матчи, таблица и трофеи — обычные списки в data.js, карточки игроков — в profiles.js. Меняете цифру — обновляется весь сайт.', ['data.js', 'profiles.js', 'crest.js']],
+      ['Скрипт читает данные и строит разделы, графики на SVG, поиск, календарь и анимации. Фреймворков нет.', ['app.js']],
+      ['Цветовые переменные, три темы оформления, стеклянные панели, адаптивность и печатная версия.', ['style.css']],
+      ['Тексты подменяются на лету: русский, английский или испанский. Выбор запоминается в браузере.', ['lang.js']]
+    ];
+    var det = document.createElement('div'); det.className = 'flow-detail panel reveal'; det.setAttribute('aria-live', 'polite');
+    det.innerHTML = '<p></p><div class="fd-chips"></div>'; flow.parentNode.insertBefore(det, flow.nextSibling);
+    var cur = -1, user = false, timer = null;
+    function set(i) {
+      cur = i;
+      steps.forEach(function (st, k) { st.classList.toggle('lit', k === i); st.classList.toggle('done', k < i); st.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      arrows.forEach(function (ar, k) { ar.classList.toggle('lit', k < i); });
+      det.querySelector('p').textContent = info[i][0];
+      det.querySelector('.fd-chips').innerHTML = info[i][1].map(function (f) { return '<code>' + f + '</code>'; }).join('');
+    }
+    steps.forEach(function (st, i) { st.tabIndex = 0; st.setAttribute('role', 'button'); st.addEventListener('click', function () { user = true; clearInterval(timer); set(i); }); st.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); st.click(); } }); });
+    set(0);
+    if (!reduce && 'IntersectionObserver' in window) new IntersectionObserver(function (en) {
+      if (en[0].isIntersecting && !user) { clearInterval(timer); timer = setInterval(function () { if (!sec.classList.contains('active')) return; set((cur + 1) % steps.length); }, 2600); } else clearInterval(timer);
+    }, { threshold: .5 }).observe(flow);
+    try { observeReveal(sec); } catch (e) { det.classList.add('in'); }
+  }
+
+  // --- карточки технологий: подсветка за курсором
+  $$('.about-cards .panel', sec).forEach(function (p) { p.addEventListener('pointermove', function (e) { var r = p.getBoundingClientRect(); p.style.setProperty('--mx', (e.clientX - r.left) + 'px'); p.style.setProperty('--my', (e.clientY - r.top) + 'px'); }); });
+
+  // --- возможности: ссылки на разделы
+  var ft = $('.feat-grid', sec);
+  if (ft) {
+    var T = [['#matches', '⚽'], ['#matches', '⏱'], ['#data-lab', '📊'], ['#squad', '⇄'], ['#matches', '🏆'], ['@search', '🔍'], ['#squad', '★'], ['#matches', '📅'], ['@theme', '◐'], [null, '🖨']];
+    $$('li', ft).forEach(function (li, i) {
+      var t = T[i]; if (!t) return; var txt = li.textContent;
+      li.innerHTML = '<span class="ft-ic" aria-hidden="true">' + t[1] + '</span><span class="ft-tx"></span>' + (t[0] ? '<i class="ft-go" aria-hidden="true">→</i>' : '');
+      li.querySelector('.ft-tx').textContent = txt; li.classList.add('ft');
+      if (t[0]) { li.tabIndex = 0; li.setAttribute('role', 'link'); li.classList.add('lnk');
+        var act = function () { if (t[0] === '@search') document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true })); else if (t[0] === '@theme') { var b = document.getElementById('themeBtn'); if (b) { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); b.click(); } } else go(t[0]); };
+        li.addEventListener('click', act); li.addEventListener('keydown', function (e) { if (e.key === 'Enter') act(); }); }
+    });
+  }
+
+  // --- файлы проекта: раскрывающиеся строки
+  var fl = $('dl.files:not(.keys)', sec);
+  if (fl) {
+    var D2 = { 'index.html': 'Разметка всех разделов; сюда подключаются остальные файлы.', 'style.css': 'Цвета, сетки, анимации, светлая тема и печатная версия.', 'data.js': 'Новости, матчи, таблица, трофеи, стадион — цифры правят здесь.', 'profiles.js': 'Позиция, номер, возраст и статистика игроков; список фото.', 'app.js': 'Логика всех разделов: переходы, поиск, графики, календарь.', 'crest.js': 'Герб клуба, закодированный прямо в коде.', 'lang.js': 'Словари английского и испанского и движок перевода.' };
+    var ul = document.createElement('ul'); ul.className = 'flist';
+    $$('dt', fl).forEach(function (dt) {
+      var dd = dt.nextElementSibling, name = dt.textContent, li = document.createElement('li');
+      li.innerHTML = '<button type="button" class="fl-row" aria-expanded="false"><code></code><span class="fl-d"></span><i aria-hidden="true">＋</i></button><p class="fl-more"></p>';
+      li.querySelector('code').textContent = name; li.querySelector('.fl-d').textContent = dd.textContent; li.querySelector('.fl-more').textContent = D2[name] || '';
+      ul.appendChild(li);
+    });
+    fl.parentNode.replaceChild(ul, fl);
+    ul.addEventListener('click', function (e) { var b = e.target.closest('.fl-row'); if (!b) return; var li = b.parentNode, open = !li.classList.contains('open');
+      $$('li.open', ul).forEach(function (x) { x.classList.remove('open'); x.querySelector('.fl-row').setAttribute('aria-expanded', 'false'); x.querySelector('i').textContent = '＋'; });
+      if (open) { li.classList.add('open'); b.setAttribute('aria-expanded', 'true'); b.querySelector('i').textContent = '−'; } });
+  }
+
+  // --- горячие клавиши: подсветка при нажатии, клик по поиску
+  var kd = $('dl.keys', sec);
+  if (kd) {
+    var rows = $$('dt', kd), tip = document.createElement('p'); tip.className = 'muted small hk-tip'; tip.textContent = 'Нажмите клавишу — она подсветится'; kd.parentNode.insertBefore(tip, kd);
+    rows.forEach(function (dt, i) { dt.classList.add('hk'); if (i < 2) { dt.tabIndex = 0; dt.setAttribute('role', 'button'); dt.classList.add('btn-k');
+      dt.addEventListener('click', function () { document.dispatchEvent(new KeyboardEvent('keydown', { key: i ? '/' : 'k', ctrlKey: !i, bubbles: true })); });
+      dt.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.stopPropagation(); dt.click(); } }); } });
+    function lit(i) { var d = rows[i]; if (!d) return; d.classList.add('press'); clearTimeout(d._t); d._t = setTimeout(function () { d.classList.remove('press'); }, 450); }
+    document.addEventListener('keydown', function (e) { if (!sec.classList.contains('active')) return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') lit(0); else if (e.key === '/') lit(1); else if (e.key === 'Escape') lit(2); }, true);
   }
 })();
