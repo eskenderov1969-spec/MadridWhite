@@ -441,7 +441,7 @@ $$('.page-title, .section-head h2').forEach(h => {
       const st = pr.stats || {};
       const photo = (window.PHOTOS || []).find(f => f.split('.')[0] === pr.slug);
       const art = photo
-        ? `<img class="f-photo" src="assets/players/${photo}" alt="${p.name}" loading="lazy">`
+        ? `<img class="f-photo" src="assets/players/${photo}" alt="${p.name}" loading="lazy" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${photo}'}else{this.remove()}">`
         : `<svg class="f-sil" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="40" r="22"/><path d="M14 120c0-30 20-46 46-46s46 16 46 46z"/></svg>`;
       return `
       <button class="card player fifa reveal pb-${p.pos}${photo ? ' has-photo' : ''}" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
@@ -664,10 +664,12 @@ $$('.page-title, .section-head h2').forEach(h => {
     $('#pcPh').textContent = initials(p.name);
     $('#pcNum').textContent = pr.num != null ? pr.num : '';
     box.classList.remove('no-photo');
-    img.onerror = () => box.classList.add('no-photo');
+    // фото ищем и в assets/players/, и рядом с index.html (если файлы загружены в корень)
+    const cand = pr.slug ? [`assets/players/${pr.slug}.jpg`, `${pr.slug}.jpg`] : []; let ck = 0;
+    img.onerror = () => { if (++ck < cand.length) img.src = cand[ck]; else box.classList.add('no-photo'); };
     img.onload = () => box.classList.remove('no-photo');
     img.alt = p.name;
-    img.src = pr.slug ? `assets/players/${pr.slug}.jpg` : '';
+    img.src = cand[0] || '';
 
     $('#pcName').textContent = p.name;
     $('#pcPos').textContent = POS[p.pos];
