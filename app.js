@@ -185,15 +185,27 @@ $('#faq').innerHTML = D.faq.map(f => `
   <details><summary>${f.q}</summary><p>${f.a}</p></details>`).join('');
 
 // ---------- История ----------
-let histFilter = 'all';
+let histFilter = 'all', histEra = null;
+const ERAS = [
+  { a: 1902, b: 1955, t: 'Основание и становление' },
+  { a: 1956, b: 1999, t: 'Первые Кубки чемпионов' },
+  { a: 2000, b: 2019, t: 'La Décima и «три подряд»' },
+  { a: 2020, b: 2099, t: 'Сегодня' }
+];
+const TL_IC = {
+  club: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M5 18l-1-9 5 4 3-7 3 7 5-4-1 9"/></svg>',
+  europe: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5c0 3 1.2 4.6 3.7 5M16 6h3.5c0 3-1.2 4.6-3.7 5M12 13v4M8.5 20h7M10 17h4"/></svg>'
+};
 function renderTimeline() {
-  const list = D.timeline.filter(t => histFilter === 'all' || t.type === histFilter);
+  const era = histEra == null ? null : ERAS[histEra];
+  const list = D.timeline.filter(t => (histFilter === 'all' || t.type === histFilter) && (!era || (t.year >= era.a && t.year <= era.b)));
   $('#timeline').innerHTML = list.map((t, i) => `
-    <li class="reveal" style="--d:${Math.min(i, 5) * 0.06}s">
+    <li class="reveal tl-${t.type}" data-year="${t.year}" style="--d:${Math.min(i, 5) * 0.06}s">
       <time>${t.year}</time>
-      <div><h3>${t.title}</h3><p>${t.text}</p></div>
+      <div><span class="tl-badge tl-b-${t.type}">${TL_IC[t.type] || ''}${t.type === 'europe' ? 'Европа' : 'Клуб'}</span><h3>${t.title}</h3><p>${t.text}</p></div>
     </li>`).join('');
   observeReveal($('#timeline'));
+  window.dispatchEvent(new Event('timelinerender'));
 }
 $('#histChips').addEventListener('click', e => {
   const b = e.target.closest('.chip');
@@ -2199,4 +2211,79 @@ $$('.page-title, .section-head h2').forEach(h => {
     }
     window.addEventListener('scroll', line, { passive: true }); window.addEventListener('resize', line); window.addEventListener('pagechange', function () { setTimeout(line, 120); }); line();
   }
+})();
+
+;
+/* ======== history-polish ======== */
+(function () {
+  var D = window.SITE, sec = document.getElementById('history'); if (!sec || !D) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var tlEl = $('#timeline'), chips = $('#histChips');
+  var T = D.timeline, Y0 = T[0].year, Y1 = new Date().getFullYear();
+  var stat = function (re) { var s = D.stats.filter(function (x) { return re.test(x.label); })[0]; return s ? s.value : null; };
+  var cl = stat(/кубков чемпионов/i), ll = stat(/титулов ла лиги/i), founded = stat(/основания/i) || Y0;
+  var kp = [[Y1 - founded, 'лет истории'], [T.length, 'событий в хронологии']];
+  if (cl != null) kp.push([cl, 'кубков чемпионов']); if (ll != null) kp.push([ll, 'титулов Ла Лиги']);
+
+  // --- панель: счётчики, шкала веков, эпохи
+  var box = document.createElement('div'); box.className = 'hx';
+  var years = {}; T.forEach(function (t) { (years[t.year] = years[t.year] || []).push(t); });
+  var span = Y1 - founded;
+  var decades = []; for (var y = Math.ceil(founded / 20) * 20; y <= Y1; y += 20) decades.push(y);
+  var pos = function (y) { return ((y - founded) / span * 100).toFixed(2); };
+  box.innerHTML =
+    '<div class="hx-kpis">' + kp.map(function (k) { return '<div><b data-to="' + k[0] + '">0</b><span>' + k[1] + '</span></div>'; }).join('') + '</div>' +
+    '<div class="panel hx-ribbon reveal"><h3>Шкала времени</h3><div class="hx-axis"><i class="hx-fill"></i>' +
+      decades.map(function (d) { return '<span class="hx-tick" style="left:' + pos(d) + '%">' + d + '</span>'; }).join('') +
+      Object.keys(years).map(function (yr) { var ev = years[yr], eu = ev.some(function (e) { return e.type === 'europe'; }), cb = ev.some(function (e) { return e.type === 'club'; });
+        return '<button type="button" class="hx-dot ' + (eu && cb ? 'both' : eu ? 'eu' : 'cl') + '" data-y="' + yr + '" style="left:' + pos(yr) + '%" aria-label="' + yr + '"><em>' + yr + (ev.length > 1 ? ' · ×' + ev.length : '') + '</em></button>'; }).join('') +
+    '</div><p class="muted small">Нажмите на точку — список ниже прокрутится к событию. <span class="hx-k"><i class="cl"></i>клуб</span><span class="hx-k"><i class="eu"></i>Европа</span><span class="hx-k"><i class="both"></i>оба</span></p></div>' +
+    '<div class="hx-eras" role="group" aria-label="Эпохи">' + [].concat(window.__eras || []).join('') + '</div>';
+  var h2 = $('.page-title', sec); h2.parentNode.insertBefore(box, chips);
+  try { observeReveal(box); } catch (e) { $$('.reveal', box).forEach(function (x) { x.classList.add('in'); }); }
+  // эпохи — карточки-фильтры
+  var eraBox = $('.hx-eras', box);
+  eraBox.innerHTML = ERAS.map(function (e, i) {
+    var ev = T.filter(function (t) { return t.year >= e.a && t.year <= e.b; }); if (!ev.length) return '';
+    var ys = ev.map(function (t) { return t.year; }).filter(function (v, k, a) { return a.indexOf(v) === k; });
+    return '<button type="button" class="hx-era" data-i="' + i + '"><small>' + e.a + (e.b > 2050 ? ' – ' + Y1 : '–' + e.b) + '</small><strong>' + e.t + '</strong><b data-to="' + ev.length + '">0</b><span>событий</span><em>' + ys.join(' · ') + '</em></button>';
+  }).join('');
+  function syncEra() {
+    $$('.hx-era', box).forEach(function (b) { b.classList.toggle('on', +b.dataset.i === histEra); });
+    var era = histEra == null ? null : ERAS[histEra];
+    $$('.hx-dot', box).forEach(function (d) { var y = +d.dataset.y; d.classList.toggle('dim', !!era && (y < era.a || y > era.b)); });
+  }
+  eraBox.addEventListener('click', function (e) {
+    var b = e.target.closest('.hx-era'); if (!b) return; var i = +b.dataset.i;
+    histEra = histEra === i ? null : i; syncEra(); renderTimeline();
+    var f = tlEl.firstElementChild; if (f && histEra != null) f.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  });
+  box.addEventListener('click', function (e) {
+    var d = e.target.closest('.hx-dot'); if (!d) return;
+    var yr = d.dataset.y, li = $('li[data-year="' + yr + '"]', tlEl);
+    if (!li) { histFilter = 'all'; histEra = null; $$('.chip', chips).forEach(function (c) { c.classList.toggle('active', c.dataset.f === 'all'); }); syncEra(); renderTimeline(); li = $('li[data-year="' + yr + '"]', tlEl); }
+    if (!li) return; li.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
+  });
+
+  // --- счётчики
+  function count(el) { var to = +el.dataset.to; if (reduce) { el.textContent = to; return; } var t0 = performance.now(); (function tick(n) { var p = Math.min((n - t0) / 1400, 1); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0); }
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); count(e.target); } }); }, { threshold: .5 }) : null;
+  $$('[data-to]', box).forEach(function (el) { if (io) io.observe(el); else el.textContent = el.dataset.to; });
+
+  // --- живая линия: заполняет шкалу и рисует вертикальную линию
+  function line() {
+    if (!sec.classList.contains('active')) return;
+    var r = tlEl.getBoundingClientRect(), vh = innerHeight, p = Math.max(0, Math.min(1, (vh * .62 - r.top) / r.height));
+    tlEl.style.setProperty('--prog', reduce ? 1 : p.toFixed(3));
+    var cur = null;
+    $$('li', tlEl).forEach(function (li) { var b = li.getBoundingClientRect(), lit = reduce || b.top + 30 < vh * .62; li.classList.toggle('lit', lit); if (lit) cur = +li.dataset.year; });
+    var fill = $('.hx-fill', box); if (fill) fill.style.width = (cur == null ? 0 : pos(cur)) + '%';
+    $$('.hx-dot', box).forEach(function (d) { d.classList.toggle('passed', cur != null && +d.dataset.y <= cur); });
+  }
+  window.addEventListener('scroll', line, { passive: true }); window.addEventListener('resize', line);
+  window.addEventListener('timelinerender', function () { setTimeout(line, 80); });
+  window.addEventListener('pagechange', function () { setTimeout(line, 150); });
+  syncEra(); line();
 })();
