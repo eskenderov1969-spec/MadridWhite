@@ -1875,3 +1875,53 @@ a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var
 
 .roof-open .rp.l { transform: translateX(-215px); opacity: .55; } .roof-open .rp.r { transform: translateX(215px); opacity: .55; }
 .st-hipogeo text { font-size: 11px; }
+
+/* ======== history polish ======== */
+.hx-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 8px 0 18px; }
+.hx-kpis > div { padding: 16px 18px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); transition: transform .3s var(--ease), border-color .3s; }
+.hx-kpis > div:hover { transform: translateY(-4px); border-color: var(--gold); }
+.hx-kpis b { display: block; font-family: var(--display); font-size: clamp(1.7rem, 3.4vw, 2.5rem); color: var(--gold); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.hx-kpis span { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+@media (max-width: 700px) { .hx-kpis { grid-template-columns: repeat(2, 1fr); } }
+
+.hx-ribbon { padding: 20px 24px 16px; margin-bottom: 18px; overflow: visible; }
+.hx-ribbon h3 { margin: 0 0 40px; font-size: 1.05rem; }
+.hx-axis { position: relative; height: 4px; margin: 0 14px 34px; border-radius: 4px; background: var(--border); }
+.hx-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 4px; background: linear-gradient(90deg, #8c6d12, var(--gold), var(--gold-soft)); box-shadow: 0 0 12px var(--glow); transition: width .35s var(--ease); }
+.hx-tick { position: absolute; top: 14px; transform: translateX(-50%); font-size: .68rem; color: var(--muted); font-weight: 600; }
+.hx-tick::before { content: ""; position: absolute; left: 50%; top: -12px; width: 1px; height: 6px; background: var(--border); }
+.hx-dot { position: absolute; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; padding: 0; border-radius: 50%; cursor: pointer; border: 3px solid var(--bg, #0b1634); background: #5b7fe0; transition: transform .3s var(--ease), box-shadow .3s, opacity .3s; }
+.hx-dot.cl { background: var(--gold); } .hx-dot.eu { background: #5b8bf0; } .hx-dot.both { background: linear-gradient(90deg, var(--gold) 50%, #5b8bf0 50%); }
+.hx-dot:hover, .hx-dot:focus-visible { transform: scale(1.5); box-shadow: 0 0 14px var(--glow); z-index: 3; outline: none; }
+.hx-dot.passed { box-shadow: 0 0 10px var(--glow); }
+.hx-dot.dim { opacity: .25; }
+.hx-dot em { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(4px); font-style: normal; font-size: .7rem; font-weight: 700; color: var(--heading); background: var(--card-solid, #101a3a); border: 1px solid var(--border); padding: 3px 8px; border-radius: 8px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.hx-dot:hover em, .hx-dot:focus-visible em { opacity: 1; transform: translateX(-50%); }
+.hx-k { margin-left: 14px; white-space: nowrap; } .hx-k i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.hx-k i.cl { background: var(--gold); } .hx-k i.eu { background: #5b8bf0; } .hx-k i.both { background: linear-gradient(90deg, var(--gold) 50%, #5b8bf0 50%); }
+
+.hx-eras { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.hx-era { font: inherit; text-align: left; color: inherit; cursor: pointer; padding: 16px 18px; border-radius: 18px; background: var(--card); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; position: relative; overflow: hidden; transition: transform .3s var(--ease), border-color .3s, box-shadow .3s; }
+.hx-era:hover { transform: translateY(-5px); border-color: rgba(212,175,55,.55); }
+.hx-era.on { border-color: var(--gold); box-shadow: 0 0 26px var(--glow); background: linear-gradient(160deg, rgba(212,175,55,.16), var(--card)); }
+.hx-era small { color: var(--gold); font-weight: 700; letter-spacing: .08em; font-size: .72rem; }
+.hx-era strong { font-size: 1rem; color: var(--heading); line-height: 1.25; min-height: 2.5em; }
+.hx-era b { font-family: var(--display); font-size: 2.2rem; color: var(--gold); line-height: 1.1; margin-top: 6px; }
+.hx-era span { font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.hx-era em { font-style: normal; font-size: .74rem; color: var(--muted); margin-top: 8px; }
+
+/* вертикальная линия и значки */
+#timeline::before { transform-origin: top; transform: scaleY(var(--prog, 0)); transition: transform .15s linear; }
+#timeline li::before { border-color: var(--border); box-shadow: none; transition: border-color .4s, box-shadow .4s, transform .4s var(--ease), background .4s; }
+#timeline li.lit::before { border-color: var(--gold); box-shadow: 0 0 14px var(--glow); transform: scale(1.15); }
+#timeline li.tl-europe.lit::before { border-color: #5b8bf0; box-shadow: 0 0 14px rgba(91,139,240,.5); }
+#timeline li.flash { animation: tlFlash 1.4s var(--ease); }
+@keyframes tlFlash { 0%, 60% { border-color: var(--gold); box-shadow: 0 0 34px var(--glow); } }
+.tl-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; font-size: .66rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; border: 1px solid; }
+.tl-badge svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tl-b-club { color: var(--gold); background: rgba(212,175,55,.12); border-color: rgba(212,175,55,.4); }
+.tl-b-europe { color: #8fb0ff; background: rgba(91,139,240,.14); border-color: rgba(91,139,240,.45); }
+#timeline li.tl-europe time { color: #8fb0ff; }
+#timeline li.tl-europe:hover { border-color: rgba(91,139,240,.6); }
+[data-theme="light"] .tl-b-europe, [data-theme="light"] #timeline li.tl-europe time { color: #2a4fb0; } [data-theme="light"] .tl-b-club { color: #7a5f0b; }
+@media (prefers-reduced-motion: reduce) { #timeline::before { transform: none; } #timeline li.flash { animation: none; } }
