@@ -1794,7 +1794,7 @@ a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var
 
 /* ======== stadium ======== */
 .st-hero { position: relative; overflow: hidden; border-radius: 26px; padding: clamp(24px, 4vw, 48px); margin-bottom: 8px; min-height: 480px; border: 1px solid var(--border); isolation: isolate; }
-.st-photo { position: absolute; inset: -90px 0; z-index: -2; background: url("assets/bernabeu.jpg") center 55% / cover no-repeat; transform: translateY(var(--py, 0px)) scale(1.04); will-change: transform; animation: stZoom 16s ease-out both; }
+.st-photo { position: absolute; inset: -90px 0; z-index: -2; background: url("assets/bernabeu.jpg") center 55% / cover no-repeat, url("bernabeu.jpg") center 55% / cover no-repeat; transform: translateY(var(--py, 0px)) scale(1.04); will-change: transform; animation: stZoom 16s ease-out both; }
 @keyframes stZoom { from { filter: saturate(.8) brightness(.8); } to { filter: none; } }
 .st-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(95deg, rgba(5,10,26,.93) 0%, rgba(5,10,26,.78) 42%, rgba(5,10,26,.25) 100%), linear-gradient(0deg, rgba(5,10,26,.85), transparent 45%); }
 .st-hero-in { max-width: 760px; display: flex; flex-direction: column; min-height: 400px; }
