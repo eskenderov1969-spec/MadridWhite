@@ -2004,3 +2004,27 @@ a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var
 .keys dt.hk.press { transform: translateY(2px) scale(.94); filter: drop-shadow(0 0 10px var(--gold)); } .keys dt.hk.press kbd { background: var(--gold); color: #0b1f4b; border-color: var(--gold); }
 @media (max-width: 860px) { .fl-row { grid-template-columns: 1fr 18px; } .fl-d { grid-column: 1; } .fl-row i { grid-row: 1; grid-column: 2; } }
 @media (prefers-reduced-motion: reduce) { .flow-step.lit b { animation: none; } .fl-more { transition: none; } }
+
+/* ======== lab polish ======== */
+.fifa-card { --pc: #d4af37; --rx: 0deg; --ry: 0deg; --sx: 50%; position: relative; overflow: hidden; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .3s var(--ease), border-color .4s, background .4s;
+  border-color: color-mix(in srgb, var(--pc) 55%, transparent); background: radial-gradient(110% 80% at 15% 0%, color-mix(in srgb, var(--pc) 30%, transparent), transparent 65%), linear-gradient(135deg, rgba(27,58,138,.4), var(--card)); }
+.fifa-card > * { position: relative; z-index: 1; }
+.fifa-card .fc-ghost { position: absolute; z-index: 0; right: 18px; top: -26px; font-family: var(--display); font-size: 12rem; line-height: 1; color: color-mix(in srgb, var(--pc) 14%, transparent); pointer-events: none; transition: color .4s; }
+.fifa-card .fc-shine { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(320px circle at var(--sx) 20%, rgba(255,255,255,.1), transparent 60%); opacity: 0; transition: opacity .3s; }
+.fifa-card:hover .fc-shine { opacity: 1; }
+.fifa-card .pc-photo { border-color: color-mix(in srgb, var(--pc) 70%, transparent); box-shadow: 0 0 30px color-mix(in srgb, var(--pc) 40%, transparent); }
+.fifa-card .pc-num { color: var(--pc); }
+.fifa-card .pc-top .tag { background: color-mix(in srgb, var(--pc) 22%, transparent); border-color: var(--pc); color: var(--pc); }
+.fifa-card .pc-facts > div { border-left: 3px solid var(--pc); }
+.fifa-card.swap .pc-photo { animation: fcIn .6s var(--ease) both; } .fifa-card.swap .pc-top, .fifa-card.swap .pc-facts > div { animation: fcSlide .5s var(--ease) both; }
+.fifa-card.swap .pc-facts > div:nth-child(2) { animation-delay: .05s; } .fifa-card.swap .pc-facts > div:nth-child(3) { animation-delay: .1s; } .fifa-card.swap .pc-facts > div:nth-child(4) { animation-delay: .15s; } .fifa-card.swap .pc-facts > div:nth-child(5) { animation-delay: .2s; }
+@keyframes fcIn { from { opacity: 0; transform: scale(.9) rotate(-3deg); } } @keyframes fcSlide { from { opacity: 0; transform: translateX(18px); } }
+.stat-tile b { font-variant-numeric: tabular-nums; }
+.ch-tip { position: absolute; z-index: 5; transform: translate(-50%, -100%); padding: 6px 12px; border-radius: 10px; background: var(--bg-2, #0a1537); border: 1px solid var(--gold); color: var(--heading); font-size: .8rem; font-weight: 600; white-space: nowrap; pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+.ch-tip[hidden] { display: none; }
+.chart-area.dim .vbar:not(.hot), .chart-area.dim .hbar:not(.hot) { opacity: .4; } .vbar, .hbar { transition: opacity .25s; }
+.vbar.hot i { filter: brightness(1.2); box-shadow: 0 0 28px var(--gold); } .hbar.hot .fill { filter: brightness(1.25); }
+.line-svg circle { transition: r .2s; cursor: pointer; } .line-svg circle.hot { r: 6; fill: var(--gold); }
+@media (max-width: 720px) { .fifa-card .fc-ghost { font-size: 8rem; } }
+@media (prefers-reduced-motion: reduce) { .fifa-card, .fifa-card.swap * { animation: none !important; transition: none; } }
+.ch-tip i { font-style: normal; color: var(--gold); }
