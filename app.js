@@ -298,26 +298,6 @@ $('#chartTabs').addEventListener('click', e => {
   if (b) renderChart(b.dataset.chart);
 });
 
-// ---------- Таблица финалов ----------
-let newestFirst = false;
-const finalSearch = $('#finalSearch');
-
-function renderFinals() {
-  const q = finalSearch.value.trim().toLowerCase();
-  let list = D.finals.filter(f =>
-    !q || hay(`${f.year} ${f.city} ${f.opponent} ${f.score}`).toLowerCase().includes(q));
-  list = [...list].sort((a, b) => newestFirst ? b.year - a.year : a.year - b.year);
-  $('#finalsBody').innerHTML = list.length
-    ? list.map(f => `<tr><td>${f.year}</td><td>${f.city}</td><td>${f.opponent}</td><td>${f.score}</td></tr>`).join('')
-    : `<tr><td colspan="4" class="muted">Ничего не найдено.</td></tr>`;
-}
-finalSearch.addEventListener('input', renderFinals);
-$('#sortBtn').addEventListener('click', e => {
-  newestFirst = !newestFirst;
-  e.target.textContent = newestFirst ? 'Сначала старые' : 'Сначала новые';
-  renderFinals();
-});
-
 // ---------- Прогресс прокрутки и кнопка «наверх» ----------
 const progress = $('#progress');
 const toTop = $('#toTop');
@@ -351,7 +331,6 @@ window.matchMedia('(min-width: 641px)').addEventListener('change', e => { if (e.
 
 // ---------- Старт ----------
 renderNews();
-renderFinals();
 showPage();
 
 
@@ -2431,4 +2410,64 @@ $$('.page-title, .section-head h2').forEach(h => {
     document.addEventListener('keydown', function (e) { if (!sec.classList.contains('active')) return;
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') lit(0); else if (e.key === '/') lit(1); else if (e.key === 'Escape') lit(2); }, true);
   }
+})();
+
+;
+/* ======== lab-polish ======== */
+(function () {
+  var D = window.SITE, sec = document.getElementById('data-lab'); if (!sec || !D) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COL = { GK: '#e6c44f', DF: '#5b8bf0', MF: '#3fb08a', FW: '#e2563f' };
+  var pcard = $('.pcard', sec), sel = $('#labPlayer'), name = $('#pcName');
+
+  // --- карточка в стиле FIFA
+  if (pcard && sel && name) {
+    pcard.classList.add('fifa-card');
+    var shine = document.createElement('span'); shine.className = 'fc-shine'; shine.setAttribute('aria-hidden', 'true'); pcard.appendChild(shine);
+    var ghost = document.createElement('span'); ghost.className = 'fc-ghost'; ghost.setAttribute('aria-hidden', 'true'); pcard.insertBefore(ghost, pcard.firstChild);
+    var upd = function () {
+      var p = D.players.find(function (x) { return x.id === +sel.value; }); if (!p) return;
+      pcard.style.setProperty('--pc', COL[p.pos] || '#d4af37'); pcard.dataset.pos = p.pos;
+      ghost.textContent = $('#pcNum').textContent;
+      if (reduce) return; pcard.classList.remove('swap'); void pcard.offsetWidth; pcard.classList.add('swap');
+    };
+    new MutationObserver(upd).observe(name, { childList: true, characterData: true, subtree: true }); upd();
+    if (!reduce) {
+      pcard.addEventListener('pointermove', function (e) { var r = pcard.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        pcard.style.setProperty('--rx', ((.5 - y) * 4).toFixed(2) + 'deg'); pcard.style.setProperty('--ry', ((x - .5) * 6).toFixed(2) + 'deg'); pcard.style.setProperty('--sx', (x * 100).toFixed(0) + '%'); });
+      pcard.addEventListener('pointerleave', function () { pcard.style.setProperty('--rx', '0deg'); pcard.style.setProperty('--ry', '0deg'); });
+    }
+  }
+
+  // --- плавный набор чисел в показателях
+  function count(el) {
+    var t = el.textContent.trim(), m = t.match(/^(\D*?)(-?\d+(?:[.,]\d+)?)(.*)$/); if (!m || reduce) return;
+    var dec = (m[2].split(/[.,]/)[1] || '').length, sep = m[2].indexOf(',') > -1 ? ',' : '.', to = parseFloat(m[2].replace(',', '.')), t0 = performance.now();
+    (function step(x) { var k = Math.min(1, (x - t0) / 900), v = to * (1 - Math.pow(1 - k, 3)); var s = dec ? v.toFixed(dec).replace('.', sep) : String(Math.round(v)); el.textContent = m[1] + s + m[3]; if (k < 1) requestAnimationFrame(step); else el.textContent = t; })(t0);
+  }
+  var stats = $('#labStats');
+  if (stats) new MutationObserver(function () { if (stats._busy) return; stats._busy = true;
+    $$('.stat-tile:not(.empty) b', stats).forEach(function (b, i) { setTimeout(function () { count(b); }, i * 40); });
+    setTimeout(function () { stats._busy = false; }, 60); }).observe(stats, { childList: true });
+
+  // --- клубные графики: подсказка и подсветка
+  var area = $('#chartArea'); if (!area) return;
+  var tip = document.createElement('div'); tip.className = 'ch-tip'; tip.hidden = true; var host = area.parentNode; host.style.position = 'relative'; host.appendChild(tip);
+  function show(el, txt, e) { var r = host.getBoundingClientRect(); tip.innerHTML = txt; tip.hidden = false; var x = e.clientX - r.left, y = e.clientY - r.top;
+    tip.style.left = Math.min(Math.max(x, 60), r.width - 60) + 'px'; tip.style.top = (y - 14) + 'px'; }
+  var plural = function (n, a, b, c) { var m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
+  area.addEventListener('pointermove', function (e) {
+    var vb = e.target.closest('.vbar'), hb = e.target.closest('.hbar'), ci = e.target.closest('.line-svg circle');
+    $$('.hot', area).forEach(function (x) { x.classList.remove('hot'); });
+    if (vb) { var i = $$('.vbar', area).indexOf(vb), lab = $$('.vlabels span', area)[i], n = +$('em', vb).textContent; vb.classList.add('hot'); area.classList.add('dim'); show(vb, '<b></b>: <i>' + n + '</i> <span>' + plural(n, 'победа', 'победы', 'побед') + '</span>', e); $('b', tip).textContent = lab.textContent; }
+    else if (hb) { hb.classList.add('hot'); area.classList.add('dim'); var s = $('span', hb).textContent, g = $('b', hb).textContent; show(hb, '<b></b>: <i>' + g + '</i> <span>' + plural(+g, 'гол', 'гола', 'голов') + '</span>', e); $('b', tip).textContent = s; }
+    else if (ci) { var t = $('title', ci); ci.classList.add('hot'); area.classList.add('dim'); if (t) var mm = t.textContent.match(/^(\d+): (\d+)$/); if (mm) show(ci, '<b>' + mm[1] + '</b> · <span>титул №</span><i>' + mm[2] + '</i>', e); }
+    else { area.classList.remove('dim'); tip.hidden = true; }
+  });
+  area.addEventListener('pointerleave', function () { area.classList.remove('dim'); tip.hidden = true; $$('.hot', area).forEach(function (x) { x.classList.remove('hot'); }); });
+  // числа над столбцами и у бомбардиров набираются
+  new MutationObserver(function (ms) { if (area._b) return; area._b = true;
+    $$('.vbar em, .hbar b', area).forEach(function (el) { var to = +el.textContent; if (!to || reduce) return; var t0 = performance.now(); (function s(x) { var k = Math.min(1, (x - t0) / 1000); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(s); })(t0); });
+    setTimeout(function () { area._b = false; }, 80); }).observe(area, { childList: true });
 })();
