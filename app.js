@@ -2218,11 +2218,11 @@ $$('.page-title, .section-head h2').forEach(h => {
   var pos = function (y) { return ((y - founded) / span * 100).toFixed(2); };
   box.innerHTML =
     '<div class="hx-kpis">' + kp.map(function (k) { return '<div><b data-to="' + k[0] + '">0</b><span>' + k[1] + '</span></div>'; }).join('') + '</div>' +
-    '<div class="panel hx-ribbon reveal"><h3>Шкала времени</h3><div class="hx-axis"><i class="hx-fill"></i>' +
+    '<div class="panel hx-ribbon reveal"><h3>Шкала времени</h3><div class="hx-scroll"><div class="hx-axis"><i class="hx-fill"></i>' +
       decades.map(function (d) { return '<span class="hx-tick" style="left:' + pos(d) + '%">' + d + '</span>'; }).join('') +
       Object.keys(years).map(function (yr) { var ev = years[yr], eu = ev.some(function (e) { return e.type === 'europe'; }), cb = ev.some(function (e) { return e.type === 'club'; });
         return '<button type="button" class="hx-dot ' + (eu && cb ? 'both' : eu ? 'eu' : 'cl') + '" data-y="' + yr + '" style="left:' + pos(yr) + '%" aria-label="' + yr + '"><em>' + yr + (ev.length > 1 ? ' · ×' + ev.length : '') + '</em></button>'; }).join('') +
-    '</div><p class="muted small">Нажмите на точку — список ниже прокрутится к событию. <span class="hx-k"><i class="cl"></i>клуб</span><span class="hx-k"><i class="eu"></i>Европа</span><span class="hx-k"><i class="both"></i>оба</span></p></div>' +
+    '</div></div><p class="muted small">Нажмите на точку — список ниже прокрутится к событию. <span class="hx-k"><i class="cl"></i>клуб</span><span class="hx-k"><i class="eu"></i>Европа</span><span class="hx-k"><i class="both"></i>оба</span></p></div>' +
     '<div class="hx-eras" role="group" aria-label="Эпохи">' + [].concat(window.__eras || []).join('') + '</div>';
   var h2 = $('.page-title', sec); h2.parentNode.insertBefore(box, chips);
   try { observeReveal(box); } catch (e) { $$('.reveal', box).forEach(function (x) { x.classList.add('in'); }); }
