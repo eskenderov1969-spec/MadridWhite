@@ -2028,3 +2028,66 @@ a.mrow.res:hover .rs-score { border-color: var(--gold); box-shadow: 0 0 16px var
 @media (max-width: 720px) { .fifa-card .fc-ghost { font-size: 8rem; } }
 @media (prefers-reduced-motion: reduce) { .fifa-card, .fifa-card.swap * { animation: none !important; transition: none; } }
 .ch-tip i { font-style: normal; color: var(--gold); }
+
+/* ======== mobile polish ======== */
+@media (max-width: 640px) {
+  .stat > span,
+  .hero-card > .hc-tag,
+  .hc-row > small,
+  .hc-motto > small,
+  .tk > span,
+  .nm-top > .tag,
+  .cd > span,
+  .nm-form > small,
+  .rb-card > small,
+  .hw-tiles span,
+  .gd > em,
+  .section-head > .tag,
+  .card-img > .tag,
+  .fact > span,
+  .era-axis > span,
+  .era-bar > em,
+  .month-grid > .wd,
+  .cal-day > i,
+  .cal-day > em,
+  .mr-date > span,
+  .mr-date > small,
+  .mr-main > .mr-comp,
+  .lg-team > .tb-s,
+  .st-kpis span,
+  .bd-list > h4,
+  .hx-kpis span,
+  .hx-axis > .hx-tick,
+  .hx-dot > em,
+  .hx-era > span,
+  .trophy > .tag,
+  .dn-mid > span,
+  .fin-rl > b,
+  .fin-rl > span,
+  .chip > small,
+  .pc-top > .tag,
+  .pc-facts dt,
+  .flabels > span { font-size: max(11.5px, .72rem) !important; }
+  .tk > span { font-size: 10.5px !important; }
+  /* больше области нажатия у точек шкалы времени и чипов */
+  .hx-dot::before { content: ""; position: absolute; inset: -12px; border-radius: 50%; }
+  .fin-node { min-width: 70px; padding: 12px 12px 10px; }
+  .chip, .tab, .btn-small, .seg button, .seg-btn { min-height: 40px; }
+  .nav-cta, .btn { min-height: 44px; }
+  .fav-btn { min-width: 40px; min-height: 40px; display: inline-grid; place-items: center; }
+  .res-badge { min-width: 28px; min-height: 28px; }
+  /* карусель трофеев и лента финалов: плавная прокрутка пальцем */
+  #trophyGrid.carousel, .fin-ribbon, .tabs, .chips { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .fin-ribbon { scroll-padding: 0 16px; }
+  /* шкала времени истории не должна слипаться: прокручиваемая лента */
+  .hx-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding: 36px 0 0; margin-top: -36px; scrollbar-width: none; }
+  .hx-scroll::-webkit-scrollbar { display: none; }
+  .hx-scroll > .hx-axis { min-width: 600px; margin-right: 24px; }
+  .ch-tip { max-width: 70vw; white-space: normal; }
+}
+@media (hover: none) {
+  .trophy:hover .tr-cup, .about-cards .panel:hover .ab-ico, .flow-step:hover, .feat-grid li.lnk:hover, .fl-row:hover, .dn-li:hover { transform: none; }
+  .fifa-card { transform: none !important; }
+}
+
+@media (max-width: 640px) { .cd span, .nm-cd span, [class*="cd"] > div > span { font-size: 11.5px !important; } }
