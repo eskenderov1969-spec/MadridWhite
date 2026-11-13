@@ -36,7 +36,33 @@ window.PROFILES_NOTE = 'Рыночная стоимость — оценки Tra
 
 // Фото игроков: положите файлы в папку assets/players/ и впишите их имена сюда.
 // Имя файла = slug игрока из этого файла (например 'mbappe.jpg'; лучше PNG/WebP с прозрачным фоном).
-window.PHOTOS = [];
+window.PHOTOS = [
+  'rodrygo.webp',
+  'espi.webp',
+  'vinicius.webp',
+  'pitarch.webp',
+  'bernardo-silva.webp',
+  'guler.webp',
+  'bellingham.webp',
+  'camavinga.webp',
+  'valverde.webp',
+  'tchouameni.webp',
+  'dumfries.webp',
+  'rudiger.webp',
+  'carreras.webp',
+  'konate.webp',
+  'cucurella.webp',
+  'alexander-arnold.webp',
+  'brahim.webp',
+  'diomande.webp',
+  'endrick.webp',
+  'mbappe.webp',
+  'huijsen.webp',
+  'militao.webp',
+  'asencio.webp',
+  'lunin.webp',
+  'courtois.webp'
+];
 
 window.PROFILES = {
   1: {
