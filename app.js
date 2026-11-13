@@ -646,7 +646,8 @@ $$('.page-title, .section-head h2').forEach(h => {
     $('#pcNum').textContent = pr.num != null ? pr.num : '';
     box.classList.remove('no-photo');
     // фото ищем и в assets/players/, и рядом с index.html (если файлы загружены в корень)
-    const cand = pr.slug ? [`assets/players/${pr.slug}.jpg`, `${pr.slug}.jpg`] : []; let ck = 0;
+    const pf = (window.PHOTOS || []).find(f => f.split('.')[0] === pr.slug) || (pr.slug ? pr.slug + '.jpg' : null);
+    const cand = pf ? [`assets/players/${pf}`, pf] : []; let ck = 0;
     img.onerror = () => { if (++ck < cand.length) img.src = cand[ck]; else box.classList.add('no-photo'); };
     img.onload = () => box.classList.remove('no-photo');
     img.alt = p.name;
