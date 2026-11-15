@@ -420,7 +420,7 @@ $$('.page-title, .section-head h2').forEach(h => {
       const st = pr.stats || {};
       const photo = (window.PHOTOS || []).find(f => f.split('.')[0] === pr.slug);
       const art = photo
-        ? `<img class="f-photo" src="assets/players/${photo}" alt="${p.name}" loading="lazy" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${photo}'}else{this.remove()}">`
+        ? `<img class="f-photo" src="assets/players/${photo}" alt="${p.name}" loading="lazy" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${photo}'}else{this.outerHTML='<svg class=&quot;f-sil&quot; viewBox=&quot;0 0 120 120&quot; aria-hidden=&quot;true&quot;><circle cx=&quot;60&quot; cy=&quot;40&quot; r=&quot;22&quot;/><path d=&quot;M14 120c0-30 20-46 46-46s46 16 46 46z&quot;/></svg>'}">`
         : `<svg class="f-sil" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="40" r="22"/><path d="M14 120c0-30 20-46 46-46s46 16 46 46z"/></svg>`;
       return `
       <button class="card player fifa reveal pb-${p.pos}${photo ? ' has-photo' : ''}" data-id="${p.id}" style="--d:${Math.min(i, 6) * 0.05}s" type="button">
@@ -2471,4 +2471,51 @@ $$('.page-title, .section-head h2').forEach(h => {
   new MutationObserver(function (ms) { if (area._b) return; area._b = true;
     $$('.vbar em, .hbar b', area).forEach(function (el) { var to = +el.textContent; if (!to || reduce) return; var t0 = performance.now(); (function s(x) { var k = Math.min(1, (x - t0) / 1000); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(s); })(t0); });
     setTimeout(function () { area._b = false; }, 80); }).observe(area, { childList: true });
+})();
+
+;
+/* ======== schedule ======== */
+(function () {
+  var D = window.SITE, tabs = document.getElementById('mcTabs'), pane = document.getElementById('mcSched'); if (!D || !tabs || !pane) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  var loc = window.LOCALE || 'ru-RU';
+  var fMon = new Intl.DateTimeFormat(loc, { month: 'long', year: 'numeric' }), fM = new Intl.DateTimeFormat(loc, { month: 'short' }), fD = new Intl.DateTimeFormat(loc, { day: 'numeric' }), fW = new Intl.DateTimeFormat(loc, { weekday: 'short' }), fT = new Intl.DateTimeFormat(loc, { hour: '2-digit', minute: '2-digit' });
+  var day = function (s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+  var out = function (s) { var p = s.split(':').map(Number); return p[0] > p[1] ? 'win' : p[0] < p[1] ? 'loss' : 'draw'; };
+  var LET = { win: 'В', draw: 'Н', loss: 'П' };
+  var f = { comp: 'all', venue: 'all', st: 'all' };
+  var todayKey = function () { var n = new Date(); return n.getFullYear() + '-' + ('0' + (n.getMonth() + 1)).slice(-2) + '-' + ('0' + n.getDate()).slice(-2); };
+  function all() {
+    var a = D.results.map(function (r) { return { date: r.date, comp: r.comp, opp: r.opp, venue: r.venue, score: r.score, played: true }; })
+      .concat(D.upcoming.map(function (m) { return { date: m.date, comp: m.comp, opp: m.opp, venue: m.venue, kickoff: m.kickoff, note: m.note, played: false }; }));
+    return a.sort(function (x, y) { return x.date < y.date ? -1 : x.date > y.date ? 1 : 0; });
+  }
+  function row(m, i) {
+    var d = day(m.date), t = '<div class="mr-date"><b>' + fD.format(d) + '</b><span>' + fM.format(d).replace('.', '') + '</span><small>' + fW.format(d) + '</small></div>';
+    var main = '<div class="mr-main"><span class="mr-comp">' + m.comp + '</span><strong>' + (m.venue === 'дома' ? '<span>Реал Мадрид</span> — <span>' + m.opp + '</span>' : '<span>' + m.opp + '</span> — <span>Реал Мадрид</span>') + '</strong></div>';
+    if (m.played) { var o = out(m.score);
+      return '<a class="mrow res ' + o + '" href="#match/' + m.date + '" style="--i:' + Math.min(i, 12) + '">' + t + main + '<span class="mr-venue">' + m.venue + '</span><span class="mr-score">' + m.score + '</span><i class="res-badge ' + o + '">' + LET[o] + '</i></a>'; }
+    return '<div class="mrow sc-next" style="--i:' + Math.min(i, 12) + '">' + t + main + '<span class="mr-venue">' + m.venue + '</span><span class="mr-time">' + (m.kickoff ? fT.format(new Date(m.kickoff)) : '<span>время уточняется</span>') + '</span></div>';
+  }
+  function render() {
+    var A = all(), played = A.filter(function (m) { return m.played; }).length, left = A.length - played;
+    var comps = ['all'].concat(A.reduce(function (s, m) { if (s.indexOf(m.comp) < 0) s.push(m.comp); return s; }, []));
+    var list = A.filter(function (m) { return (f.comp === 'all' || m.comp === f.comp) && (f.venue === 'all' || m.venue === f.venue) && (f.st === 'all' || (f.st === 'played') === m.played); });
+    var tk = todayKey(), html = '', cur = '', marked = false;
+    list.forEach(function (m, i) {
+      var mk = m.date.slice(0, 7);
+      if (!marked && !m.played && f.st === 'all') { marked = true; html += '<div class="sc-today"><i></i><span>Сегодня</span><b>' + fD.format(day(tk)) + ' ' + fM.format(day(tk)).replace('.', '') + '</b><i></i></div>'; }
+      if (mk !== cur) { cur = mk; var dd = day(m.date); html += '<h3 class="sc-month">' + fMon.format(dd) + '</h3>'; }
+      html += row(m, i);
+    });
+    pane.innerHTML = '<div class="facts"><div class="fact"><b>' + played + '</b><span>Сыграно</span></div><div class="fact"><b>' + left + '</b><span>Впереди</span></div><div class="fact"><b>' + A.length + '</b><span>матчей в расписании</span></div></div>' +
+      '<div class="chips mc-filter" role="group" aria-label="Фильтр">' + comps.map(function (c) { return '<button class="chip' + (c === f.comp ? ' active' : '') + '" data-c="' + c + '" type="button">' + (c === 'all' ? 'Все турниры' : c) + '</button>'; }).join('') +
+      '<span class="chip-sep" aria-hidden="true"></span>' + [['all', 'Все матчи'], ['дома', 'Дома'], ['в гостях', 'В гостях']].map(function (p) { return '<button class="chip' + (p[0] === f.venue ? ' active' : '') + '" data-v="' + p[0] + '" type="button">' + p[1] + '</button>'; }).join('') +
+      '<span class="chip-sep" aria-hidden="true"></span>' + [['all', 'Все'], ['played', 'Сыгранные'], ['next', 'Предстоящие']].map(function (p) { return '<button class="chip' + (p[0] === f.st ? ' active' : '') + '" data-s="' + p[0] + '" type="button">' + p[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="sc-list">' + (html || '<p class="muted empty">Ничего не найдено.</p>') + '</div>' +
+      '<p class="muted small">Расписание составлено по данным сайта клуба: у части матчей Ла Лиги время начала ещё не объявлено, даты могут сдвинуться. Суперкубок Испании 2027 пройдёт в Стамбуле 2–6 февраля, полуфинал с участием Реала — 3 февраля (по данным Comuniate от 26 октября).</p>';
+    try { observeReveal(pane); } catch (e) {}
+  }
+  pane.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b) return; if (b.dataset.c) f.comp = b.dataset.c; else if (b.dataset.v) f.venue = b.dataset.v; else if (b.dataset.s) f.st = b.dataset.s; render(); });
+  tabs.addEventListener('click', function (e) { var b = e.target.closest('.tab'); if (!b) return; if (b.dataset.tab === 'sched') { render(); pane.hidden = false; } else pane.hidden = true; });
 })();
