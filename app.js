@@ -863,6 +863,7 @@ $$('.page-title, .section-head h2').forEach(h => {
     return `<div class="mr-date"><b>${fmtDay.format(d)}</b><span>${fmtMon.format(d).replace('.', '')}</span><small>${fmtWd.format(d)}</small></div>`;
   }
   function renderCal() {
+    if (!$('#mcCal')) return;
     const list = D.upcoming.filter(m => endOf(m) > Date.now());
     $('#mcCal').innerHTML = monthGridHTML() + `<div class="cal-tools"><h3>Ближайшие матчи</h3><button class="btn btn-outline" type="button" data-ics="all">⬇ Скачать календарь (.ics)</button></div>` + (list.length ? `<div class="mrows">${list.map((m, i) => `
       <div class="mrow reveal" style="--d:${Math.min(i, 6) * 0.05}s">
@@ -1182,7 +1183,7 @@ $$('.page-title, .section-head h2').forEach(h => {
   $('#mcTabs').addEventListener('click', e => {
     const b = e.target.closest('.tab'); if (!b) return;
     $$('#mcTabs .tab').forEach(x => x.classList.toggle('active', x === b));
-    const ids = { cal: 'mcCal', res: 'mcRes', table: 'mcTable', season: 'mcSeason' };
+    const ids = { res: 'mcRes', table: 'mcTable', season: 'mcSeason' };
     Object.entries(ids).forEach(([k, id]) => { $('#' + id).hidden = k !== b.dataset.tab; });
     if (b.dataset.tab === 'season') renderSeason();
     observeReveal($('#matches'));
@@ -2483,7 +2484,7 @@ $$('.page-title, .section-head h2').forEach(h => {
   var day = function (s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
   var out = function (s) { var p = s.split(':').map(Number); return p[0] > p[1] ? 'win' : p[0] < p[1] ? 'loss' : 'draw'; };
   var LET = { win: 'В', draw: 'Н', loss: 'П' };
-  var f = { comp: 'all', venue: 'all', st: 'all' };
+  var f = { comp: 'all', venue: 'all', st: 'next' };
   var todayKey = function () { var n = new Date(); return n.getFullYear() + '-' + ('0' + (n.getMonth() + 1)).slice(-2) + '-' + ('0' + n.getDate()).slice(-2); };
   function all() {
     var a = D.results.map(function (r) { return { date: r.date, comp: r.comp, opp: r.opp, venue: r.venue, score: r.score, played: true }; })
@@ -2513,9 +2514,11 @@ $$('.page-title, .section-head h2').forEach(h => {
       '<span class="chip-sep" aria-hidden="true"></span>' + [['all', 'Все матчи'], ['дома', 'Дома'], ['в гостях', 'В гостях']].map(function (p) { return '<button class="chip' + (p[0] === f.venue ? ' active' : '') + '" data-v="' + p[0] + '" type="button">' + p[1] + '</button>'; }).join('') +
       '<span class="chip-sep" aria-hidden="true"></span>' + [['all', 'Все'], ['played', 'Сыгранные'], ['next', 'Предстоящие']].map(function (p) { return '<button class="chip' + (p[0] === f.st ? ' active' : '') + '" data-s="' + p[0] + '" type="button">' + p[1] + '</button>'; }).join('') + '</div>' +
       '<div class="sc-list">' + (html || '<p class="muted empty">Ничего не найдено.</p>') + '</div>' +
-      '<p class="muted small">Расписание составлено по данным сайта клуба: у части матчей Ла Лиги время начала ещё не объявлено, даты могут сдвинуться. Суперкубок Испании 2027 пройдёт в Стамбуле 2–6 февраля, полуфинал с участием Реала — 3 февраля (по данным Comuniate от 26 октября).</p>';
+      '<p class="muted small">Расписание составлено по данным сайта клуба: у части матчей Ла Лиги время начала ещё не объявлено, даты могут сдвинуться. Суперкубок Испании 2027 пройдёт в Стамбуле 2–6 февраля, полуфинал с участием Реала — 3 февраля (по данным Comuniate от 26 октября).</p>' +
+      '<p><button class="btn btn-outline" type="button" data-ics="all">⬇ Скачать календарь (.ics)</button></p>';
     try { observeReveal(pane); } catch (e) {}
   }
   pane.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b) return; if (b.dataset.c) f.comp = b.dataset.c; else if (b.dataset.v) f.venue = b.dataset.v; else if (b.dataset.s) f.st = b.dataset.s; render(); });
   tabs.addEventListener('click', function (e) { var b = e.target.closest('.tab'); if (!b) return; if (b.dataset.tab === 'sched') { render(); pane.hidden = false; } else pane.hidden = true; });
+  render();
 })();
