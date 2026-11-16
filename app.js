@@ -2142,12 +2142,12 @@ $$('.page-title, .section-head h2').forEach(h => {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   // 1. счётчики в верхнем блоке
   function count(el) {
-    var to = +el.dataset.to; if (reduce) { el.textContent = to; return; }
+    var to = +el.dataset.to, fmt = function (n) { return n >= 10000 ? n.toLocaleString(window.LOCALE || 'ru-RU') : n; }; if (reduce) { el.textContent = fmt(to); return; }
     var t0 = performance.now(), dur = 1500;
-    (function tick(now) { var p = Math.min((now - t0) / dur, 1); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
+    (function tick(now) { var p = Math.min((now - t0) / dur, 1); el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(tick); })(t0);
   }
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); count(e.target); } }); }, { threshold: .4 }) : null;
-  $$('.st-kpis [data-to]').forEach(function (el) { if (io) io.observe(el); else el.textContent = el.dataset.to; });
+  $$('.st-kpis [data-to]').forEach(function (el) { if (io) io.observe(el); else el.textContent = (+el.dataset.to >= 10000 ? (+el.dataset.to).toLocaleString(window.LOCALE || 'ru-RU') : el.dataset.to); });
 
   // 2. параллакс фото
   var hero = $('.st-hero');
@@ -2171,7 +2171,7 @@ $$('.page-title, .section-head h2').forEach(h => {
   }
 
   // 4. график вместимости
-  var tlHead = $$('.section-head', sec).filter(function (h) { return /Хронология/.test(h.textContent); })[0] || $('.st-tl', sec);
+  var tlHead = $$('.section-head', sec).filter(function (h) { return /Крупные матчи/.test(h.textContent); })[0] || $('.st-tl', sec);
   if (tlHead && !$('#capChart')) {
     var D = [['1947', 75145, 'при открытии'], ['1954', 125000, 'после расширения'], ['сейчас', 80000, 'более 80 000']];
     var mx = 125000, wrap = document.createElement('div');
@@ -2521,4 +2521,32 @@ $$('.page-title, .section-head h2').forEach(h => {
   pane.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b) return; if (b.dataset.c) f.comp = b.dataset.c; else if (b.dataset.v) f.venue = b.dataset.v; else if (b.dataset.s) f.st = b.dataset.s; render(); });
   tabs.addEventListener('click', function (e) { var b = e.target.closest('.tab'); if (!b) return; if (b.dataset.tab === 'sched') { render(); pane.hidden = false; } else pane.hidden = true; });
   render();
+})();
+
+;
+/* ======== stadium-polish ======== */
+(function () {
+  var sec = document.getElementById('stadium'), D = window.SITE; if (!sec) return;
+  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
+  // раскрывающиеся карточки фактов
+  var facts = $('.st-facts', sec);
+  if (facts) {
+    var tog = function (c) { var o = !c.classList.contains('open'); $$('.st-fact.open', facts).forEach(function (x) { x.classList.remove('open'); x.setAttribute('aria-expanded', 'false'); x.querySelector('.sf-chev').textContent = '＋'; });
+      if (o) { c.classList.add('open'); c.setAttribute('aria-expanded', 'true'); c.querySelector('.sf-chev').textContent = '−'; } };
+    facts.addEventListener('click', function (e) { var c = e.target.closest('.st-fact'); if (c) tog(c); });
+    facts.addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var c = e.target.closest('.st-fact'); if (c) { e.preventDefault(); tog(c); } });
+  }
+  // галерея: показывается, когда в data.js указаны файлы
+  var list = (D && D.stadiumPhotos) || [], box = $('#stGallery'), grid = $('#stGalGrid');
+  if (box && grid && list.length) {
+    box.hidden = false;
+    grid.innerHTML = list.map(function (f, i) { return '<button type="button" class="sg-it reveal" data-i="' + i + '" aria-label="Фото ' + (i + 1) + '"><img loading="lazy" alt="" src="assets/stadium/' + f + '" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'' + f + '\'}else{this.closest(\'.sg-it\').remove()}"></button>'; }).join('');
+    var dlg = document.createElement('dialog'); dlg.className = 'sg-dlg'; dlg.innerHTML = '<button type="button" class="sg-x" aria-label="Закрыть">✕</button><button type="button" class="sg-p" aria-label="Предыдущее">←</button><img alt=""><button type="button" class="sg-n" aria-label="Следующее">→</button>';
+    document.body.appendChild(dlg); var cur = 0, im = $('img', dlg);
+    var show = function (i) { cur = (i + list.length) % list.length; var src = $('.sg-it[data-i="' + cur + '"] img', grid); im.src = src ? src.currentSrc || src.src : ''; };
+    grid.addEventListener('click', function (e) { var b = e.target.closest('.sg-it'); if (!b) return; show(+b.dataset.i); dlg.showModal(); });
+    dlg.addEventListener('click', function (e) { if (e.target.closest('.sg-x') || e.target === dlg) dlg.close(); else if (e.target.closest('.sg-p')) show(cur - 1); else if (e.target.closest('.sg-n')) show(cur + 1); });
+    dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') show(cur - 1); else if (e.key === 'ArrowRight') show(cur + 1); });
+    try { observeReveal(sec); } catch (e) { $$('.sg-it', grid).forEach(function (x) { x.classList.add('in'); }); }
+  }
 })();
