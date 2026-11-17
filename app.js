@@ -664,12 +664,12 @@ $$('.page-title, .section-head h2').forEach(h => {
       ['В клубе', p.years],
     ];
     $('#pcFacts').innerHTML = facts.map(([k, v]) =>
-      `<div><dt>${k}</dt><dd${v ? '' : ' class="na" title="Нет данных — заполните в profiles.js"'}>${v || '—'}</dd></div>`).join('');
+      `<div><dt>${k}</dt><dd${v ? '' : ' class="na" title="Нет данных в открытых источниках"'}>${v || '—'}</dd></div>`).join('');
 
     // Вкладки и показатели
     $('#labTabs').innerHTML = [['general', 'Общее'], ['pos', POS_TAB[p.pos]]].map(([k, l]) =>
       `<button class="tab${labTab === k ? ' active' : ''}" data-t="${k}" type="button" role="tab">${l}</button>`).join('');
-    $('#labSeason').textContent = `${SEASON} Прочерк — данных в открытых источниках нет (добавьте в profiles.js).`;
+    $('#labSeason').textContent = `${SEASON} Прочерк — данных в открытых источниках нет.`;
     const set = labTab === 'general' ? STAT_SETS.general : STAT_SETS[p.pos];
     $('#labStats').innerHTML = set.map(([key, label, u], i) => {
       const v = statVal(p, pr, key);
@@ -711,7 +711,7 @@ $$('.page-title, .section-head h2').forEach(h => {
         }).join('')}</div>
         <div class="flabels">${last.map(r => `<span title="${r.opp} (${r.comp})">${shortName(r.opp)}</span>`).join('')}</div>
         <div class="form-legend"><span><i class="win"></i>победа</span><span><i class="draw"></i>ничья</span><span><i class="loss"></i>поражение</span></div>`;
-      $('#formNote').textContent = `Рейтингов игрока за матч пока нет, поэтому показана форма команды: ${pts} очков из ${last.length * 3}. Чтобы увидеть форму игрока, добавьте form в profiles.js.`;
+      $('#formNote').textContent = `Рейтингов игрока за матч пока нет, поэтому показана форма команды: ${pts} очков из ${last.length * 3}.`;
     }
     await dbl();
     $$('.fb i', area).forEach(i => i.classList.add('on'));
@@ -2549,4 +2549,20 @@ $$('.page-title, .section-head h2').forEach(h => {
     dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') show(cur - 1); else if (e.key === 'ArrowRight') show(cur + 1); });
     try { observeReveal(sec); } catch (e) { $$('.sg-it', grid).forEach(function (x) { x.classList.add('in'); }); }
   }
+})();
+
+;
+/* ======== font-floor ======== */
+(function () {
+  // мелкие подписи (меньше 11px) поднимаем до 11px, чтобы текст читался
+  var busy = 0;
+  function fix() {
+    var v = document.querySelector('.view.active'); if (!v) return;
+    var els = v.querySelectorAll('span,small,em,b,i,time,label,a,button,p,li,td,th,dt,dd');
+    for (var i = 0; i < els.length; i++) { var e = els[i]; if (e.children.length || !e.firstChild) continue; if (parseFloat(getComputedStyle(e).fontSize) < 11) e.style.fontSize = '11px'; }
+  }
+  function later() { clearTimeout(busy); busy = setTimeout(fix, 450); }
+  document.addEventListener('pagechange', function () { later(); setTimeout(fix, 1600); });
+  window.addEventListener('load', function () { setTimeout(fix, 1200); });
+  document.addEventListener('click', later);
 })();
