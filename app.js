@@ -350,8 +350,8 @@ $$('.page-title, .section-head h2').forEach(h => {
   try { seen = sessionStorage.getItem('splash') === '1'; sessionStorage.setItem('splash', '1'); } catch (e) {}
   if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { sp.remove(); return; }
   document.body.classList.add('splash-on');
-  setTimeout(() => sp.classList.add('hide'), 2000);
-  setTimeout(() => { sp.remove(); document.body.classList.remove('splash-on'); }, 2600);
+  setTimeout(() => sp.classList.add('hide'), 2900);
+  setTimeout(() => { sp.remove(); document.body.classList.remove('splash-on'); }, 3500);
 })();
 
 ;
@@ -2565,58 +2565,4 @@ $$('.page-title, .section-head h2').forEach(h => {
   document.addEventListener('pagechange', function () { later(); setTimeout(fix, 1600); });
   window.addEventListener('load', function () { setTimeout(fix, 1200); });
   document.addEventListener('click', later);
-})();
-
-;
-/* ======== wow-polish ======== */
-(function () {
-  var D = window.SITE; if (!D) return;
-  var $ = function (q, r) { return (r || document).querySelector(q); }, $$ = function (q, r) { return Array.prototype.slice.call((r || document).querySelectorAll(q)); };
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // --- 1. «Сегодня играем»: если сегодня (по времени посетителя) матч Реала
-  function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
-  var today = ymd(new Date());
-  var all = [].concat(D.upcoming || [], D.results || []);
-  var game = all.filter(function (m) { return m.kickoff ? ymd(new Date(m.kickoff)) === today : m.date === today; })[0];
-  if (game) {
-    document.documentElement.dataset.matchday = 'today';
-    var pill = $('.hero .pill-badge');
-    if (pill) {
-      var t = ''; if (game.kickoff) { try { t = new Date(game.kickoff).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); } catch (e) {} }
-      pill.classList.add('md-pill');
-      pill.innerHTML = '<i></i><b>Сегодня играем</b><span class="md-opp">' + (game.opp || '') + '</span>' + (t ? '<span class="md-t">' + t + '</span>' : '');
-    }
-  }
-
-  // --- 2. «Клуб»: счётчик года основания и рост полос эпох
-  var club = document.getElementById('club');
-  if (club) {
-    $$('.fact b', club).forEach(function (b) {
-      var s = b.textContent.trim(); if (!/^\d{3,4}$/.test(s)) return;
-      b.dataset.final = s; b.textContent = '0';
-    });
-    var run = function () {
-      $$('.fact b[data-final]', club).forEach(function (b) {
-        if (b.dataset.done) return; b.dataset.done = 1; var to = +b.dataset.final;
-        if (reduce) { b.textContent = to; return; }
-        var t0 = performance.now(), dur = 1400, from = Math.max(0, to - 120);
-        (function tick(now) { var p = Math.min((now - t0) / dur, 1); b.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); else b.textContent = to; })(t0);
-      });
-      club.classList.add('club-in');
-    };
-    document.addEventListener('pagechange', function (e) { if (e.detail === 'club') { club.classList.remove('club-in'); setTimeout(run, 150); } });
-    if (club.classList.contains('active')) setTimeout(run, 300);
-  }
-
-  // --- 3. наклон карточек игроков и на телефоне (по касанию, с возвратом)
-  var grid = document.getElementById('players-grid');
-  if (grid && !reduce && matchMedia('(hover: none)').matches) {
-    var cur = null;
-    var tilt = function (c, e) { var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.setProperty('--ry', (x * 10).toFixed(2) + 'deg'); c.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg'); c.classList.add('tilt'); };
-    var back = function (c) { if (!c) return; c.style.setProperty('--ry', '0deg'); c.style.setProperty('--rx', '0deg'); c.classList.remove('tilt'); };
-    grid.addEventListener('pointerdown', function (e) { var c = e.target.closest('.player'); if (!c) return; cur = c; tilt(c, e); });
-    grid.addEventListener('pointermove', function (e) { if (cur && e.pressure > 0) tilt(cur, e); });
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (n) { grid.addEventListener(n, function () { setTimeout(function () { back(cur); cur = null; }, 120); }); });
-  }
 })();
