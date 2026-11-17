@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Документация проекта — Real Madrid</title>
+<meta name="description" content="Как устроен фан-сайт Real Madrid: команда, этапы работы, технологии, файлы, обновление данных и проверка.">
+<link rel="icon" href="assets/crest.png">
+<style>
+:root{--bg:#060b1d;--bg2:#0d1a42;--card:rgba(255,255,255,.05);--bd:rgba(255,255,255,.12);--tx:#d6def5;--mut:#9aa8cf;--hd:#fff;--gold:#d4af37;--gold2:#f0dc8e}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--tx);background:radial-gradient(1200px 600px at 70% -10%,var(--bg2),transparent),var(--bg);min-height:100vh}
+a{color:var(--gold2)}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;padding:12px max(16px,calc((100vw - 1100px)/2));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+.top img{width:34px;height:34px;object-fit:contain}
+.top strong{color:var(--hd);letter-spacing:.04em;flex:1;font-size:.95rem}
+.back{padding:8px 16px;border-radius:999px;background:var(--gold);color:#0a1228;font-weight:700;text-decoration:none;font-size:.9rem}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 80px;display:grid;grid-template-columns:210px 1fr;gap:36px}
+nav.toc{position:sticky;top:84px;align-self:start;display:grid;gap:2px;padding-top:40px;font-size:.88rem}
+nav.toc a{color:var(--mut);text-decoration:none;padding:5px 10px;border-left:2px solid var(--bd)}
+nav.toc a:hover{color:var(--gold2);border-color:var(--gold)}
+header.hero{grid-column:1/-1;padding:56px 0 8px}
+.eyebrow{color:var(--gold);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;color:var(--hd);margin:8px 0 14px}
+h1 span{color:var(--gold)}
+.lead{max-width:720px;color:var(--mut);font-size:1.08rem}
+main section{padding-top:44px}
+h2{color:var(--hd);font-size:1.6rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";height:2px;flex:1;background:linear-gradient(90deg,var(--gold),transparent);opacity:.5}
+h3{color:var(--hd);font-size:1.05rem;margin-bottom:4px}
+p.sub{color:var(--mut);margin:0 0 16px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{padding:18px 20px;border:1px solid var(--bd);border-radius:18px;background:var(--card)}
+.card p{color:var(--mut);font-size:.93rem}
+.card h3.g{color:var(--gold2)}
+.member{text-align:center;padding:26px 18px}
+.av{width:76px;height:76px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.4rem;color:#0a1228;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 8px 24px rgba(212,175,55,.3)}
+.stages{list-style:none;counter-reset:s;display:grid;gap:12px;padding-left:54px;position:relative}
+.stages::before{content:"";position:absolute;left:19px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--gold),transparent)}
+.stages li{counter-increment:s;position:relative;padding:14px 18px;border:1px solid var(--bd);border-radius:16px;background:var(--card)}
+.stages li::before{content:counter(s);position:absolute;left:-54px;top:10px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--gold);color:#0a1228}
+.stages b{color:var(--hd);display:block}.stages p{color:var(--mut);font-size:.93rem}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.flow .card{flex:1 1 200px}.flow i{align-self:center;color:var(--gold);font-style:normal;font-size:1.4rem}
+table{width:100%;border-collapse:collapse;border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--card);font-size:.93rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th{color:var(--gold2);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+code,kbd{font:.88em ui-monospace,Consolas,monospace;padding:1px 6px;border-radius:6px;background:rgba(127,127,127,.18);color:var(--hd)}
+ul.l,ol.l{padding-left:22px;display:grid;gap:6px}
+.two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.note{border-left:3px solid var(--gold);padding:10px 16px;background:var(--card);border-radius:0 12px 12px 0;color:var(--mut);font-size:.93rem}
+footer{grid-column:1/-1;margin-top:50px;padding-top:20px;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}nav.toc{display:none}header.hero{padding-top:36px}}
+@media (max-width:560px){.stages{padding-left:44px}.stages::before{left:15px}.stages li::before{left:-44px;width:32px;height:32px;font-size:.85rem}th,td{padding:8px 10px}h2{font-size:1.35rem}}
+@media print{.top,nav.toc{display:none}body{background:#fff;color:#000}.wrap{display:block}.card,.stages li,table{break-inside:avoid}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="top">
+  <img src="assets/crest.png" alt="" onerror="this.onerror=null;this.src='crest.png'">
+  <strong>REAL MADRID · Документация</strong>
+  <a class="back" href="index.html">← На сайт</a>
+</div>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Учебный проект · Сезон 2026/2027</div>
+  <h1>Как устроен сайт <span>Real Madrid</span></h1>
+  <p class="lead">Здесь собрано всё, что мы сделали: кто работал над сайтом, из каких этапов состояла работа, что использовалось, как устроены файлы и как обновлять данные. Сайт неофициальный и не связан с клубом Real Madrid C.F.</p>
+</header>
+
+<nav class="toc" aria-label="Содержание">
+  <a href="#team">Команда</a>
+  <a href="#stages">Этапы работы</a>
+  <a href="#sections">Разделы сайта</a>
+  <a href="#arch">Как это устроено</a>
+  <a href="#tech">Технологии</a>
+  <a href="#files">Файлы</a>
+  <a href="#features">Возможности</a>
+  <a href="#update">Как обновить</a>
+  <a href="#tests">Проверка</a>
+  <a href="#limits">Источники и ограничения</a>
+</nav>
+
+<main>
+<section id="team">
+  <h2>Команда проекта</h2>
+  <p class="sub">Сайт сделан тремя студентами как учебный проект.</p>
+  <div class="grid">
+    <article class="card member"><div class="av" aria-hidden="true">ЭЭ</div><h3>Эскендеров Э.Г.</h3><p><b style="color:var(--gold2)">Разработка</b></p><p>вёрстка, JavaScript, графики, переводы</p></article>
+    <article class="card member"><div class="av" aria-hidden="true">ТМ</div><h3>Темирханов М.С.</h3><p><b style="color:var(--gold2)">Данные и содержание</b></p><p>новости, составы, результаты, таблицы</p></article>
+    <article class="card member"><div class="av" aria-hidden="true">МХ</div><h3>Муртазалиев Х.М.</h3><p><b style="color:var(--gold2)">Дизайн, проверка и публикация</b></p><p>оформление, тесты, GitHub Pages</p></article>
+  </div>
+</section>
+
+<section id="stages">
+  <h2>Что мы сделали</h2>
+  <p class="sub">Работа шла по этапам; после каждого сайт проверялся в браузере.</p>
+  <ol class="stages">
+    <li><b>Каркас и дизайн</b><p>Оформление в стиле клубного портала: шапка, тёмная и светлая темы, адаптивная сетка, кнопка «наверх», индикатор прокрутки.</p></li>
+    <li><b>Сбор данных</b><p>Новости, состав, результаты и таблица из открытых источников. Всё вынесено в отдельный файл <code>data.js</code>, чтобы не трогать вёрстку.</p></li>
+    <li><b>Состав и «Матчи»</b><p>Карточки 25 игроков, поиск, фильтры, сравнение двух игроков, расписание, результаты, таблица Ла Лиги, сезон в цифрах и страница каждого матча.</p></li>
+    <li><b>Лаборатория данных</b><p>Карточка игрока в стиле FIFA, показатели по позициям, графики формы и клубные графики.</p></li>
+    <li><b>Клуб, История, Трофеи, Стадион</b><p>Факты и легенды, шкала истории по эпохам, зал трофеев с диаграммами и лентой финалов, страница стадиона с фактами и крупными матчами.</p></li>
+    <li><b>Три языка</b><p>Русский, английский и испанский: словари и автоматический перевод интерфейса и данных.</p></li>
+    <li><b>Фото и телефон</b><p>Фото всех игроков без фона, мобильная версия, крупные кнопки и жесты.</p></li>
+    <li><b>Обновление данных</b><p>Актуализация на 14 ноября 2026 года: новости, 12 туров Ла Лиги, календарь до января.</p></li>
+    <li><b>Проверка</b><p>Автоматические проверки в браузере на трёх языках, на компьютере и телефоне.</p></li>
+  </ol>
+</section>
+
+<section id="sections">
+  <h2>Разделы сайта</h2>
+  <div class="grid">
+    <article class="card"><h3 class="g">Новости</h3><p>Лента с поиском, фильтром по категориям и окном полного текста.</p></article>
+    <article class="card"><h3 class="g">Клуб</h3><p>Факты, легенды клуба, вопросы и ответы.</p></article>
+    <article class="card"><h3 class="g">Состав</h3><p>25 игроков: поиск, фильтр по позиции, сортировка и сравнение двух игроков.</p></article>
+    <article class="card"><h3 class="g">Матчи</h3><p>Расписание, результаты, таблица Ла Лиги, сезон в цифрах и страница каждого матча.</p></article>
+    <article class="card"><h3 class="g">Стадион</h3><p>Фото, ключевые цифры, раскрывающиеся факты, крупные матчи на Бернабеу и галерея.</p></article>
+    <article class="card"><h3 class="g">История</h3><p>Шкала истории клуба по эпохам с фильтром.</p></article>
+    <article class="card"><h3 class="g">Трофеи</h3><p>Зал трофеев, диаграмма титулов и лента финалов Лиги чемпионов.</p></article>
+    <article class="card"><h3 class="g">Лаборатория данных</h3><p>Карточка игрока, показатели по позициям, графики формы и клубные графики.</p></article>
+    <article class="card"><h3 class="g">О проекте</h3><p>Краткое описание сайта, технологии, возможности и файлы.</p></article>
+  </div>
+</section>
+
+<section id="arch">
+  <h2>Как это устроено</h2>
+  <p class="sub">Сервера нет: браузер открывает файлы, а страницы собираются прямо на компьютере посетителя.</p>
+  <div class="flow">
+    <div class="card"><h3>1. Данные</h3><p>Новости, матчи, таблица и игроки лежат в <code>data.js</code> и <code>profiles.js</code>.</p></div><i>→</i>
+    <div class="card"><h3>2. Разметка</h3><p><code>index.html</code> содержит все разделы; видим всегда только один.</p></div><i>→</i>
+    <div class="card"><h3>3. JavaScript</h3><p><code>app.js</code> строит карточки, таблицы, графики, поиск и переходы.</p></div><i>→</i>
+    <div class="card"><h3>4. Переводы</h3><p><code>lang.js</code> подменяет тексты на английский или испанский.</p></div>
+  </div>
+  <ul class="l" style="margin-top:16px">
+    <li><b>Переходы между разделами:</b> адрес вида <code>#stadium</code> или <code>#match/2026-11-08</code>. Поэтому у каждого раздела и каждого матча своя ссылка, а кнопка «Назад» работает.</li>
+    <li><b>Перевод:</b> для каждого русского текста есть пара на английском и испанском; выбранный язык запоминается в браузере. Данные (новости, пояснения) переводятся по порядку.</li>
+    <li><b>Анимации:</b> появление блоков при прокрутке, счётчики, графики на SVG; при включённой в системе настройке «уменьшить анимацию» они отключаются.</li>
+    <li><b>Оформление:</b> цвета заданы переменными, поэтому тёмная, светлая темы и печатная версия меняются в одном месте.</li>
+  </ul>
+</section>
+
+<section id="tech">
+  <h2>Технологии</h2>
+  <div class="grid">
+    <article class="card"><h3 class="g">HTML5</h3><p>Семантическая разметка, подписи для программ чтения с экрана.</p></article>
+    <article class="card"><h3 class="g">CSS3</h3><p>Переменные, сетки, стеклянные панели, анимации, адаптивность, печать.</p></article>
+    <article class="card"><h3 class="g">JavaScript</h3><p>Чистый JS без фреймворков и без сборки.</p></article>
+    <article class="card"><h3 class="g">SVG</h3><p>Графики, диаграммы, значки и герб, нарисованные кодом.</p></article>
+    <article class="card"><h3 class="g">WebP</h3><p>Фото игроков в лёгком формате с прозрачным фоном.</p></article>
+    <article class="card"><h3 class="g">GitHub Pages</h3><p>Бесплатная публикация сайта по ссылке.</p></article>
+    <article class="card"><h3 class="g">Playwright</h3><p>Автоматические проверки в браузере.</p></article>
+  </div>
+</section>
+
+<section id="files">
+  <h2>Файлы проекта</h2>
+  <table>
+    <tr><th>Файл</th><th>Что внутри</th></tr>
+    <tr><td><code>index.html</code></td><td>Разметка всех разделов сайта</td></tr>
+    <tr><td><code>style.css</code></td><td>Всё оформление: темы, сетки, анимации, мобильная версия, печать</td></tr>
+    <tr><td><code>data.js</code></td><td>Данные: новости, результаты, ближайшие матчи, таблица, трофеи, история, вопросы и ответы</td></tr>
+    <tr><td><code>profiles.js</code></td><td>Игроки: номер, дата рождения, контракт, стоимость, статистика, форма, список фото</td></tr>
+    <tr><td><code>app.js</code></td><td>Вся логика. Части разделены комментариями <code>/* ======== имя ======== */</code></td></tr>
+    <tr><td><code>lang.js</code></td><td>Переводы RU / EN / ES и механизм переключения языка</td></tr>
+    <tr><td><code>crest.js</code></td><td>Герб клуба, встроенный в код</td></tr>
+    <tr><td><code>project.html</code></td><td>Эта страница</td></tr>
+    <tr><td><code>assets/</code></td><td><code>crest.png</code>, <code>bernabeu.jpg</code> и папка <code>players/</code> с фото игроков</td></tr>
+  </table>
+  <p class="note" style="margin-top:12px">Если на GitHub все файлы лежат в корне, без папки <code>assets</code>, сайт всё равно находит картинки: сначала ищет в <code>assets/</code>, затем рядом с <code>index.html</code>.</p>
+</section>
+
+<section id="features">
+  <h2>Возможности сайта</h2>
+  <ul class="l">
+    <li>Матч-центр: расписание, результаты, таблица Ла Лиги, сезон в цифрах</li>
+    <li>Страница каждого матча с авторами голов и шкалой минут</li>
+    <li>Лаборатория данных: карточки игроков, радар, графики формы</li>
+    <li>Сравнение двух игроков</li>
+    <li>Таблица Ла Лиги с переключением на график очков</li>
+    <li>Поиск по всему сайту: <kbd>Ctrl</kbd> + <kbd>K</kbd> или <kbd>/</kbd></li>
+    <li>Избранные игроки и матчи</li>
+    <li>Добавление матчей в календарь (файл .ics)</li>
+    <li>Тёмная, светлая темы и режим «День матча»</li>
+    <li>Русский, английский и испанский языки</li>
+    <li>Печатная версия страниц</li>
+    <li>Мобильная версия, работа с клавиатуры, учёт настройки «уменьшить анимацию»</li>
+  </ul>
+</section>
+
+<section id="update">
+  <h2>Как обновить сайт</h2>
+  <div class="two">
+    <div class="card"><h3>Шаги</h3>
+      <ol class="l">
+        <li>В <code>data.js</code> поменяйте новости, результаты, таблицу и дату в поле <code>asOf</code>.</li>
+        <li>В <code>profiles.js</code> обновите статистику игроков; фото кладите в <code>assets/players</code>.</li>
+        <li>Для английской и испанской версий добавьте перевод новых строк в <code>lang.js</code>.</li>
+        <li>Загрузите изменённые файлы на GitHub и обновите страницу через <kbd>Ctrl</kbd> + <kbd>F5</kbd>.</li>
+      </ol>
+    </div>
+    <div class="card"><h3>Полезно знать</h3>
+      <ul class="l">
+        <li>Список ближайших матчей — поле <code>upcoming</code> в <code>data.js</code>.</li>
+        <li>Фото в галерею стадиона — имена файлов в поле <code>stadiumPhotos</code>.</li>
+        <li>Новости в <code>data.js</code> идут от новых к старым; переводы новостей в <code>lang.js</code> — в том же порядке.</li>
+        <li>Локально сайт открывается двойным щелчком по <code>index.html</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="tests">
+  <h2>Как мы проверяли</h2>
+  <ul class="l">
+    <li>Все разделы открывались на русском, английском и испанском без ошибок в консоли браузера.</li>
+    <li>В английской и испанской версиях не оставалось русских слов.</li>
+    <li>Проверка на экране компьютера и на экране телефона, включая горизонтальную прокрутку и размер кнопок.</li>
+    <li>Данные сверялись с открытыми источниками; что не удалось подтвердить, помечено «—».</li>
+  </ul>
+</section>
+
+<section id="limits">
+  <h2>Источники и ограничения</h2>
+  <ul class="l">
+    <li>Данные собраны вручную из открытых источников (ESPN, LaLiga, Sports Mole, Marca и других).</li>
+    <li>Личная статистика игроков обновляется вручную и может отставать от последних матчей.</li>
+    <li>Переводы на английский и испанский сделаны нами; их стоит показать носителю языка.</li>
+    <li>Цвета значков соперников приблизительные.</li>
+    <li>Сайт неофициальный; названия и символы принадлежат их владельцам.</li>
+  </ul>
+</section>
+</main>
+
+<footer>Real Madrid · неофициальный фан-сайт · учебный проект · Эскендеров Э.Г., Темирханов М.С., Муртазалиев Х.М. · <a href="index.html">вернуться на сайт</a></footer>
+</div>
+</body>
+</html>
